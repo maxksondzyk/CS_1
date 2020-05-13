@@ -1,7 +1,5 @@
 package com.ksondzyk;
 
-import sun.misc.CRC16;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -14,10 +12,14 @@ public class Packet {
     private int wLen;
     private Message bMsq;
     private byte[] data;
-    public Packet(byte bSrc, int cType,int bUserId,String message){
+    public Packet(byte bSrc, int cType,int bUserId,String message) throws IOException {
         this.bSrc = bSrc;
         this.bMsq = new Message(cType,bUserId,message);
         bPktId++;
+        data = fill();
+    }
+    public byte[] getData(){
+        return data;
     }
     private byte[] fill() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -38,39 +40,23 @@ public class Packet {
         temp.putInt(wLen);
         bytes.write(temp.array());
 
-        temp = ByteBuffer.allocate(2);
+        temp = ByteBuffer.allocate(4);
         byte[] bytes013 = Arrays.copyOfRange(bytes.toByteArray(),0,14);
-        temp.putInt(calculate_crc(bytes013));
+        temp.putInt(CRC.calculate_crc(bytes013));
         bytes.write(temp.array());
 
         temp = ByteBuffer.allocate(message.length);
         temp.put(message);
         bytes.write(temp.array());
 
-        temp = ByteBuffer.allocate(2);
+        temp = ByteBuffer.allocate(4);
         byte[] bytes13end = Arrays.copyOfRange(bytes.toByteArray(),18,18+message.length);
-        temp.putInt(calculate_crc(bytes13end));
+        temp.putInt(CRC.calculate_crc(bytes13end));
         bytes.write(temp.array());
         return bytes.toByteArray();
     }
 
-    int calculate_crc(byte[] bytes) {
-        int i;
-        int crc_value = 0;
-        for (int len = 0; len < bytes.length; len++) {
-            for (i = 0x80; i != 0; i >>= 1) {
-                if ((crc_value & 0x8000) != 0) {
-                    crc_value = (crc_value << 1) ^ 0x8005;
-                } else {
-                    crc_value = crc_value << 1;
-                }
-                if ((bytes[len] & i) != 0) {
-                    crc_value ^= 0x8005;
-                }
-            }
-        }
-        return crc_value;
-    }
+
     public Message getBMsq(){
         return bMsq;
     }
