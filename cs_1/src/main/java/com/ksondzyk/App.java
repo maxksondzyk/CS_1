@@ -25,6 +25,10 @@ public class App
         }
         //System.out.println(packet.getBMsq().getMessage());
         PacketReceiver packetReceiver = new PacketReceiver(packet.getData());
+
+       String s=  CipherXOR.encode("Test124");
+        System.out.println(CipherXOR.decode(s));
+
     }
     public static String sha256hex(String input) {
         return DigestUtils.sha256Hex(input);
