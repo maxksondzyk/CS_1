@@ -12,7 +12,7 @@ public class Message {
         this.cType = cType;
         this.bUserId = bUserId;
         this.message = new JSONObject();
-        this.message.put("data",message);
+        this.message.put("MESSAGE",message);
     }
     public byte[] toBytes(){
         byte[] res;

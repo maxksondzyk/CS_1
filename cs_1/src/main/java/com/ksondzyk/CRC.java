@@ -1,7 +1,7 @@
 package com.ksondzyk;
 
 public class CRC {
-    static int calculate_crc(byte[] bytes) {
+    static short calculate_crc(byte[] bytes) {
         int i;
         int crc_value = 0;
         for (int len = 0; len < bytes.length; len++) {
@@ -16,6 +16,6 @@ public class CRC {
                 }
             }
         }
-        return crc_value;
+        return (short)crc_value;
     }
 }
