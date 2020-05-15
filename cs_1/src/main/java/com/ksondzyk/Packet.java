@@ -2,6 +2,7 @@ package com.ksondzyk;
 
 import org.json.simple.JSONObject;
 
+import lombok.Getter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -20,6 +21,7 @@ public class Packet {
     private static long bPktId;
     private int wLen;
     private final Message bMsq;
+    @Getter
     private final byte[] data;
 
     public Packet(byte bSrc, int cType, int bUserId, String message) throws IOException {
@@ -27,10 +29,6 @@ public class Packet {
         this.bMsq = new Message(cType, bUserId, message);
         bPktId++;
         data = fill();
-    }
-
-    public byte[] getData() {
-        return data;
     }
 
     private byte[] fill() throws IOException {
