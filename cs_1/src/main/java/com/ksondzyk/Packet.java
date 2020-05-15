@@ -1,12 +1,11 @@
 package com.ksondzyk;
-
-import org.json.simple.JSONObject;
-
 import lombok.Getter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+
 
 public class Packet {
     public static final int B_MAGIC_OFFSET = 0;
@@ -17,19 +16,31 @@ public class Packet {
     public static final int B_MSQ_OFFSET = 16;
 
     private static final byte bMagic = 0x13;
-    private final byte bSrc;
+    /*private final byte bSrc;
     private static long bPktId;
     private int wLen;
-    private final Message bMsq;
-    @Getter
-    private final byte[] data;
+    private final Message bMsq;*/
+    private static long bPktId;
 
-    public Packet(byte bSrc, int cType, int bUserId, String message) throws IOException {
+
+    public Packet(byte bSrc, Message bMsq) throws IOException {
         this.bSrc = bSrc;
-        this.bMsq = new Message(cType, bUserId, message);
+        this.bMsq = bMsq;
         bPktId++;
         data = fill();
     }
+
+    @Getter
+    Byte bSrc;
+
+    @Getter
+    Integer wLen;
+
+    @Getter
+    Message bMsq;
+
+    @Getter
+    private final byte[] data;
 
     private byte[] fill() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -66,34 +77,4 @@ public class Packet {
         bytes.write(temp.array());
         return bytes.toByteArray();
     }
-
-    class Message {
-        public static final int C_TYPE_OFFSET = 0;
-        public static final int B_USER_ID_OFFSET = 4;
-        public static final int MESSAGE_OFFSET = 8;
-        private final int cType;
-        private final int bUserId;
-        private final JSONObject message;
-
-        public Message(int cType, int bUserId, String message) {
-            this.cType = cType;
-            this.bUserId = bUserId;
-            this.message = new JSONObject();
-            message = CipherXOR.encode(message);
-            this.message.put("MESSAGE", message);
-        }
-
-        public byte[] toBytes() {
-            byte[] res;
-            byte[] bytes = message.toString().getBytes();
-            ByteBuffer temp = ByteBuffer.allocate(8 + bytes.length);
-            temp.putInt(this.cType);
-            temp.putInt(this.bUserId);
-            temp.put(bytes);
-            res = temp.array();
-            return res;
-        }
-
-    }
-
 }
