@@ -1,72 +1,101 @@
 package com.ksondzyk;
 
+import org.json.simple.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class Packet {
-    public static final int B_MAGIC = 0;
-    public static final int B_SRC = 1;
-    public static final int B_PKT_ID = 2;
-    public static final int W_LEN = 10;
-    public static final int W_CRC_16 = 14;
-    public static final int B_MSQ = 16;
+    public static final int B_MAGIC_OFFSET = 0;
+    public static final int B_SRC_OFFSET = 1;
+    public static final int B_PKT_ID_OFFSET = 2;
+    public static final int W_LEN_OFFSET = 10;
+    public static final int W_CRC_16_OFFSET = 14;
+    public static final int B_MSQ_OFFSET = 16;
 
     private static final byte bMagic = 0x13;
-    private byte bSrc;
+    private final byte bSrc;
     private static long bPktId;
     private int wLen;
-    private Message bMsq;
-    private byte[] data;
-    public Packet(byte bSrc, int cType,int bUserId,String message) throws IOException {
+    private final Message bMsq;
+    private final byte[] data;
+
+    public Packet(byte bSrc, int cType, int bUserId, String message) throws IOException {
         this.bSrc = bSrc;
-        this.bMsq = new Message(cType,bUserId,message);
+        this.bMsq = new Message(cType, bUserId, message);
         bPktId++;
         data = fill();
     }
-    public byte[] getData(){
+
+    public byte[] getData() {
         return data;
     }
+
     private byte[] fill() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        ByteBuffer temp = ByteBuffer.allocate(B_SRC-B_MAGIC);
+        ByteBuffer temp = ByteBuffer.allocate(B_SRC_OFFSET - B_MAGIC_OFFSET);
         temp.put(bMagic);
         bytes.write(temp.array());
 
-        temp = ByteBuffer.allocate(B_PKT_ID-B_SRC);
+        temp = ByteBuffer.allocate(B_PKT_ID_OFFSET - B_SRC_OFFSET);
         temp.put(bSrc);
         bytes.write(temp.array());
 
-        temp = ByteBuffer.allocate(W_LEN-B_PKT_ID);
+        temp = ByteBuffer.allocate(W_LEN_OFFSET - B_PKT_ID_OFFSET);
         temp.putLong(bPktId);
         bytes.write(temp.array());
 
         byte[] message = this.bMsq.toBytes();
-        wLen=message.length;
-        temp = ByteBuffer.allocate(W_CRC_16-W_LEN);
+        wLen = message.length;
+        temp = ByteBuffer.allocate(W_CRC_16_OFFSET - W_LEN_OFFSET);
         temp.putInt(wLen);
         bytes.write(temp.array());
 
-        temp = ByteBuffer.allocate(B_MSQ-W_CRC_16);
-        byte[] bytes013 = Arrays.copyOfRange(bytes.toByteArray(),B_MAGIC,W_CRC_16);
-        temp.putShort(CRC.calculate_crc(bytes013));
+        temp = ByteBuffer.allocate(B_MSQ_OFFSET - W_CRC_16_OFFSET);
+        byte[] bytes013 = Arrays.copyOfRange(bytes.toByteArray(), B_MAGIC_OFFSET, W_CRC_16_OFFSET);
+        temp.putShort((short)CRC.calculateCRC(CRC.Parameters.CRC16,bytes013));
         bytes.write(temp.array());
 
         temp = ByteBuffer.allocate(message.length);
         temp.put(message);
         bytes.write(temp.array());
 
-        temp = ByteBuffer.allocate(B_MSQ-W_CRC_16);
-        byte[] bytes13end = Arrays.copyOfRange(bytes.toByteArray(),B_MSQ,B_MSQ+message.length);
-        temp.putShort(CRC.calculate_crc(bytes13end));
+        temp = ByteBuffer.allocate(B_MSQ_OFFSET - W_CRC_16_OFFSET);
+        byte[] bytes13end = Arrays.copyOfRange(bytes.toByteArray(), B_MSQ_OFFSET, B_MSQ_OFFSET + message.length);
+        temp.putShort((short)CRC.calculateCRC(CRC.Parameters.CRC16,bytes13end));
         bytes.write(temp.array());
         return bytes.toByteArray();
     }
 
+    class Message {
+        public static final int C_TYPE_OFFSET = 0;
+        public static final int B_USER_ID_OFFSET = 4;
+        public static final int MESSAGE_OFFSET = 8;
+        private final int cType;
+        private final int bUserId;
+        private final JSONObject message;
 
-    public Message getBMsq(){
-        return bMsq;
+        public Message(int cType, int bUserId, String message) {
+            this.cType = cType;
+            this.bUserId = bUserId;
+            this.message = new JSONObject();
+            message = CipherXOR.encode(message);
+            this.message.put("MESSAGE", message);
+        }
+
+        public byte[] toBytes() {
+            byte[] res;
+            byte[] bytes = message.toString().getBytes();
+            ByteBuffer temp = ByteBuffer.allocate(8 + bytes.length);
+            temp.putInt(this.cType);
+            temp.putInt(this.bUserId);
+            temp.put(bytes);
+            res = temp.array();
+            return res;
+        }
+
     }
 
 }

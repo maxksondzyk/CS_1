@@ -1,9 +1,9 @@
 package com.ksondzyk;
 
-//import junit.framework.Test;
 import junit.framework.TestCase;
 import org.junit.Assert;
-import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * Unit test for simple App.
@@ -11,41 +11,18 @@ import org.junit.Test;
 public class AppTest 
     extends TestCase
 {
-//    /**
-//     * Create the test case
-//     *
-//     * @param testName name of the test case
-//     */
-//    public AppTest( String testName )
-//    {
-//        super( testName );
-//    }
-//
-//    /**
-//     * @return the suite of tests being tested
-//     */
-//    public static Test suite()
-//    {
-//        return new TestSuite( AppTest.class );
-//    }
-//
-//    /**
-//     * Rigourous Test :-)
-//     */
-//    public void testApp()
-//    {
-//        assertTrue( true );
-//    }
-private String INPUT = "123456";
 
-    @Test
-    public void testLength() {
-        Assert.assertEquals(64, App.sha256hex(INPUT).length());
-    }
+private String INPUT = "test";
+    public void testCheckPacket()
+    {
+        try {
+            Packet p = new Packet((byte)10,100,7731265,INPUT);
+            PacketReceiver pr = new PacketReceiver(p.getData());
+            Assert.assertTrue(pr.checkCRC());
+            Assert.assertEquals(INPUT, pr.getMessage());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-    @Test
-    public void testHex() {
-        String expected = "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92";
-        Assert.assertEquals(expected, App.sha256hex(INPUT));
     }
 }
