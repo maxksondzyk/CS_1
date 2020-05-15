@@ -1,0 +1,6 @@
+
+3
+java:S1700K"Rename field "message"(Ï“¸Ï8‹üÅ¤¡.
+o
+java:S1450"SRemove the "wLen" field and declare it as a local variable in the relevant methods.(»ÂÏC8‹üÅ¤¡.
+v	java:S115"ZRename this constant name to match the regular expression '^[A-Z][A-Z0-9]*(_[A-Z0-9]+)*$'.(‚¬ÓÄ8‹üÅ¤¡.
