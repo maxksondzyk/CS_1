@@ -2,19 +2,16 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="df35288d-5f8e-48cb-8f4e-1a8cd52295a7" name="Default Changelist" comment="Cipher+ made message internal class">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CipherXOR.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/CS_1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/CS_1.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_gson_gson_2_7.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs_1/cs_1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/cs_1/cs_1.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/App.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Message.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Packet.java" beforeDir="false" afterPath="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Packet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/PacketReceiver.java" beforeDir="false" afterPath="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/PacketReceiver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/App.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/Message.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/Packet.class" beforeDir="false" afterPath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/Packet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/App.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/CRC$Parameters.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/CRC.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/CipherXOR.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/Packet$Message.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/Packet.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/PacketReceiver.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cs_1/target/test-classes/com/ksondzyk/AppTest.class" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cs_1/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -24,81 +21,21 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file pinned="false" current-in-tab="true">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/App.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="23" column="32" lean-forward="true" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="136">
+              <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CRC.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="36">
-              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Packet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1219">
-              <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#3040#3041#0" expanded="true" />
-                <element signature="e#3175#3176#0" expanded="true" />
-                <element signature="e#3202#3203#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/PacketReceiver.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="18" selection-start-line="18" selection-end-line="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CipherXOR.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="27" column="61" selection-start-line="27" selection-start-column="61" selection-end-line="27" selection-end-column="61" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar!/junit/framework/TestCase.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="93">
-              <caret line="106" selection-start-line="106" selection-end-line="106" />
-              <folding>
-                <element signature="e#2691#2692#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar!/junit/framework/TestSuite.class">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="64" selection-start-line="64" selection-end-line="64" />
-              <folding>
-                <element signature="e#2322#2323#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="102">
+              <caret line="6" column="17" lean-forward="true" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -106,8 +43,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/cs_1/src/test/java/com/ksondzyk/AppTest.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="774">
-              <caret line="45" column="9" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
+            <state relative-caret-position="170">
+              <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -132,12 +69,12 @@
       <list>
         <option value="$PROJECT_DIR$/cs_1/src/test/java/com/ksondzyk/CipherXORTest.java" />
         <option value="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Message.java" />
-        <option value="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Packet.java" />
         <option value="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Cipher.java" />
         <option value="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CipherMessage.java" />
         <option value="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/PacketReceiver.java" />
         <option value="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CipherXOR.java" />
         <option value="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/App.java" />
+        <option value="$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Packet.java" />
       </list>
     </option>
   </component>
@@ -148,7 +85,7 @@
       </MavenImportingSettings>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="-15" />
     <option name="y" value="24" />
     <option name="width" value="1116" />
@@ -161,35 +98,34 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
             <path>
               <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS_1" type="462c0819:PsiDirectoryNode" />
+              <item name="RCSZ" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS_1" type="462c0819:PsiDirectoryNode" />
+              <item name="RCSZ" type="462c0819:PsiDirectoryNode" />
               <item name="cs_1" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS_1" type="462c0819:PsiDirectoryNode" />
+              <item name="RCSZ" type="462c0819:PsiDirectoryNode" />
               <item name="cs_1" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS_1" type="462c0819:PsiDirectoryNode" />
+              <item name="RCSZ" type="462c0819:PsiDirectoryNode" />
               <item name="cs_1" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS_1" type="462c0819:PsiDirectoryNode" />
+              <item name="RCSZ" type="462c0819:PsiDirectoryNode" />
               <item name="cs_1" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
@@ -197,7 +133,7 @@
             </path>
             <path>
               <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS_1" type="462c0819:PsiDirectoryNode" />
+              <item name="RCSZ" type="462c0819:PsiDirectoryNode" />
               <item name="cs_1" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
@@ -206,62 +142,13 @@
             </path>
             <path>
               <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS_1" type="462c0819:PsiDirectoryNode" />
-              <item name="cs_1" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS_1" type="462c0819:PsiDirectoryNode" />
-              <item name="cs_1" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="CS_1" type="462c0819:PsiDirectoryNode" />
-              <item name="cs_1" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="test" type="462c0819:PsiDirectoryNode" />
-              <item name="java" type="462c0819:PsiDirectoryNode" />
-              <item name="ksondzyk" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-            <path>
-              <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: junit:junit:4.12" type="70bed36:NamedLibraryElementNode" />
-            </path>
-            <path>
-              <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: junit:junit:4.12" type="70bed36:NamedLibraryElementNode" />
-              <item name="junit-4.12.jar" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: junit:junit:4.12" type="70bed36:NamedLibraryElementNode" />
-              <item name="junit-4.12.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="junit" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs_1" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-              <item name="Maven: junit:junit:4.12" type="70bed36:NamedLibraryElementNode" />
-              <item name="junit-4.12.jar" type="462c0819:PsiDirectoryNode" />
-              <item name="junit" type="462c0819:PsiDirectoryNode" />
-              <item name="framework" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="ProjectViewState">
@@ -272,7 +159,8 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1589458418319" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1589541267991" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../json-simple-1.1.jar!/" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -301,6 +189,20 @@
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="AppTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="cs_1" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ksondzyk.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ksondzyk" />
+      <option name="MAIN_CLASS_NAME" value="com.ksondzyk.AppTest" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -364,22 +266,17 @@
       </extension>
       <option name="PACKAGE_NAME" value="com.ksondzyk" />
       <option name="MAIN_CLASS_NAME" value="com.ksondzyk.CipherXORTest" />
-      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="cs_1-1.0-SNAPSHOT.jar" type="JarApplication" factoryName="JAR Application" temporary="true">
-      <option name="JAR_PATH" value="$PROJECT_DIR$/cs_1/target/cs_1-1.0-SNAPSHOT.jar" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Application.App" />
+        <item itemvalue="JUnit.AppTest" />
         <item itemvalue="JUnit.AppTest.testHex" />
         <item itemvalue="JUnit.CipherXORTest" />
         <item itemvalue="JUnit.AppTest.testLength" />
-        <item itemvalue="JAR Application.cs_1-1.0-SNAPSHOT.jar" />
       </list>
     </recent_temporary>
   </component>
@@ -396,6 +293,8 @@
       <workItem from="1589269471147" duration="2206000" />
       <workItem from="1589271997477" duration="79000" />
       <workItem from="1589272101128" duration="15408000" />
+      <workItem from="1589535503906" duration="1251000" />
+      <workItem from="1589538619501" duration="2130000" />
     </task>
     <servers />
   </component>
@@ -416,8 +315,11 @@
       <configuration name="AppTest.testHex" configurationId="JUnit" />
     </history-entry>
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="3381000" />
+  </component>
   <component name="ToolWindowManager">
-    <frame x="73" y="-7" width="1214" height="735" extended-state="6" />
+    <frame x="-7" y="-7" width="1295" height="695" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Image Layers" order="0" />
@@ -426,20 +328,22 @@
       <window_info id="simpleUML" order="3" />
       <window_info id="Capture Tool" order="4" />
       <window_info id="Favorites" order="5" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="6" visible="true" weight="0.25951558" />
+      <window_info active="true" content_ui="combo" id="Project" order="6" visible="true" weight="0.26882592" />
       <window_info id="Structure" order="7" side_tool="true" weight="0.25" />
       <window_info id="Learn" order="8" />
-      <window_info anchor="bottom" id="Messages" order="0" weight="0.32781458" />
+      <window_info anchor="bottom" id="Messages" order="0" visible="true" weight="0.3268206" />
       <window_info anchor="bottom" id="Terminal" order="1" />
       <window_info anchor="bottom" id="Event Log" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="3" />
       <window_info anchor="bottom" id="Find" order="4" />
-      <window_info anchor="bottom" id="Version Control" order="5" weight="0.3294702" />
-      <window_info anchor="bottom" id="Run" order="6" visible="true" weight="0.294702" />
+      <window_info anchor="bottom" id="Version Control" order="5" weight="0.09769094" />
+      <window_info anchor="bottom" id="Run" order="6" weight="0.294702" />
       <window_info anchor="bottom" id="Debug" order="7" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="8" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="9" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="10" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="12" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="right" id="Theme Preview" order="1" />
       <window_info anchor="right" id="Palette&#9;" order="2" />
@@ -448,127 +352,90 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="5" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="6" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="7" weight="0.25" />
+      <window_info anchor="right" id="Database" order="8" />
     </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Cipher+ made message internal class" />
     <option name="LAST_COMMIT_MESSAGE" value="Cipher+ made message internal class" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="261" y="159" key="FileChooserDialogImpl" timestamp="1589292310571">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="261" y="159" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1589292310571" />
-    <state width="723" height="161" key="GridCell.Tab.0.bottom" timestamp="1589376121513">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="723" height="161" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589376121513" />
-    <state width="723" height="161" key="GridCell.Tab.0.center" timestamp="1589376121512">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="723" height="161" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1589376121512" />
-    <state width="723" height="161" key="GridCell.Tab.0.left" timestamp="1589376121511">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="723" height="161" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1589376121511" />
-    <state width="723" height="161" key="GridCell.Tab.0.right" timestamp="1589376121513">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="723" height="161" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1589376121513" />
-    <state width="723" height="265" key="GridCell.Tab.1.bottom" timestamp="1589376055884">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="723" height="265" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589376055884" />
-    <state width="723" height="265" key="GridCell.Tab.1.center" timestamp="1589376055884">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="723" height="265" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" timestamp="1589376055884" />
-    <state width="723" height="265" key="GridCell.Tab.1.left" timestamp="1589376055883">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="723" height="265" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" timestamp="1589376055883" />
-    <state width="723" height="265" key="GridCell.Tab.1.right" timestamp="1589376055884">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state width="723" height="265" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1589376055884" />
-    <state x="12" y="0" key="SettingsEditor" timestamp="1589292317208">
-      <screen x="0" y="0" width="1536" height="834" />
-    </state>
-    <state x="12" y="0" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1589292317208" />
+    <state x="261" y="159" key="FileChooserDialogImpl" />
+    <state x="261" y="159" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" />
+    <state width="723" height="161" key="GridCell.Tab.0.bottom" />
+    <state width="723" height="161" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" />
+    <state width="723" height="161" key="GridCell.Tab.0.center" />
+    <state width="723" height="161" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" />
+    <state width="723" height="161" key="GridCell.Tab.0.left" />
+    <state width="723" height="161" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" />
+    <state width="723" height="161" key="GridCell.Tab.0.right" />
+    <state width="723" height="161" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" />
+    <state width="723" height="265" key="GridCell.Tab.1.bottom" />
+    <state width="723" height="265" key="GridCell.Tab.1.bottom/0.0.1536.834@0.0.1536.834" />
+    <state width="723" height="265" key="GridCell.Tab.1.center" />
+    <state width="723" height="265" key="GridCell.Tab.1.center/0.0.1536.834@0.0.1536.834" />
+    <state width="723" height="265" key="GridCell.Tab.1.left" />
+    <state width="723" height="265" key="GridCell.Tab.1.left/0.0.1536.834@0.0.1536.834" />
+    <state width="723" height="265" key="GridCell.Tab.1.right" />
+    <state width="723" height="265" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" />
+    <state x="12" y="0" key="SettingsEditor" />
+    <state x="12" y="0" key="SettingsEditor/0.0.1536.834@0.0.1536.834" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/App.class">
+    <entry file="file://$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/App.class" />
+    <entry file="file://$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/CRC.class" />
+    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar!/junit/framework/TestSuite.class" />
+    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar!/junit/framework/TestCase.class" />
+    <entry file="file://$PROJECT_DIR$/cs_1/src/test/java/com/ksondzyk/CipherXORTest.java" />
+    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Message.java" />
+    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CipherMessage.java" />
+    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CRC.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#431#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="34">
+          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/cs_1/target/classes/com/ksondzyk/CRC.class">
+    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/PacketReceiver.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#701#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="255">
+          <caret line="18" selection-start-line="18" selection-end-line="18" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar!/junit/framework/TestSuite.class">
+    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CipherXOR.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="110">
-          <caret line="64" selection-start-line="64" selection-end-line="64" />
-          <folding>
-            <element signature="e#2322#2323#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="459">
+          <caret line="27" column="9" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar!/junit/framework/TestCase.class">
+    <entry file="file://$PROJECT_DIR$/cs_1/pom.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="106" selection-start-line="106" selection-end-line="106" />
-          <folding>
-            <element signature="e#2691#2692#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="229">
+          <caret line="42" column="21" lean-forward="true" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/App.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/cs_1/cs_1.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-357" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cs_1/src/test/java/com/ksondzyk/AppTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="774">
-          <caret line="45" column="9" selection-start-line="45" selection-start-column="9" selection-end-line="45" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cs_1/src/test/java/com/ksondzyk/CipherXORTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="13" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Message.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" selection-start-line="6" selection-end-line="31" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CipherMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+        <state relative-caret-position="170">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -577,45 +444,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/Packet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1219">
-          <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#3040#3041#0" expanded="true" />
-            <element signature="e#3175#3176#0" expanded="true" />
-            <element signature="e#3202#3203#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/PacketReceiver.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" selection-start-line="18" selection-end-line="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CRC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="36">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/CipherXOR.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="324">
-          <caret line="27" column="61" selection-start-line="27" selection-start-column="61" selection-end-line="27" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/cs_1/src/main/java/com/ksondzyk/App.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="23" column="32" lean-forward="true" selection-start-line="23" selection-start-column="32" selection-end-line="23" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="102">
+          <caret line="6" column="17" lean-forward="true" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
         </state>
       </provider>
     </entry>
