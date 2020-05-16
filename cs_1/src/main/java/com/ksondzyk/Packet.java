@@ -84,7 +84,7 @@ public class Packet {
     public String getMessage(){
         byte[] message = Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +Message.MESSAGE_OFFSET +12,packet.length-2-(Packet.B_MSQ_OFFSET - Packet.W_CRC_16_OFFSET));
         String msg = new String(message);
-        msg = CipherXOR.decode(msg);
+        msg = CipherMy.decode(msg);
         return msg;
     }
 }

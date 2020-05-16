@@ -18,7 +18,7 @@ public class Message {
         this.bUserId = bUserId;
         this.message = new JSONObject();
         message = message.toLowerCase();
-        message = CipherXOR.encode(message);
+        message = CipherMy.encode(message);
         this.message.put("MESSAGE", message);
     }
 
