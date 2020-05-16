@@ -1,10 +1,0 @@
-
-d
-java:S1854"BRemove this useless assignment to local variable "packetReceiver".(¬£Òúýÿÿÿÿ8¦‚ ¥¡.
-E
-java:S1148"#Use a logger to log this exception.(€ÉÔ…ýÿÿÿÿ8ÎÅ¶ñ .
-X	java:S125"<This block of commented-out lines of code should be removed.(ë†ˆª8á¸Ëì .
-]	java:S125"<This block of commented-out lines of code should be removed.(ùé©àýÿÿÿÿ8‡¬±ñ .
-U	java:S106"9Replace this use of System.out or System.err by a logger.(ê¬¾û8ÍúÅ¤¡.
-U
-java:S1481"3Remove this unused "packetReceiver" local variable.(¬£Òúýÿÿÿÿ8¦‚ ¥¡.
