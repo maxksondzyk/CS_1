@@ -9,19 +9,19 @@ import java.util.Arrays;
 
 
 public class Packet {
-    public static final int B_MAGIC_OFFSET = 0;
+    private static final int B_MAGIC_OFFSET = 0;
     public static final int B_SRC_OFFSET = 1;
-    public static final int B_PKT_ID_OFFSET = 2;
-    public static final int W_LEN_OFFSET = 10;
-    public static final int W_CRC_16_OFFSET = 14;
-    public static final int B_MSQ_OFFSET = 16;
+    private static final int B_PKT_ID_OFFSET = 2;
+    private static final int W_LEN_OFFSET = 10;
+    private static final int W_CRC_16_OFFSET = 14;
+    private static final int B_MSQ_OFFSET = 16;
 
     private static final Byte bMagic = 0x13;
     private static UnsignedLong bPktId = UnsignedLong.ZERO;
     private Short wCRC16_1;
     private Short wCRC16_2;
 
-
+    private byte[] packet;
     public Packet(byte bSrc, Message bMsq) throws IOException {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
@@ -59,7 +59,7 @@ public class Packet {
 
     }
 
-    byte[] packet;
+
     public Packet(byte[] packet) throws Exception {
         ByteBuffer buffer = ByteBuffer.wrap(packet);
         this.packet = packet;
