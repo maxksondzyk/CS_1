@@ -42,7 +42,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1589458418319" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../json-simple-1.1.jar!/" />
-    <property name="project.structure.last.edited" value="Global Libraries" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -160,7 +160,7 @@
       <workItem from="1589269471147" duration="2206000" />
       <workItem from="1589271997477" duration="79000" />
       <workItem from="1589272101128" duration="15408000" />
-      <workItem from="1589526497791" duration="8479000" />
+      <workItem from="1589526497791" duration="11212000" />
     </task>
     <servers />
   </component>
@@ -177,26 +177,30 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="0" y="75" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.834@0.0.1536.834" timestamp="1589531402792" />
+    <state x="362" y="128" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1589542163581">
+      <screen x="0" y="0" width="1536" height="834" />
+    </state>
+    <state x="362" y="128" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog/0.0.1536.834@0.0.1536.834" timestamp="1589542163581" />
     <state x="261" y="159" key="FileChooserDialogImpl" timestamp="1589292310571">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="261" y="159" key="FileChooserDialogImpl/0.0.1536.834@0.0.1536.834" timestamp="1589292310571" />
-    <state width="1493" height="287" key="GridCell.Tab.0.bottom" timestamp="1589532841143">
+    <state width="1493" height="97" key="GridCell.Tab.0.bottom" timestamp="1589543533157">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="287" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589532841143" />
-    <state width="1493" height="287" key="GridCell.Tab.0.center" timestamp="1589532841143">
+    <state width="1493" height="97" key="GridCell.Tab.0.bottom/0.0.1536.834@0.0.1536.834" timestamp="1589543533157" />
+    <state width="1493" height="97" key="GridCell.Tab.0.center" timestamp="1589543533156">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="287" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1589532841143" />
-    <state width="1493" height="287" key="GridCell.Tab.0.left" timestamp="1589532841143">
+    <state width="1493" height="97" key="GridCell.Tab.0.center/0.0.1536.834@0.0.1536.834" timestamp="1589543533156" />
+    <state width="1493" height="97" key="GridCell.Tab.0.left" timestamp="1589543533156">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="287" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1589532841143" />
-    <state width="1493" height="287" key="GridCell.Tab.0.right" timestamp="1589532841143">
+    <state width="1493" height="97" key="GridCell.Tab.0.left/0.0.1536.834@0.0.1536.834" timestamp="1589543533156" />
+    <state width="1493" height="97" key="GridCell.Tab.0.right" timestamp="1589543533156">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state width="1493" height="287" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1589532841143" />
+    <state width="1493" height="97" key="GridCell.Tab.0.right/0.0.1536.834@0.0.1536.834" timestamp="1589543533156" />
     <state width="723" height="264" key="GridCell.Tab.1.bottom" timestamp="1589496605343">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
@@ -213,17 +217,17 @@
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state width="723" height="264" key="GridCell.Tab.1.right/0.0.1536.834@0.0.1536.834" timestamp="1589496605342" />
-    <state x="12" y="0" key="SettingsEditor" timestamp="1589540829294">
+    <state x="12" y="0" key="SettingsEditor" timestamp="1589542172735">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
-    <state x="12" y="0" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1589540829294" />
+    <state x="12" y="0" key="SettingsEditor/0.0.1536.834@0.0.1536.834" timestamp="1589542172735" />
     <state x="46" y="155" width="672" height="678" key="search.everywhere.popup" timestamp="1589528703037">
       <screen x="0" y="0" width="1536" height="834" />
     </state>
     <state x="46" y="155" width="672" height="678" key="search.everywhere.popup/0.0.1536.834@0.0.1536.834" timestamp="1589528703037" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/cs_1$All_in_cs_1.ic" NAME="All in cs_1 Coverage Results" MODIFIED="1589531619467" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+    <SUITE FILE_PATH="coverage/cs_1$All_in_cs_1.ic" NAME="All in cs_1 Coverage Results" MODIFIED="1589542710121" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
     <SUITE FILE_PATH="coverage/cs_1$CipherXOR.ic" NAME="CipherXOR Coverage Results" MODIFIED="1589532619322" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>com.ksondzyk.*</FILTER>
     </SUITE>
