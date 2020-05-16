@@ -1,4 +1,5 @@
 package com.ksondzyk;
+import com.google.common.primitives.UnsignedLong;
 import lombok.Getter;
 
 import java.io.ByteArrayOutputStream;
@@ -15,18 +16,16 @@ public class Packet {
     public static final int W_CRC_16_OFFSET = 14;
     public static final int B_MSQ_OFFSET = 16;
 
-    private static final byte bMagic = 0x13;
-    /*private final byte bSrc;
-    private static long bPktId;
-    private int wLen;
-    private final Message bMsq;*/
-    private static long bPktId;
+    private static final Byte bMagic = 0x13;
+    private static UnsignedLong bPktId = UnsignedLong.ZERO;
+    private Short wCRC16_1;
+    private Short wCRC16_2;
 
 
     public Packet(byte bSrc, Message bMsq) throws IOException {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
-        bPktId++;
+        bPktId = bPktId.plus(UnsignedLong.ONE);
         data = fill();
     }
 
@@ -44,37 +43,48 @@ public class Packet {
 
     private byte[] fill() throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        ByteBuffer temp = ByteBuffer.allocate(B_SRC_OFFSET - B_MAGIC_OFFSET);
-        temp.put(bMagic);
-        bytes.write(temp.array());
-
-        temp = ByteBuffer.allocate(B_PKT_ID_OFFSET - B_SRC_OFFSET);
-        temp.put(bSrc);
-        bytes.write(temp.array());
-
-        temp = ByteBuffer.allocate(W_LEN_OFFSET - B_PKT_ID_OFFSET);
-        temp.putLong(bPktId);
-        bytes.write(temp.array());
-
         byte[] message = this.bMsq.toBytes();
         wLen = message.length;
-        temp = ByteBuffer.allocate(W_CRC_16_OFFSET - W_LEN_OFFSET);
-        temp.putInt(wLen);
-        bytes.write(temp.array());
-
-        temp = ByteBuffer.allocate(B_MSQ_OFFSET - W_CRC_16_OFFSET);
-        byte[] bytes013 = Arrays.copyOfRange(bytes.toByteArray(), B_MAGIC_OFFSET, W_CRC_16_OFFSET);
-        temp.putShort((short)CRC.calculateCRC(CRC.Parameters.CRC16,bytes013));
-        bytes.write(temp.array());
-
-        temp = ByteBuffer.allocate(message.length);
-        temp.put(message);
-        bytes.write(temp.array());
-
-        temp = ByteBuffer.allocate(B_MSQ_OFFSET - W_CRC_16_OFFSET);
-        byte[] bytes13end = Arrays.copyOfRange(bytes.toByteArray(), B_MSQ_OFFSET, B_MSQ_OFFSET + message.length);
-        temp.putShort((short)CRC.calculateCRC(CRC.Parameters.CRC16,bytes13end));
-        bytes.write(temp.array());
+        Integer packetLength = bMagic.BYTES+bSrc.BYTES+(W_LEN_OFFSET - B_PKT_ID_OFFSET)+wLen.BYTES+wCRC16_1.BYTES+message.length+wCRC16_2.BYTES;
+        ByteBuffer bb = ByteBuffer.allocate(packetLength);
+        bb.put(bMagic).put(bSrc).putLong(bPktId.longValue()).putInt(wLen);
+        byte[] bytes1 = Arrays.copyOfRange(bb.array(), B_MAGIC_OFFSET, W_CRC_16_OFFSET);
+        wCRC16_1 = (short)CRC.calculateCRC(CRC.Parameters.CRC16,bytes1);
+        bb.putShort(wCRC16_1).put(message);
+        byte[] bytes2 = Arrays.copyOfRange(bb.array(), B_MSQ_OFFSET, B_MSQ_OFFSET + message.length);
+        wCRC16_2 = (short)CRC.calculateCRC(CRC.Parameters.CRC16,bytes2);
+        bb.putShort(wCRC16_2);
+        bytes.write(bb.array());
         return bytes.toByteArray();
+
+    }
+
+    byte[] packet;
+    public Packet(byte[] packet) throws Exception {
+        ByteBuffer buffer = ByteBuffer.wrap(packet);
+        this.packet = packet;
+        Byte expectedBMagic = buffer.get();
+        if (!expectedBMagic.equals(bMagic))
+            throw new Exception("Unexpected bMagic");
+        bSrc = buffer.get();
+        bPktId = UnsignedLong.fromLongBits(buffer.getLong());
+        wLen = buffer.getInt();
+        wCRC16_1 = buffer.getShort();
+        byte[] messageBody = new byte[wLen-8];
+        bMsq = new Message(buffer.getInt(),buffer.getInt(), String.valueOf(buffer.get(messageBody)));
+        wCRC16_2 = buffer.getShort();
+        data = fill();
+    }
+
+    public boolean checkCRC() {
+        int wLen = packet.length-Packet.B_MSQ_OFFSET -(Packet.B_MSQ_OFFSET -Packet.W_CRC_16_OFFSET);
+        return(((short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(packet,Packet.B_MAGIC_OFFSET,Packet.W_CRC_16_OFFSET))== ByteBuffer.wrap(Arrays.copyOfRange(packet,Packet.W_CRC_16_OFFSET,Packet.B_MSQ_OFFSET)).getShort())&&
+                ((short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET,Packet.B_MSQ_OFFSET +wLen))== ByteBuffer.wrap(Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +wLen,Packet.B_MSQ_OFFSET +wLen+(Packet.B_MSQ_OFFSET -Packet.W_CRC_16_OFFSET))).getShort()));
+    }
+    public String getMessage(){
+        byte[] message = Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +Message.MESSAGE_OFFSET +12,packet.length-2-(Packet.B_MSQ_OFFSET - Packet.W_CRC_16_OFFSET));
+        String msg = new String(message);
+        msg = CipherXOR.decode(msg);
+        return msg;
     }
 }
