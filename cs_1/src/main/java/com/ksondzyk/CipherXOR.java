@@ -1,34 +1,29 @@
 package com.ksondzyk;
+import lombok.Builder;
+import lombok.Data;
 
+@Data
+@Builder(toBuilder = true)
 public class CipherXOR {
 
     private final static char KEY ='A';
 
-    public static String encode(String str){
+    private static String deencode(String string) {
+        String outputString = "";
+        int len = string.length();
 
+        for (int i = 0; i < len; i++)
+            outputString = outputString + (char) (string.charAt(i) ^ KEY);
 
-        String encr= "";
-
-
-        for (int i=0; i<str.length(); i++){
-            encr=encr+(char)(str.charAt(i)^KEY);
-        }
-
-        return encr;
-
+        return outputString;
     }
 
-    public static String decode(String str){
-
-        String encr= "";
-
-        for (int i=0; i<str.length(); i++){
-
-            encr=encr+(char)(str.charAt(i) ^KEY);
-        }
-
-        return encr;
-
+    public static String encode(final String string) {
+        return deencode(string);
     }
 
+    public static String decode(final String string) {
+        return deencode(string);
+    }
 }
+

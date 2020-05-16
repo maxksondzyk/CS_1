@@ -15,7 +15,7 @@ public class  PacketReceiver {
                 ((short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET,Packet.B_MSQ_OFFSET +wLen))== ByteBuffer.wrap(Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +wLen,Packet.B_MSQ_OFFSET +wLen+(Packet.B_MSQ_OFFSET -Packet.W_CRC_16_OFFSET))).getShort()));
     }
     public String getMessage(){
-        byte[] message = Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +Packet.Message.MESSAGE_OFFSET +12,packet.length-2-(Packet.B_MSQ_OFFSET - Packet.W_CRC_16_OFFSET));
+        byte[] message = Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +Message.MESSAGE_OFFSET +12,packet.length-2-(Packet.B_MSQ_OFFSET - Packet.W_CRC_16_OFFSET));
         String msg = new String(message);
         msg = CipherXOR.decode(msg);
         return msg;
