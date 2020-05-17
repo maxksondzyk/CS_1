@@ -1,10 +1,7 @@
 package com.ksondzyk;
-
 import org.json.JSONObject;
-import lombok.Data;
 import java.nio.ByteBuffer;
 
-@Data
 public class Message {
     public static final int C_TYPE_OFFSET = 0;
     public static final int B_USER_ID_OFFSET = 4;
