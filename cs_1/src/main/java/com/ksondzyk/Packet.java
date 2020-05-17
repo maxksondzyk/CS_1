@@ -17,9 +17,13 @@ public class Packet {
     private static final int B_MSQ_OFFSET = 16;
 
     private static final Byte bMagic = 0x13;
+    private static Byte bSrc;
     private static UnsignedLong bPktId = UnsignedLong.ZERO;
+    private static Integer wLen;
+    private static Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
+
 
     private byte[] packet;
     public Packet(byte bSrc, Message bMsq) throws IOException {
@@ -28,15 +32,6 @@ public class Packet {
         bPktId = bPktId.plus(UnsignedLong.ONE);
         data = fill();
     }
-
-    @Getter
-    Byte bSrc;
-
-    @Getter
-    Integer wLen;
-
-    @Getter
-    Message bMsq;
 
     @Getter
     private final byte[] data;

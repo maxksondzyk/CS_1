@@ -10,6 +10,7 @@ import java.io.IOException;
 public class AppTest extends TestCase {
 
 private String INPUT = "test";
+
     public void testCheckPacket() {
         try {
             Message testMessage = new Message(100, 7731265, INPUT);
