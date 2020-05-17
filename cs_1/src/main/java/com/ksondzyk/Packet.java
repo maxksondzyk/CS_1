@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class Packet {
     private static final int B_MAGIC_OFFSET = 0;
-    public static final int B_SRC_OFFSET = 1;
+    private static final int B_SRC_OFFSET = 1;
     private static final int B_PKT_ID_OFFSET = 2;
     private static final int W_LEN_OFFSET = 10;
     private static final int W_CRC_16_OFFSET = 14;
@@ -45,7 +45,7 @@ public class Packet {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         byte[] message = this.bMsq.toBytes();
         wLen = message.length;
-        Integer packetLength = bMagic.BYTES+bSrc.BYTES+(W_LEN_OFFSET - B_PKT_ID_OFFSET)+wLen.BYTES+wCRC16_1.BYTES+message.length+wCRC16_2.BYTES;
+        int packetLength = bMagic.BYTES+bSrc.BYTES+(W_LEN_OFFSET - B_PKT_ID_OFFSET)+wLen.BYTES+wCRC16_1.BYTES+message.length+wCRC16_2.BYTES;
         ByteBuffer bb = ByteBuffer.allocate(packetLength);
         bb.put(bMagic).put(bSrc).putLong(bPktId.longValue()).putInt(wLen);
         byte[] bytes1 = Arrays.copyOfRange(bb.array(), B_MAGIC_OFFSET, W_CRC_16_OFFSET);
