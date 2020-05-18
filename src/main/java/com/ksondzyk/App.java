@@ -11,7 +11,7 @@ public class App {
             //System.out.println(Arrays.toString(packet.getData()));
             Packet packetReceiver = new Packet(packet.getData());
             //System.out.println(Arrays.toString(packetReceiver.getData()));
-           // System.out.println("Message: "+packetReceiver.getMessage()+"\nPacket is intact: "+packetReceiver.checkCRC());
+          //  System.out.println("Message: "+packetReceiver.getMessage()+"\nPacket is intact: "+packetReceiver.checkCRC());
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {

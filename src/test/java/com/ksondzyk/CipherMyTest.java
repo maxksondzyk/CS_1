@@ -10,23 +10,24 @@ import static org.junit.Assert.*;
 
 public class CipherMyTest {
 
-    String s;
+    String testString;
     @Before
     public void setUp(){
-        s="Successful test";
+        testString="Successful test";
 
     }
 
 
     @Test
     public void encode() {
-        String encoded = CipherMy.encode(s);
-        Assert.assertNotEquals(s, encoded);
-        Assert.assertEquals(s, CipherMy.decode(encoded));
+        String encoded = CipherMy.encode(testString);
+        Assert.assertNotEquals(testString, encoded);
+        Assert.assertEquals(testString, CipherMy.decode(encoded));
     }
 
     @Test
     public void decode() {
-        Assert.assertEquals(s, CipherMy.decode( CipherMy.encode(s)));
+        String encoded = CipherMy.encode(testString);
+        Assert.assertEquals(testString, CipherMy.decode(encoded));
     }
 }
