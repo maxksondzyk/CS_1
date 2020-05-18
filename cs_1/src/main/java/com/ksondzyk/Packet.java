@@ -17,15 +17,14 @@ public class Packet {
     private static final int B_MSQ_OFFSET = 16;
 
     private static final Byte bMagic = 0x13;
-    private static Byte bSrc;
-    private static UnsignedLong bPktId = UnsignedLong.ZERO;
-    private static Integer wLen;
-    private static Message bMsq;
+    private Byte bSrc;
+    private UnsignedLong bPktId = UnsignedLong.ZERO;
+    private Integer wLen;
+    private Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
-
-
     private byte[] packet;
+
     public Packet(byte bSrc, Message bMsq) throws IOException {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
@@ -72,9 +71,9 @@ public class Packet {
     }
 
     public boolean checkCRC() {
-        int wLen = packet.length-Packet.B_MSQ_OFFSET -(Packet.B_MSQ_OFFSET -Packet.W_CRC_16_OFFSET);
+        int wLength = packet.length-Packet.B_MSQ_OFFSET -(Packet.B_MSQ_OFFSET -Packet.W_CRC_16_OFFSET);
         return(((short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(packet,Packet.B_MAGIC_OFFSET,Packet.W_CRC_16_OFFSET))== ByteBuffer.wrap(Arrays.copyOfRange(packet,Packet.W_CRC_16_OFFSET,Packet.B_MSQ_OFFSET)).getShort())&&
-                ((short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET,Packet.B_MSQ_OFFSET +wLen))== ByteBuffer.wrap(Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +wLen,Packet.B_MSQ_OFFSET +wLen+(Packet.B_MSQ_OFFSET -Packet.W_CRC_16_OFFSET))).getShort()));
+                ((short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET,Packet.B_MSQ_OFFSET +wLength))== ByteBuffer.wrap(Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +wLength,Packet.B_MSQ_OFFSET +wLength+(Packet.B_MSQ_OFFSET -Packet.W_CRC_16_OFFSET))).getShort()));
     }
     public String getMessage(){
         byte[] message = Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +Message.MESSAGE_OFFSET +12,packet.length-2-(Packet.B_MSQ_OFFSET - Packet.W_CRC_16_OFFSET));
