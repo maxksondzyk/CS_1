@@ -70,7 +70,7 @@ public class Packet {
         wCRC16_2 = buffer.getShort();
         data = fill();
     }
-
+/*
     public boolean checkCRC() {
         int wLength = packet.length-Packet.B_MSQ_OFFSET -(Packet.B_MSQ_OFFSET -Packet.W_CRC_16_OFFSET);
         return(((short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(packet,Packet.B_MAGIC_OFFSET,Packet.W_CRC_16_OFFSET))== ByteBuffer.wrap(Arrays.copyOfRange(packet,Packet.W_CRC_16_OFFSET,Packet.B_MSQ_OFFSET)).getShort())&&
@@ -82,4 +82,5 @@ public class Packet {
         msg = CipherMy.decode(msg);
         return msg;
     }
+*/
 }
