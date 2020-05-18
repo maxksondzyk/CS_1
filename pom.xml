@@ -41,6 +41,11 @@
       <artifactId>commons-codec</artifactId>
       <version>1.11</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.snksoft</groupId>
+      <artifactId>crc</artifactId>
+      <version>1.0.2</version>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

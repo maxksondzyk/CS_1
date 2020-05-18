@@ -1,4 +1,5 @@
 package com.ksondzyk;
+import com.github.snksoft.crc.CRC;
 import com.google.common.primitives.UnsignedLong;
 import lombok.Getter;
 
