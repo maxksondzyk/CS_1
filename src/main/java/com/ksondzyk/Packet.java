@@ -10,12 +10,6 @@ import java.util.Arrays;
 
 
 public class Packet {
-    private static final int B_MAGIC_OFFSET = 0;
-    private static final int B_SRC_OFFSET = 1;
-    private static final int B_PKT_ID_OFFSET = 2;
-    private static final int W_LEN_OFFSET = 10;
-    private static final int W_CRC_16_OFFSET = 14;
-    private static final int B_MSQ_OFFSET = 16;
 
     private static final Byte bMagic = 0x13;
     private Byte bSrc;
@@ -36,22 +30,28 @@ public class Packet {
     @Getter
     private final byte[] data;
 
-    private byte[] fill() throws IOException {
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+    private byte[] fill() {
+
         byte[] message = this.bMsq.toBytes();
         wLen = message.length;
-        int packetLength = bMagic.BYTES+bSrc.BYTES+(W_LEN_OFFSET - B_PKT_ID_OFFSET)+wLen.BYTES+wCRC16_1.BYTES+message.length+wCRC16_2.BYTES;
-        ByteBuffer bb = ByteBuffer.allocate(packetLength);
-        bb.put(bMagic).put(bSrc).putLong(bPktId.longValue()).putInt(wLen);
-        byte[] bytes1 = Arrays.copyOfRange(bb.array(), B_MAGIC_OFFSET, W_CRC_16_OFFSET);
-        wCRC16_1 = (short)CRC.calculateCRC(CRC.Parameters.CRC16,bytes1);
-        bb.putShort(wCRC16_1).put(message);
-        byte[] bytes2 = Arrays.copyOfRange(bb.array(), B_MSQ_OFFSET, B_MSQ_OFFSET + message.length);
-        wCRC16_2 = (short)CRC.calculateCRC(CRC.Parameters.CRC16,bytes2);
-        bb.putShort(wCRC16_2);
-        bytes.write(bb.array());
-        return bytes.toByteArray();
 
+        int packetFirstPartLength = bMagic.BYTES + bSrc.BYTES + Long.BYTES + wLen.BYTES;
+        ByteBuffer packetFirstPart = ByteBuffer.allocate(packetFirstPartLength)
+                                        .put(bMagic)
+                                        .put(bSrc)
+                                        .putLong(bPktId.longValue())
+                                        .putInt(wLen);
+
+        wCRC16_1 = (short)CRC.calculateCRC(CRC.Parameters.CRC16,packetFirstPart.array());
+        wCRC16_2 = (short)CRC.calculateCRC(CRC.Parameters.CRC16,message);
+
+        ByteBuffer packet = ByteBuffer.allocate(packetFirstPartLength + wCRC16_1.BYTES + message.length+ wCRC16_2.BYTES)
+                                        .put(packetFirstPart)
+                                        .putShort(wCRC16_1)
+                                        .put(message)
+                                        .putShort(wCRC16_2);
+
+        return packet.array();
     }
 
 
