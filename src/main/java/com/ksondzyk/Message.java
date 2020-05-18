@@ -3,30 +3,29 @@ import org.json.JSONObject;
 import java.nio.ByteBuffer;
 
 public class Message {
-    public static final int C_TYPE_OFFSET = 0;
-    public static final int B_USER_ID_OFFSET = 4;
-    public static final int MESSAGE_OFFSET = 8;
     private final int cType;
     private final int bUserId;
-    private final JSONObject message;
+    private final String message;
 
+    public static final int BYTES_WITHOUT_MESSAGE = Integer.BYTES + Integer.BYTES;
     public Message(int cType, int bUserId, String message) {
         this.cType = cType;
         this.bUserId = bUserId;
-        this.message = new JSONObject();
-        message = message.toLowerCase();
         message = CipherMy.encode(message);
-        this.message.put("MESSAGE", message);
+        this.message = message;
+    }
+    public Integer getMessageBytes() {
+        return message.length();
+    }
+    public int getMessageBytesLength() {
+        return BYTES_WITHOUT_MESSAGE + getMessageBytes();
     }
 
     public byte[] toBytes() {
-        byte[] res;
-        byte[] bytes = message.toString().getBytes();
-        ByteBuffer temp = ByteBuffer.allocate(8 + bytes.length);
-        temp.putInt(cType);
-        temp.putInt(bUserId);
-        temp.put(bytes);
-        res = temp.array();
-        return res;
+        ByteBuffer temp = ByteBuffer.allocate(getMessageBytesLength())
+        .putInt(cType)
+        .putInt(bUserId)
+        .put(message.getBytes());
+        return temp.array();
     }
 }
