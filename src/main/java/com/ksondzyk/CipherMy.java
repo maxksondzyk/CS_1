@@ -16,7 +16,7 @@ import java.util.Base64;
 
 public class CipherMy {
 
-    static final private String myKey = "EnctyptionKey";
+    private static final String myKey = "EnctyptionKey";
 
     private static Key setKey(String myKey)
     {
@@ -28,16 +28,12 @@ public class CipherMy {
             key = Arrays.copyOf(key, 16);
             return new SecretKeySpec(key, "AES");//This class specifies a secret key in a provider-independent fashion. It can be used to construct a SecretKey from a byte array
         }
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        catch (UnsupportedEncodingException e) {
+        catch (NoSuchAlgorithmException |
+                UnsupportedEncodingException e) {
             e.printStackTrace();
         }
         return null;
     }
-
-
 
 
     public static String encode(final String message) {
@@ -53,20 +49,15 @@ public class CipherMy {
                 byte[] cipherText = cipher.doFinal(message.getBytes("UTF-8"));
                 return Base64.getEncoder().encodeToString(cipherText);
 
-        } catch (NoSuchAlgorithmException e1) {
-            e1.printStackTrace();
-        } catch (InvalidKeyException e1) {
-            e1.printStackTrace();
-        } catch (NoSuchPaddingException e1) {
-            e1.printStackTrace();
-        } catch (BadPaddingException e1) {
-            e1.printStackTrace();
-        } catch (UnsupportedEncodingException e1) {
-            e1.printStackTrace();
-        } catch (IllegalBlockSizeException e1) {
+        } catch (NoSuchAlgorithmException |
+                IllegalBlockSizeException |
+                UnsupportedEncodingException |
+                BadPaddingException |
+                NoSuchPaddingException |
+                InvalidKeyException e1) {
             e1.printStackTrace();
         }
-return null;
+        return null;
 
     }
 
@@ -82,18 +73,11 @@ return null;
                 byte[] cipherText = cipher.doFinal(Base64.getDecoder().decode(message));
                 return new String(cipherText);
 
-
-
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
+        } catch (NoSuchAlgorithmException |
+                NoSuchPaddingException |
+                InvalidKeyException |
+                BadPaddingException |
+                IllegalBlockSizeException e) {
             e.printStackTrace();
         }
 
