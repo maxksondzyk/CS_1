@@ -14,11 +14,11 @@ public class Packet {
     private Byte bSrc;
     private UnsignedLong bPktId = UnsignedLong.ZERO;
     private Integer wLen;
-    private Message bMsq;
+    private final Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
 
-    public Packet(byte bSrc, Message bMsq) throws IOException {
+    public Packet(byte bSrc, Message bMsq) {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
         bPktId = bPktId.plus(UnsignedLong.ONE);
@@ -31,7 +31,6 @@ public class Packet {
     private byte[] fill() {
 
         byte[] message = this.bMsq.toBytes();
-
         wLen = message.length;
 
         Integer packetFirstPartLength = bMagic.BYTES + bSrc.BYTES + Long.BYTES + wLen.BYTES;
@@ -48,8 +47,7 @@ public class Packet {
                 .put(message).array();
 
         wCRC16_2 = (short)CRC.calculateCRC(CRC.Parameters.CRC16,packetPartSecond);
-
-
+        //System.out.println(Arrays.toString(packetPartSecond));
         Integer packetLength = packetFirstPartLength + wCRC16_1.BYTES + packetPartSecondLength + wCRC16_2.BYTES;
 
         return ByteBuffer.allocate(packetLength).put(packetFirstPart).putShort(wCRC16_1).put(packetPartSecond).putShort(wCRC16_2).array();
@@ -59,10 +57,12 @@ public class Packet {
 
 
     public Packet(byte[] packet) throws Exception {
+        data = packet;
         ByteBuffer bb = ByteBuffer.wrap(packet);
         Byte expectedBMagic = bb.get();
-        if (!expectedBMagic.equals(bMagic))
+        if (!expectedBMagic.equals(bMagic)) {
             throw new Exception("Unexpected bMagic");
+        }
         bSrc = bb.get();
         bPktId = UnsignedLong.fromLongBits(bb.getLong());
         wLen = bb.getInt();
@@ -70,19 +70,32 @@ public class Packet {
         byte[] messageBody = new byte[wLen-8];
         bMsq = new Message(bb.getInt(), bb.getInt(), String.valueOf(bb.get(messageBody)));
         wCRC16_2 = bb.getShort();
-        data = fill();
+        if(!checkCRC()){
+            throw new Exception("The packet has been damaged");
+        }
     }
 
-//    public boolean checkCRC() {
-//    byte[] firstCRC = Arrays.copyOfRange(data,Packet.B_MAGIC_OFFSET,Packet.W_CRC_16_OFFSET);
-//        return(((short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(data,Packet.B_MAGIC_OFFSET,Packet.W_CRC_16_OFFSET))== ByteBuffer.wrap(Arrays.copyOfRange(packet,Packet.W_CRC_16_OFFSET,Packet.B_MSQ_OFFSET)).getShort())&&
-//                ((short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(data,Packet.B_MSQ_OFFSET,Packet.B_MSQ_OFFSET +wLength))== ByteBuffer.wrap(Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +wLength,Packet.B_MSQ_OFFSET +wLength+(Packet.B_MSQ_OFFSET -Packet.W_CRC_16_OFFSET))).getShort()));
-//    }
-//    public String getMessage(){
-//        byte[] message = Arrays.copyOfRange(packet,Packet.B_MSQ_OFFSET +Message.MESSAGE_OFFSET +12,packet.length-2-(Packet.B_MSQ_OFFSET - Packet.W_CRC_16_OFFSET));
-//        String msg = new String(message);
-//        msg = CipherMy.decode(msg);
-//        return msg;
-//    }
+    public boolean checkCRC() {
+        Integer packetFirstPartLength = bMagic.BYTES + bSrc.BYTES + Long.BYTES + wLen.BYTES;
+
+        byte[] packetFirstPart = ByteBuffer.allocate(packetFirstPartLength)
+                .put(bMagic)
+                .put(bSrc)
+                .putLong(bPktId.longValue())
+                .putInt(wLen).array();
+//
+        Short wCRC16_1_test = (short)CRC.calculateCRC(CRC.Parameters.CRC16,packetFirstPart);
+//    //System.out.println(Arrays.toString(this.bMsq.toBytes()));
+//        Short wCRC16_2_test = (short)CRC.calculateCRC(CRC.Parameters.CRC16,this.bMsq.toBytes());
+
+        return (wCRC16_1_test.equals(wCRC16_1))&&
+                (short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(data,16,16 +wLen))== ByteBuffer.wrap(Arrays.copyOfRange(data,16 +wLen,16 +wLen+2)).getShort();
+    }
+    public String getMessage(){
+        byte[] message = Arrays.copyOfRange(data,24,16+wLen);
+        String msg = new String(message);
+        msg = CipherMy.decode(msg);
+        return msg;
+    }
 
 }
