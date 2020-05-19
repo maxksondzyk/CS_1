@@ -1,15 +1,9 @@
 package com.ksondzyk;
 
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Base64;
 
@@ -28,8 +22,7 @@ public class CipherMy {
             key = Arrays.copyOf(key, 16);
             return new SecretKeySpec(key, "AES");//This class specifies a secret key in a provider-independent fashion. It can be used to construct a SecretKey from a byte array
         }
-        catch (NoSuchAlgorithmException |
-                UnsupportedEncodingException e) {
+        catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -49,12 +42,7 @@ public class CipherMy {
                 byte[] cipherText = cipher.doFinal(message.getBytes("UTF-8"));
                 return Base64.getEncoder().encodeToString(cipherText);
 
-        } catch (NoSuchAlgorithmException |
-                IllegalBlockSizeException |
-                UnsupportedEncodingException |
-                BadPaddingException |
-                NoSuchPaddingException |
-                InvalidKeyException e1) {
+        } catch (Exception e1) {
             e1.printStackTrace();
         }
         return null;
@@ -73,11 +61,7 @@ public class CipherMy {
                 byte[] cipherText = cipher.doFinal(Base64.getDecoder().decode(message));
                 return new String(cipherText);
 
-        } catch (NoSuchAlgorithmException |
-                NoSuchPaddingException |
-                InvalidKeyException |
-                BadPaddingException |
-                IllegalBlockSizeException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

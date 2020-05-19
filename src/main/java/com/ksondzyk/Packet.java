@@ -1,25 +1,27 @@
 package com.ksondzyk;
+
 import com.github.snksoft.crc.CRC;
 import com.google.common.primitives.UnsignedLong;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;
-import java.util.Arrays;
 
 
 public class Packet {
 
     private static final Byte bMagic = 0x13;
-    private Byte bSrc;
+    private final Byte bSrc;
     private UnsignedLong bPktId = UnsignedLong.ZERO;
     private Integer wLen;
     private final Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
+    private final String decodedMessage;
 
     public Packet(byte bSrc, Message bMsq) {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
+        decodedMessage = "forbidden";
         bPktId = bPktId.plus(UnsignedLong.ONE);
         data = fill();
     }
@@ -33,22 +35,26 @@ public class Packet {
         wLen = message.length;
 
         Integer packetFirstPartLength = bMagic.BYTES + bSrc.BYTES + Long.BYTES + wLen.BYTES;
+        Integer packetSecondPartLength = message.length;
+
         byte[] packetFirstPart = ByteBuffer.allocate(packetFirstPartLength)
                                         .put(bMagic)
                                         .put(bSrc)
                                         .putLong(bPktId.longValue())
                                         .putInt(wLen).array();
-
         wCRC16_1 = (short)CRC.calculateCRC(CRC.Parameters.CRC16,packetFirstPart);
 
-        Integer packetPartSecondLength = message.length;
-        byte[] packetPartSecond = ByteBuffer.allocate(packetPartSecondLength)
+        byte[] packetPartSecond = ByteBuffer.allocate(packetSecondPartLength)
                 .put(message).array();
-
         wCRC16_2 = (short)CRC.calculateCRC(CRC.Parameters.CRC16,packetPartSecond);
-        Integer packetLength = packetFirstPartLength + wCRC16_1.BYTES + packetPartSecondLength + wCRC16_2.BYTES;
 
-        return ByteBuffer.allocate(packetLength).put(packetFirstPart).putShort(wCRC16_1).put(packetPartSecond).putShort(wCRC16_2).array();
+        Integer packetLength = packetFirstPartLength + wCRC16_1.BYTES + packetSecondPartLength + wCRC16_2.BYTES;
+
+        return ByteBuffer.allocate(packetLength)
+                .put(packetFirstPart)
+                .putShort(wCRC16_1)
+                .put(packetPartSecond)
+                .putShort(wCRC16_2).array();
 }
 
     public Packet(byte[] packet) throws Exception {
@@ -67,32 +73,41 @@ public class Packet {
         wCRC16_1 = bb.getShort();
 
         byte[] messageBody = new byte[wLen-8];
-        bMsq = new Message(bb.getInt(), bb.getInt(), String.valueOf(bb.get(messageBody)),true);
+        int cType = bb.getInt();
+        int bUserId = bb.getInt();
+        bb.get(messageBody);
+        String message = new String(messageBody);
 
+        decodedMessage = CipherMy.decode(message);
+        bMsq = new Message(cType, bUserId, message,true);
         wCRC16_2 = bb.getShort();
+
         if(!checkCRC()){
             throw new Exception("The packet has been damaged");
         }
     }
 
     public boolean checkCRC() {
+        byte[] message = this.bMsq.toBytes();
         Integer packetFirstPartLength = bMagic.BYTES + bSrc.BYTES + Long.BYTES + wLen.BYTES;
+        Integer packetPartSecondLength = message.length;
+
         byte[] packetFirstPart = ByteBuffer.allocate(packetFirstPartLength)
                 .put(bMagic)
                 .put(bSrc)
                 .putLong(bPktId.longValue())
                 .putInt(wLen).array();
-        Short wCRC16_1_test = (short)CRC.calculateCRC(CRC.Parameters.CRC16,packetFirstPart);
+        byte[] packetPartSecond = ByteBuffer.allocate(packetPartSecondLength)
+                .put(message).array();
 
-        Short wCRC16_2_test = (short)CRC.calculateCRC(CRC.Parameters.CRC16,Arrays.copyOfRange(data,16,16 +wLen));
-        return (wCRC16_1_test.equals(wCRC16_1))&&
-                (wCRC16_2_test.equals(wCRC16_2));
+        Short wCRC16_1_test = (short)CRC.calculateCRC(CRC.Parameters.CRC16,packetFirstPart);
+        Short wCRC16_2_test = (short)CRC.calculateCRC(CRC.Parameters.CRC16,packetPartSecond);
+
+        return (wCRC16_1_test.equals(wCRC16_1))&&(wCRC16_2_test.equals(wCRC16_2));
     }
 
     public String getMessage(){
-        byte[] message = Arrays.copyOfRange(data,24,16+wLen);
-        String msg = new String(message);
-        return CipherMy.decode(msg);
+        return decodedMessage;
     }
 
 }

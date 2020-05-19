@@ -1,13 +1,17 @@
 package com.ksondzyk;
-import org.json.JSONObject;
+
+import lombok.Getter;
+
 import java.nio.ByteBuffer;
 
 public class Message {
     private final int cType;
     private final int bUserId;
+    @Getter
     private final String message;
 
     public static final int BYTES_WITHOUT_MESSAGE = Integer.BYTES + Integer.BYTES;
+
     public Message(int cType, int bUserId, String message,boolean encoded)
     {
         this.cType = cType;
@@ -34,6 +38,7 @@ public class Message {
         .putInt(cType)
         .putInt(bUserId)
         .put(message.getBytes());
+
         return temp.array();
     }
 }
