@@ -1,10 +1,12 @@
 package com.ksondzyk;
-import org.json.JSONObject;
+import lombok.Getter;
+
 import java.nio.ByteBuffer;
 
 public class Message {
     private final int cType;
     private final int bUserId;
+    @Getter
     private final String message;
 
     public static final int BYTES_WITHOUT_MESSAGE = Integer.BYTES + Integer.BYTES;
