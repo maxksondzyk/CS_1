@@ -1,5 +1,7 @@
 package com.ksondzyk;
 
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
 import junit.framework.TestCase;
 import org.junit.Assert;
 

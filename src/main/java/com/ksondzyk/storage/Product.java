@@ -1,4 +1,4 @@
-package com.ksondzyk;
+package com.ksondzyk.storage;
 
 import lombok.Getter;
 import lombok.Setter;

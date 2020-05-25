@@ -1,7 +1,9 @@
-package com.ksondzyk;
+package com.ksondzyk.entities;
 
 import com.github.snksoft.crc.CRC;
 import com.google.common.primitives.UnsignedLong;
+import com.ksondzyk.CipherMy;
+import com.ksondzyk.entities.Message;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;
@@ -9,7 +11,7 @@ import java.nio.ByteBuffer;
 
 public class Packet {
 
-    private static final Byte bMagic = 0x13;
+    public static final Byte bMagic = 0x13;
     private final Byte bSrc;
     private UnsignedLong bPktId = UnsignedLong.ZERO;
     private Integer wLen;
