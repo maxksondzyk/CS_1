@@ -1,10 +1,10 @@
-package com.ksondzyk;
+package com.ksondzyk.network.TCPNetwork;
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 
 import com.ksondzyk.network.Network;
-import com.ksondzyk.network.TCPNetwork;
+import com.ksondzyk.network.TCPNetwork_еуые;
 
 
 public class Client {
@@ -16,7 +16,7 @@ public class Client {
         Packet secondPacket = new Packet((byte) 1, secondTestMessage);
 
         try {
-            Network network = new TCPNetwork();
+            Network network = new TCPNetwork_еуые();
             network.connect();
 
             network.send(packet);
