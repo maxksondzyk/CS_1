@@ -28,7 +28,7 @@ public class ServerThread extends Thread {
         }
       //  System.out.println("Thread is running");
 
-        this.start();
+      //  this.start();
     }
 
     public void run(){
