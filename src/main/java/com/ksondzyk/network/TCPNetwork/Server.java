@@ -12,11 +12,9 @@ public class Server {
     public static void main(String[] args) {
        try {
             ServerSocket serverSocket = new ServerSocket(5023);
-           ExecutorService service = Executors.newFixedThreadPool(8);
+          // ExecutorService service = Executors.newFixedThreadPool(1);
 
-           while(true){
-               service.execute(new ServerThread(serverSocket.accept()));
-           }
+               ServerThread serverThread =new ServerThread(serverSocket.accept());
 
             /*  Network network = new TCPNetwork_еуые();
 

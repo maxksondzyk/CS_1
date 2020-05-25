@@ -15,6 +15,7 @@ public class Packet {
     private final Byte bSrc;
     private UnsignedLong bPktId = UnsignedLong.ZERO;
     private Integer wLen;
+    @Getter
     private final Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;

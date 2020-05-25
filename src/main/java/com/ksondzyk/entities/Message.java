@@ -6,6 +6,7 @@ import lombok.Getter;
 import java.nio.ByteBuffer;
 
 public class Message {
+    @Getter
     private final int cType;
     private final int bUserId;
     @Getter

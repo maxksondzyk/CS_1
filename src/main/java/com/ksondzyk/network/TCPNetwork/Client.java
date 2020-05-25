@@ -24,12 +24,12 @@ public class Client {
         Message secondTestMessage = new Message(1, 1, "notTime", false);
         Packet secondPacket = new Packet((byte) 1, secondTestMessage);
 
-        ExecutorService service = Executors.newFixedThreadPool(8);
+       // ExecutorService service = Executors.newFixedThreadPool(1);
         try {
             Socket socket = new Socket("localhost",5023);
-            while(true){
-                service.execute(new ClientThread(socket));
-            }
+
+                ClientThread clientThread = new ClientThread(socket);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

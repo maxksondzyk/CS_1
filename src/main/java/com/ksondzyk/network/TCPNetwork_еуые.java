@@ -31,7 +31,7 @@ public class TCPNetwork_еуые implements Network {
 
         socketOutputStream = socket.getOutputStream();
         serverInputStream = socket.getInputStream();
-        serverSocket.close();
+       // serverSocket.close();
 
     }
 

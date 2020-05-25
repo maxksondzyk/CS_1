@@ -15,13 +15,14 @@ public class PacketReceiver {
    public Packet receive(InputStream serverInputStream) throws Exception {
 
        byte buffer[] = new byte[1024];
-       while (serverInputStream.read() != Packet.bMagic.byteValue()) ;
+    //   System.out.println(serverInputStream.read());
+       while (serverInputStream.read() != Packet.bMagic);
 
        ByteArrayOutputStream packetBytes = new ByteArrayOutputStream();
 
        ByteBuffer byteBuffer;
 
-       packetBytes.write(Packet.bMagic.byteValue());
+       packetBytes.write(Packet.bMagic);
        serverInputStream.read(buffer, 0, 1+8);
        packetBytes.write(buffer, 0, 1+8); //wrote first part
 

@@ -16,6 +16,7 @@ public class ServerThread extends Thread {
     private Socket socket;
 
     ServerThread(Socket socket){
+
         this.socket= socket;
 
         try {
@@ -27,32 +28,30 @@ public class ServerThread extends Thread {
         }
       //  System.out.println("Thread is running");
 
-        //this.start();
+        this.start();
     }
 
     public void run(){
-        //while (true) {
-
             try {
-                System.out.println("Thread is running");
-                PacketReceiver pr = new PacketReceiver();
-                Packet packet = null;
-                try {
-                    packet = pr.receive(is);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
 
-                System.out.println("Received"+currentThread().getName());
+                    System.out.println("Thread is running");
+                    PacketReceiver pr = new PacketReceiver();
+                    Packet packet = null;
+                    try {
+                        packet = pr.receive(is);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
 
-                System.err.println(packet.getMessage());
+                    System.out.println("Received" + currentThread().getName());
 
-                Processor.process(packet, os);
+                    System.err.println(packet.getMessage());
+
+                    Processor.process(packet, os);
             }catch (Exception e){
 
             }
 
-        //}
 
     }
 

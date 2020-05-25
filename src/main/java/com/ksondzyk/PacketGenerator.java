@@ -13,7 +13,7 @@ public class PacketGenerator {
         array = new byte[7];
         rand = new Random();
         rand.nextBytes(array);
-        Packet packet = new Packet((byte)rand.nextInt(255),new Message(rand.nextInt(),rand.nextInt(),new String(array),false));
+        Packet packet = new Packet((byte)rand.nextInt(255),new Message(rand.nextInt(6),rand.nextInt(),new String(array),false));
         return packet;
     }
 }
