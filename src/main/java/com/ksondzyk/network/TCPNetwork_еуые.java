@@ -31,6 +31,7 @@ public class TCPNetwork_еуые implements Network {
 
         socketOutputStream = socket.getOutputStream();
         serverInputStream = socket.getInputStream();
+        serverSocket.close();
 
     }
 
@@ -45,9 +46,6 @@ public class TCPNetwork_еуые implements Network {
          System.err.println(packet.getMessage());
          //Processor.process(this, packet);
      }
-
-
-
 
 
     @Override
