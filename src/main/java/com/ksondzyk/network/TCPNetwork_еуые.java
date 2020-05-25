@@ -11,7 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 
-public class TCPNetwork implements Network {
+public class TCPNetwork_еуые implements Network {
 
     Socket socket;
     ServerSocket serverSocket;
@@ -23,8 +23,8 @@ public class TCPNetwork implements Network {
     @Override
     public void listen() throws IOException {
 
-        serverSocket = new ServerSocket(5023);
-       // ExecutorService service = Executors.newFixedThreadPool(8);
+        serverSocket = new ServerSocket(2305);
+       //ExecutorService service = Executors.newFixedThreadPool(8);
 
         socket = serverSocket.accept();
 
@@ -44,7 +44,7 @@ public class TCPNetwork implements Network {
          System.out.println("Received");
 
          System.err.println(packet.getMessage());
-         Processor.process(this, packet);
+         //Processor.process(this, packet);
      }
 
 
@@ -69,6 +69,6 @@ public class TCPNetwork implements Network {
 
     @Override
     public void close() throws IOException {
-socket.close();
+        socket.close();
     }
 }
