@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class PacketGenerator {
 
-    Packet newPacket(){
+    public Packet newPacket(){
         Random rand;
         byte[] array;
         array = new byte[7];
