@@ -3,13 +3,7 @@ package com.ksondzyk.network.TCPNetwork;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 
-import com.ksondzyk.network.Network;
-import com.ksondzyk.network.TCPNetwork_еуые;
-
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -24,12 +18,14 @@ public class Client {
         Message secondTestMessage = new Message(1, 1, "notTime", false);
         Packet secondPacket = new Packet((byte) 1, secondTestMessage);
 
-       // ExecutorService service = Executors.newFixedThreadPool(1);
+        ExecutorService service = Executors.newFixedThreadPool(2);
         try {
             Socket socket = new Socket("localhost",5023);
 
-                ClientThread clientThread = new ClientThread(socket);
-
+              //  ClientThread clientThread = new ClientThread(socket);
+            for(int i = 0;i<2;i++){
+                service.execute(new ClientThread(socket));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

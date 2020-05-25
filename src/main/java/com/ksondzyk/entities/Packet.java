@@ -24,9 +24,11 @@ public class Packet {
     public Packet(byte bSrc, Message bMsq) {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
-        decodedMessage = "forbidden";
-        bPktId = bPktId.plus(UnsignedLong.ONE);
-        data = fill();
+        synchronized (this.bMsq) {
+            decodedMessage = "forbidden";
+            bPktId = bPktId.plus(UnsignedLong.ONE);
+            data = fill();
+        }
     }
 
     @Getter
@@ -62,31 +64,32 @@ public class Packet {
 
     public Packet(byte[] packet) throws Exception {
         data = packet;
+        synchronized (this.data) {
+            ByteBuffer bb = ByteBuffer.wrap(packet);
 
-        ByteBuffer bb = ByteBuffer.wrap(packet);
+            Byte expectedBMagic = bb.get();
+            if (!expectedBMagic.equals(bMagic)) {
+                throw new Exception("Unexpected bMagic");
+            }
 
-        Byte expectedBMagic = bb.get();
-        if (!expectedBMagic.equals(bMagic)) {
-            throw new Exception("Unexpected bMagic");
-        }
+            bSrc = bb.get();
+            bPktId = UnsignedLong.fromLongBits(bb.getLong());
+            wLen = bb.getInt();
+            wCRC16_1 = bb.getShort();
 
-        bSrc = bb.get();
-        bPktId = UnsignedLong.fromLongBits(bb.getLong());
-        wLen = bb.getInt();
-        wCRC16_1 = bb.getShort();
+            byte[] messageBody = new byte[wLen - 8];
+            int cType = bb.getInt();
+            int bUserId = bb.getInt();
+            bb.get(messageBody);
+            String message = new String(messageBody);
 
-        byte[] messageBody = new byte[wLen-8];
-        int cType = bb.getInt();
-        int bUserId = bb.getInt();
-        bb.get(messageBody);
-        String message = new String(messageBody);
+            decodedMessage = CipherMy.decode(message);
+            bMsq = new Message(cType, bUserId, message, true);
+            wCRC16_2 = bb.getShort();
 
-        decodedMessage = CipherMy.decode(message);
-        bMsq = new Message(cType, bUserId, message,true);
-        wCRC16_2 = bb.getShort();
-
-        if(!checkCRC()){
-            throw new Exception("The packet has been damaged");
+            if (!checkCRC()) {
+                throw new Exception("The packet has been damaged");
+            }
         }
     }
 

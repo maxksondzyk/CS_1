@@ -15,7 +15,7 @@ public class ClientThread extends Thread {
 
     private InputStream is;
     private OutputStream os;
-    private Socket socket;
+    private final Socket socket;
 
     ClientThread(Socket socket){
         this.socket= socket;
@@ -28,33 +28,35 @@ public class ClientThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.start();
+      //  this.start();
     }
 
     public void run(){
 
         //while (true) {
             try {
-                PacketGenerator pg = new PacketGenerator();
-                Packet packet = pg.newPacket();
-                byte[] packetBytes = packet.getData();
+                synchronized (socket) {
+                    PacketGenerator pg = new PacketGenerator();
+                    Packet packet = pg.newPacket();
+                    byte[] packetBytes = packet.getData();
 
-                os.write(packetBytes);
-                os.flush();
+                    os.write(packetBytes);
+                    os.flush();
 
-                System.out.println("Send" + currentThread().getName());
-                System.out.println(Arrays.toString(packetBytes) + "\n");
+                    System.out.println("Send" + currentThread().getName());
+                    System.out.println(Arrays.toString(packetBytes) + "\n");
 
-                PacketReceiver pr = new PacketReceiver();
-                Packet packetReceived = pr.receive(is);
-                System.out.println("Received" + currentThread().getName());
-                System.out.println(Arrays.toString(packetBytes) + "\n");
+                    PacketReceiver pr = new PacketReceiver();
+                    Packet packetReceived = pr.receive(is);
+                    System.out.println("Received" + currentThread().getName());
+                    System.out.println(Arrays.toString(packetBytes) + "\n");
 
-                // System.err.println(packetReceived.getMessage());
+                    // System.err.println(packetReceived.getMessage());
 
-                Processor.process(packet, os);
+                    Processor.process(packet, os);
+                }
             } catch (Exception e) {
-
+                System.err.println(e.getMessage());
             }
        // }
     }

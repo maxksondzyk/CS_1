@@ -13,12 +13,10 @@ public class ServerThread extends Thread {
 
     private InputStream is;
     private OutputStream os;
-    private Socket socket;
+    private final Socket socket;
 
     ServerThread(Socket socket){
-
         this.socket= socket;
-
         try {
             is = socket.getInputStream();
             os = socket.getOutputStream();
@@ -33,25 +31,25 @@ public class ServerThread extends Thread {
 
     public void run(){
             try {
+                synchronized (socket) {
+                        System.out.println("Thread is running");
+                        PacketReceiver pr = new PacketReceiver();
+                        Packet packet = null;
+                        try {
+                            packet = pr.receive(is);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-                    System.out.println("Thread is running");
-                    PacketReceiver pr = new PacketReceiver();
-                    Packet packet = null;
-                    try {
-                        packet = pr.receive(is);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        System.out.println("Received" + currentThread().getName());
+
+                        System.err.println(packet.getMessage());
+
+                        Processor.process(packet, os);
                     }
-
-                    System.out.println("Received" + currentThread().getName());
-
-                    System.err.println(packet.getMessage());
-
-                    Processor.process(packet, os);
             }catch (Exception e){
 
             }
-
 
     }
 

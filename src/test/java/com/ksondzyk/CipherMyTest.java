@@ -10,9 +10,7 @@ public class CipherMyTest {
     @Before
     public void setUp(){
         testString="Successful test";
-
     }
-
 
     @Test
     public void encode() {
