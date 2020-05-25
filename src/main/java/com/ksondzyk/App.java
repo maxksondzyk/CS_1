@@ -1,5 +1,8 @@
 package com.ksondzyk;
 
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
+
 public class App {
     public static void main(String[] args) {
         try {

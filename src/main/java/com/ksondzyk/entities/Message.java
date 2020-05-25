@@ -1,5 +1,6 @@
-package com.ksondzyk;
+package com.ksondzyk.entities;
 
+import com.ksondzyk.CipherMy;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;

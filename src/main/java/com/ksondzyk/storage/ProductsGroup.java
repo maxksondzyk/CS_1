@@ -1,5 +1,6 @@
-package com.ksondzyk;
+package com.ksondzyk.storage;
 
+import com.ksondzyk.storage.Product;
 import lombok.Getter;
 import lombok.Setter;
 
