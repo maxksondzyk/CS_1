@@ -1,5 +1,8 @@
 package com.ksondzyk;
 
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
+
 import java.util.Random;
 
 public class PacketGenerator {

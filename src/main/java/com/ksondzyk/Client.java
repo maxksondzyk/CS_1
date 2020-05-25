@@ -1,9 +1,5 @@
 package com.ksondzyk;
 
-<<<<<<< HEAD
-public class Client {
-}
-=======
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 
@@ -35,5 +31,3 @@ public class Client {
         }
     }
 }
-
->>>>>>> ba09185eb547c565fd32ce0c7b3b523cfe8a18ee

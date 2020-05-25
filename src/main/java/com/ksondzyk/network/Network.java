@@ -5,9 +5,6 @@ import com.ksondzyk.entities.Packet;
 import java.io.IOException;
 
 public interface Network {
-
-
-
         void listen() throws IOException;
         void receive() throws  Exception;
 

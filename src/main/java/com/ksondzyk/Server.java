@@ -1,9 +1,5 @@
 package com.ksondzyk;
 
-<<<<<<< HEAD
-public class Server {
-}
-=======
 import com.ksondzyk.network.Network;
 import com.ksondzyk.network.TCPNetwork;
 
@@ -27,4 +23,3 @@ public class Server {
         }
     }
 }
->>>>>>> ba09185eb547c565fd32ce0c7b3b523cfe8a18ee
