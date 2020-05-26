@@ -11,11 +11,12 @@ import static java.lang.Thread.currentThread;
 public class PacketSender {
 
     public void send(Packet packet, OutputStream os) throws IOException {
-        byte[] packetBytes = packet.getData();
 
-        os.write(packetBytes);
-        os.flush();
+            byte[] packetBytes = packet.getData();
 
-        System.out.println("Send " + currentThread().getName());
+            os.write(packetBytes);
+            os.flush();
+
+            System.out.println("Send " + currentThread().getName());
     }
 }

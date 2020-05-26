@@ -67,9 +67,8 @@ public class PacketReceiver {
                throw new PacketDamagedException(crc16_2_real, crc16_2_test);
            packetBytes.write(buffer, 0, Short.BYTES);
        }
-
-
-       return new Packet(packetBytes.toByteArray());
+       Packet packet = new Packet(packetBytes.toByteArray());
+       return packet;
 
 
    }

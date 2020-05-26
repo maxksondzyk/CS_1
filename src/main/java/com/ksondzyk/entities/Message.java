@@ -11,14 +11,16 @@ public class Message {
     @Getter
     private final int bUserId;
     @Getter
-    private final String message;
+    private String message;
 
     public static final int BYTES_WITHOUT_MESSAGE = Integer.BYTES + Integer.BYTES;
 
-    public Message(int cType, int bUserId, String message)
+    public Message(int cType, int bUserId, String message, boolean encoded)
     {
         this.cType = cType;
         this.bUserId = bUserId;
+        //if(!encoded)
+        //message = CipherMy.encode(message);
 
         this.message = message;
     }

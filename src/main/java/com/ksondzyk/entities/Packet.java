@@ -18,9 +18,11 @@ public class Packet {
     private UnsignedLong bPktId = UnsignedLong.ZERO;
     private Integer wLen;
     @Getter
-    private final Message bMsq;
+    private Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
+
+    private String decodedMessage = "forbidden";
 
     public Packet(byte bSrc, Message bMsq) {
         this.bSrc = bSrc;
@@ -92,9 +94,9 @@ public class Packet {
             bb.get(messageBody);
             String message = new String(messageBody);
 
-            bMsq = new Message(cType, bUserId, message);
+            bMsq = new Message(cType, bUserId, message,true);
             wCRC16_2 = bb.getShort();
-
+          //  decodedMessage = CipherMy.decode(bMsq.getMessage());
             if (!checkCRC()) {
                 throw new PacketDamagedException("CRC not expected ");
             }

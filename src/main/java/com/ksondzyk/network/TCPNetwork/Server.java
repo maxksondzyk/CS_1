@@ -16,7 +16,7 @@ public class Server {
         System.out.println("Сервер запущено.");
         ExecutorService service = Executors.newFixedThreadPool(7);
         try {
-            for(int i = 0;i<3;i++){//while (true) {
+            for(int i = 0;i<5;i++){//while (true) {
                 Socket socket = s.accept();
                 service.execute(new ServerThread(socket));
             }

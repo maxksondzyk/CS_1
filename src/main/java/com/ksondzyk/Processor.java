@@ -25,22 +25,22 @@ public class Processor {
 
             switch (cType) {
                 case 1:
-                    answerMessage = new Message(0, 1, "the amount of products");
+                    answerMessage = new Message(0, 1, "the amount of products",false);
                     break;
                 case 2:
-                    answerMessage = new Message(0, 1, "some product has been deleted");
+                    answerMessage = new Message(0, 1, "some product has been deleted",false);
                     break;
                 case 3:
-                    answerMessage = new Message(0, 1, "some product has been added:");
+                    answerMessage = new Message(0, 1, "some product has been added:",false);
                     break;
                 case 4:
-                    answerMessage = new Message(0, 1, "a group of product has been added");
+                    answerMessage = new Message(0, 1, "a group of product has been added",false);
                     break;
                 case 5:
-                    answerMessage = new Message(0, 1, "a product's name has been added to a group");
+                    answerMessage = new Message(0, 1, "a product's name has been added to a group",false);
                     break;
                 case 6:
-                    answerMessage = new Message(0, 1, "the price has been set");
+                    answerMessage = new Message(0, 1, "the price has been set",false);
                     break;
                 default:
                     throw new Exception();
