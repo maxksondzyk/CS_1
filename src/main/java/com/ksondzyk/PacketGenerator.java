@@ -14,7 +14,7 @@ public class PacketGenerator {
 
 
         return  new Packet((byte)rand.nextInt(255),
-                new Message(rand.nextInt(6), clientID, message));
+                new Message(rand.nextInt(5)+1, clientID, message));
 
     }
     public static Packet newPacket(){
@@ -24,7 +24,7 @@ public class PacketGenerator {
 
 
         return  new Packet((byte)rand.nextInt(255),
-                                    new Message(rand.nextInt(6),
+                                    new Message(rand.nextInt(5)+1,
                                             rand.nextInt(),
                                             message));
 

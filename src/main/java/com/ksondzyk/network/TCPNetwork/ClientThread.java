@@ -3,15 +3,14 @@ package com.ksondzyk.network.TCPNetwork;
 import com.ksondzyk.PacketGenerator;
 import com.ksondzyk.PacketReceiver;
 import com.ksondzyk.PacketSender;
-import com.ksondzyk.Processor;
 import com.ksondzyk.entities.Packet;
 import lombok.Getter;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.Date;
 
 public class ClientThread extends Thread {
     private Socket socket;
