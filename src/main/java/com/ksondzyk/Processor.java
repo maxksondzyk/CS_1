@@ -1,5 +1,6 @@
 package com.ksondzyk;
 
+import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 
@@ -16,6 +17,8 @@ public class Processor {
     public static void process(Packet packet, OutputStream os) throws Exception {
         synchronized (storage) {
             Message answerMessage;
+          //  int bUserId = packet.getBMsq().getBUserId();
+            UnsignedLong bPktId= packet.getBPktId();
             int cType = packet.getBMsq().getCType();
             switch (cType) {
                 case 1:
@@ -39,7 +42,7 @@ public class Processor {
                 default:
                     throw new Exception();
             }
-            Packet answerPacket = new Packet((byte) 1, answerMessage);
+            Packet answerPacket = new Packet((byte) 1,bPktId, answerMessage);
             System.out.println(CipherMy.decode(answerMessage.getMessage()));
             try {
                 PacketSender sender = new PacketSender();

@@ -13,6 +13,7 @@ public class Packet {
 
     public static final Byte bMagic = 0x13;
     private final Byte bSrc;
+    @Getter
     private UnsignedLong bPktId = UnsignedLong.ZERO;
     private Integer wLen;
     @Getter
@@ -31,6 +32,16 @@ public class Packet {
         }
     }
 
+
+    public Packet(byte bSrc, UnsignedLong bPktId, Message bMsq) {
+        this.bSrc = bSrc;
+        this.bMsq = bMsq;
+        synchronized (this.bMsq) {
+            decodedMessage = "forbidden";
+            bPktId = bPktId;
+            data = fill();
+        }
+    }
     @Getter
     private final byte[] data;
 

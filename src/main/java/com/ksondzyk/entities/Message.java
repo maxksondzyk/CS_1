@@ -8,6 +8,7 @@ import java.nio.ByteBuffer;
 public class Message {
     @Getter
     private final int cType;
+    @Getter
     private final int bUserId;
     @Getter
     private final String message;
