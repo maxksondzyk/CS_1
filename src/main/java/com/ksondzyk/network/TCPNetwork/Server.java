@@ -16,16 +16,11 @@ public class Server {
         System.out.println("Сервер запущено.");
         ExecutorService service = Executors.newFixedThreadPool(7);
         try {
-            while (true) {
+            for(int i = 0;i<3;i++){//while (true) {
                 Socket socket = s.accept();
                 service.execute(new ServerThread(socket));
-//                try {
-//                    new ServerThread(socket);
-//                } catch (IOException e) {
-//                    //в разі невдачі закриваємо сокет
-//                    socket.close();
-//                }
             }
+            service.shutdown();
         } finally {
             s.close();
         }

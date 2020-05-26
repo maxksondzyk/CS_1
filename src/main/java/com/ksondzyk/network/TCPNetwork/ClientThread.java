@@ -37,7 +37,6 @@ public class ClientThread extends Thread {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
 
-            //start();
         }
         catch (IOException e) {
             // Сокет має бути закритий при будь якій помилці
