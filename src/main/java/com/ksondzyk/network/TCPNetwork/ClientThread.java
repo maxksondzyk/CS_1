@@ -57,25 +57,28 @@ public class ClientThread extends Thread {
 
 
     public void run(){
-            try {
+            try
+            {
                 // client sends messages and gets replies
 
-                for(int i=0; i<2; i++) {
-    PacketGenerator pg = new PacketGenerator();
-    Packet packet = pg.newPacket();
+                for(int i=0; i<2; i++)
+                {
+                    PacketGenerator pg = new PacketGenerator();
+                    Packet packet = pg.newPacket();
 
-    PacketSender sender = new PacketSender();
-    sender.send(packet, outputStream);
+                    PacketSender sender = new PacketSender();
+                    sender.send(packet, outputStream);
 
-    PacketReceiver pr = new PacketReceiver();
-    Packet packetReceived = pr.receive(inputStream);
+                PacketReceiver pr = new PacketReceiver();
+                Packet packetReceived = pr.receive(inputStream);
 
-    System.out.println("Received " + currentThread().getName());
-    System.out.println("Respond: " + packetReceived.getMessage());
+                System.out.println("Received " + currentThread().getName());
+                System.out.println("Respond: " + packetReceived.getMessage());
+                }
 
+                PacketSender fin= new PacketSender();
 
-
-}
+                fin.send(new PacketGenerator().newPacket(clientID,"END" ), outputStream);
 
                 System.out.println("END of "+currentThread().getName());
 
