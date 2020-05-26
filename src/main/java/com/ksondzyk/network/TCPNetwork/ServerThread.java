@@ -23,7 +23,7 @@ public class ServerThread extends Thread {
             os = socket.getOutputStream();
 
            System.out.println("Ready to run");
-           start();
+           //start();
     }
 
     public void run(){
@@ -41,7 +41,7 @@ public class ServerThread extends Thread {
 
                 Processor.process(packet, os);
             }
-            System.out.println("Закриваємо сокет на сервері");
+          //  System.out.println("Закриваємо сокет на сервері");
         } catch (IOException e) {
             System.err.println("IO Exception");
         } catch (Exception e) {
