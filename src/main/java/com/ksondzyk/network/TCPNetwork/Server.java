@@ -13,13 +13,16 @@ import java.util.concurrent.Executors;
 
 public class Server {
     public static void main(String[] args) {
-       try {
-           ServerSocket serverSocket = new ServerSocket(5023);
-           ExecutorService service = Executors.newFixedThreadPool(2);
+     start();
+    }
+    public static void start(){
+        try {
+            ServerSocket serverSocket = new ServerSocket(5023);
+            ExecutorService service = Executors.newFixedThreadPool(1);
 
-           for(;; ){
-               service.execute(new ServerThread(serverSocket.accept()));
-           }
+            while(true){
+                service.execute(new ServerThread(serverSocket.accept()));
+            }
 
             /*  Network network = new TCPNetwork_еуые();
 
@@ -34,8 +37,6 @@ public class Server {
             network.close();  */
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
-
-       }
+        }
     }
 }

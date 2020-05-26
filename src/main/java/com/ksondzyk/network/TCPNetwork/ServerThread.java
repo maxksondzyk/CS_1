@@ -31,8 +31,8 @@ public class ServerThread extends Thread {
 
     public void run(){
             try {
-                synchronized (socket) {
-                        System.out.println("Thread is running");
+               //synchronized (socket) {
+                   System.out.println("Thread is running");
                         PacketReceiver pr = new PacketReceiver();
                         Packet packet = null;
                         try {
@@ -46,7 +46,8 @@ public class ServerThread extends Thread {
                         System.err.println(packet.getMessage());
 
                         Processor.process(packet, os);
-                    }
+
+                 //   }
             }catch (Exception e){
 
             }

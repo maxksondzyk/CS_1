@@ -17,7 +17,7 @@ public class ClientThread extends Thread {
     private OutputStream os;
     private final Socket socket;
 
-    ClientThread(Socket socket){
+    public ClientThread(Socket socket){
         this.socket= socket;
 
         try {
@@ -35,7 +35,7 @@ public class ClientThread extends Thread {
 
         //while (true) {
             try {
-                synchronized (socket) {
+                //synchronized (socket) {
                     PacketGenerator pg = new PacketGenerator();
                     Packet packet = pg.newPacket();
                     byte[] packetBytes = packet.getData();
@@ -54,7 +54,7 @@ public class ClientThread extends Thread {
                     // System.err.println(packetReceived.getMessage());
 
                     Processor.process(packet, os);
-                }
+                //}
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }

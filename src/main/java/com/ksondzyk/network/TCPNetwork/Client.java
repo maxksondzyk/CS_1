@@ -12,25 +12,7 @@ import java.util.concurrent.Executors;
 public class Client {
 
     public static void main(String[] args) {
-        Message testMessage = new Message(1, 1, "time", false);
-        Packet packet = new Packet((byte) 1,  testMessage);
-
-        Message secondTestMessage = new Message(1, 1, "notTime", false);
-        Packet secondPacket = new Packet((byte) 1, secondTestMessage);
-
-        ExecutorService service = Executors.newFixedThreadPool(2);
-        try {
-            Socket socket = new Socket("localhost",5023);
-
-              //  ClientThread clientThread = new ClientThread(socket);
-            for(int i = 0;i<2;i++){
-                service.execute(new ClientThread(socket));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
+        start();
 //        try {
 //            Network network = new TCPNetwork_еуые();
 //            network.connect();
@@ -48,5 +30,25 @@ public class Client {
 //        }  catch (Exception e) {
 //            e.printStackTrace();
 //        }
+    }
+
+    public static void start(){
+        Message testMessage = new Message(1, 1, "time", false);
+        Packet packet = new Packet((byte) 1,  testMessage);
+
+        Message secondTestMessage = new Message(1, 1, "notTime", false);
+        Packet secondPacket = new Packet((byte) 1, secondTestMessage);
+
+        ExecutorService service = Executors.newFixedThreadPool(1);
+        try {
+            Socket socket = new Socket("localhost",5023);
+
+            //  ClientThread clientThread = new ClientThread(socket);
+            while(true){
+                service.execute(new ClientThread(socket));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

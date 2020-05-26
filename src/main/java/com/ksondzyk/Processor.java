@@ -13,7 +13,7 @@ import java.io.OutputStream;
 
 
 public class Processor {
-    static ProductsStorage storage = new ProductsStorage();
+    private static ProductsStorage storage = new ProductsStorage();
     public static void process(Packet packet, OutputStream os) throws Exception {
         synchronized (storage) {
             Message answerMessage;
@@ -51,6 +51,5 @@ public class Processor {
                 e.printStackTrace();
             }
         }
-
     }
 }
