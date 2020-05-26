@@ -12,11 +12,13 @@ import java.io.OutputStream;
 
 
 public class Processor {
+
     private static ProductsStorage storage = new ProductsStorage();
+
     public static void process(Packet packet, OutputStream os) throws Exception {
         synchronized (storage) {
             Message answerMessage;
-          //  int bUserId = packet.getBMsq().getBUserId();
+
             UnsignedLong bPktId= packet.getBPktId();
 
             int cType = packet.getBMsq().getCType();

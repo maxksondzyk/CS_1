@@ -8,7 +8,7 @@ import java.net.InetAddress;
 public class Client {
 
 
-        static final int MAX_THREADS = 5;
+        static final int MAX_THREADS = 2;
 
         public static void main(String[] args) throws IOException, InterruptedException {
             InetAddress addr = InetAddress.getByName(null);

@@ -76,9 +76,7 @@ public class ClientThread extends Thread {
 
 
 }
-                PacketSender fin= new PacketSender();
 
-                fin.send(new PacketGenerator().newPacket(clientID,"END" ), outputStream);
                 System.out.println("END of "+currentThread().getName());
 
             }
