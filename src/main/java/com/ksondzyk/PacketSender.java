@@ -14,7 +14,5 @@ public class PacketSender {
         os.write(packetBytes);
         os.flush();
 
-        System.out.println("Send");
-        System.out.println(Arrays.toString(packetBytes) + "\n");
     }
 }

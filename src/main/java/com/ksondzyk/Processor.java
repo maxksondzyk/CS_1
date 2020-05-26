@@ -2,9 +2,6 @@ package com.ksondzyk;
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
-
-import com.ksondzyk.exceptions.PacketDamagedException;
-import com.ksondzyk.network.Network;
 import com.ksondzyk.storage.ProductsStorage;
 
 import java.io.IOException;
@@ -12,7 +9,7 @@ import java.io.OutputStream;
 
 
 public class Processor {
-    private static ProductsStorage storage = new ProductsStorage();
+    private static final ProductsStorage storage = new ProductsStorage();
     public static void process(Packet packet, OutputStream os) throws Exception {
         synchronized (storage) {
             Message answerMessage;

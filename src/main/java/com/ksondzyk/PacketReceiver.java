@@ -13,16 +13,17 @@ import java.util.Arrays;
 public class PacketReceiver {
 
    public Packet receive(InputStream serverInputStream) throws Exception {
-       byte buffer[] = new byte[1024];
+       byte[] buffer = new byte[1024];
        ByteArrayOutputStream packetBytes = new ByteArrayOutputStream();
-       synchronized (PacketReceiver.class) {
-           //   System.out.println(serverInputStream.read());
-           while (serverInputStream.read() != Packet.bMagic) ;
 
+       synchronized (PacketReceiver.class) {
+
+           while (serverInputStream.read() != Packet.bMagic) ;
 
            ByteBuffer byteBuffer;
 
            packetBytes.write(Packet.bMagic);
+
            serverInputStream.read(buffer, 0, 1 + 8);
            packetBytes.write(buffer, 0, 1 + 8); //wrote first part
 

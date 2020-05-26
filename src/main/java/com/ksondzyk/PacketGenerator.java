@@ -8,12 +8,12 @@ import java.util.Random;
 public class PacketGenerator {
 
     public static Packet newPacket(){
-        Random rand;
-        byte[] array;
-        array = new byte[7];
-        rand = new Random();
+        Random rand = new Random();
+
+        byte[] array = new byte[7];
+
         rand.nextBytes(array);
-        Packet packet = new Packet((byte)rand.nextInt(255),new Message(rand.nextInt(6),rand.nextInt(),new String(array),false));
-        return packet;
+
+        return new Packet((byte)rand.nextInt(255),new Message(rand.nextInt(6),rand.nextInt(),new String(array),false));
     }
 }

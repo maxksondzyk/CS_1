@@ -3,7 +3,6 @@ package com.ksondzyk.entities;
 import com.github.snksoft.crc.CRC;
 import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.CipherMy;
-import com.ksondzyk.entities.Message;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;

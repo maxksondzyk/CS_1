@@ -24,33 +24,33 @@ public class ServerThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-      //  System.out.println("Thread is running");
 
-      //  this.start();
     }
 
     public void run(){
+        while(true) {
             try {
-               //synchronized (socket) {
-                   System.out.println("Thread is running");
-                        PacketReceiver pr = new PacketReceiver();
-                        Packet packet = null;
-                        try {
-                            packet = pr.receive(is);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                synchronized (socket) {
+                System.out.println("Thread is running");
+                PacketReceiver pr = new PacketReceiver();
+                Packet packet = null;
+                try {
+                    packet = pr.receive(is);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                        System.out.println("Received" + currentThread().getName());
+                System.out.println("Received" + currentThread().getName());
 
-                        System.err.println(packet.getMessage());
+                System.err.println(packet.getMessage());
 
-                        Processor.process(packet, os);
+                Processor.process(packet, os);
 
-                 //   }
-            }catch (Exception e){
+                   }
+            } catch (Exception e) {
 
             }
+        }
 
     }
 
