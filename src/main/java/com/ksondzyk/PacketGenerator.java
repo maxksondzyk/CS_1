@@ -7,13 +7,26 @@ import java.util.Random;
 
 public class PacketGenerator {
 
+
+    public static Packet newPacket(int clientID, String message){
+        Random rand;
+        rand = new Random();
+
+
+        return  new Packet((byte)rand.nextInt(255),
+                new Message(rand.nextInt(6), clientID, message));
+
+    }
     public static Packet newPacket(){
         Random rand;
-        byte[] array;
-        array = new byte[7];
+        String message ="random message";
         rand = new Random();
-        rand.nextBytes(array);
-        Packet packet = new Packet((byte)rand.nextInt(255),new Message(rand.nextInt(6),rand.nextInt(),new String(array),false));
-        return packet;
+
+
+        return  new Packet((byte)rand.nextInt(255),
+                                    new Message(rand.nextInt(6),
+                                            rand.nextInt(),
+                                            message));
+
     }
 }

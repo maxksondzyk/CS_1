@@ -4,6 +4,7 @@ import com.github.snksoft.crc.CRC;
 import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.CipherMy;
 import com.ksondzyk.entities.Message;
+import com.ksondzyk.exceptions.PacketDamagedException;
 import lombok.Getter;
 
 import java.nio.ByteBuffer;
@@ -20,13 +21,11 @@ public class Packet {
     private final Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
-    private final String decodedMessage;
 
     public Packet(byte bSrc, Message bMsq) {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
         synchronized (this.bMsq) {
-            decodedMessage = "forbidden";
             bPktId = bPktId.plus(UnsignedLong.ONE);
             data = fill();
         }
@@ -37,8 +36,7 @@ public class Packet {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
         synchronized (this.bMsq) {
-            decodedMessage = "forbidden";
-            bPktId = bPktId;
+            this.bPktId = bPktId;
             data = fill();
         }
     }
@@ -73,14 +71,14 @@ public class Packet {
                 .putShort(wCRC16_2).array();
 }
 
-    public Packet(byte[] packet) throws Exception {
+    public Packet(byte[] packet) throws PacketDamagedException {
         data = packet;
         synchronized (this.data) {
             ByteBuffer bb = ByteBuffer.wrap(packet);
 
             Byte expectedBMagic = bb.get();
             if (!expectedBMagic.equals(bMagic)) {
-                throw new Exception("Unexpected bMagic");
+                throw new PacketDamagedException("Unexpected bMagic");
             }
 
             bSrc = bb.get();
@@ -94,12 +92,11 @@ public class Packet {
             bb.get(messageBody);
             String message = new String(messageBody);
 
-            decodedMessage = CipherMy.decode(message);
-            bMsq = new Message(cType, bUserId, message, true);
+            bMsq = new Message(cType, bUserId, message);
             wCRC16_2 = bb.getShort();
 
             if (!checkCRC()) {
-                throw new Exception("The packet has been damaged");
+                throw new PacketDamagedException("CRC not expected ");
             }
         }
     }
@@ -124,7 +121,7 @@ public class Packet {
     }
 
     public String getMessage(){
-        return decodedMessage;
+        return bMsq.getMessage();
     }
 
 }

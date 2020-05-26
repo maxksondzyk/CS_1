@@ -12,8 +12,8 @@ import java.util.concurrent.Executors;
 
 public class ThreadsTest extends TestCase {
     public void testExchange(){
-     Server.start();
-     Client.start();
+     //Server.start();
+    // Client.start();
 
 
     }

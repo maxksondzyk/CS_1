@@ -4,8 +4,7 @@ import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 
-import com.ksondzyk.exceptions.PacketDamagedException;
-import com.ksondzyk.network.Network;
+
 import com.ksondzyk.storage.ProductsStorage;
 
 import java.io.IOException;
@@ -19,31 +18,33 @@ public class Processor {
             Message answerMessage;
           //  int bUserId = packet.getBMsq().getBUserId();
             UnsignedLong bPktId= packet.getBPktId();
+
             int cType = packet.getBMsq().getCType();
+
             switch (cType) {
                 case 1:
-                    answerMessage = new Message(0, 1, "the amount of products", false);
+                    answerMessage = new Message(0, 1, "the amount of products");
                     break;
                 case 2:
-                    answerMessage = new Message(0, 1, "some product has been deleted", false);
+                    answerMessage = new Message(0, 1, "some product has been deleted");
                     break;
                 case 3:
-                    answerMessage = new Message(0, 1, "some product has been added", false);
+                    answerMessage = new Message(0, 1, "some product has been added:");
                     break;
                 case 4:
-                    answerMessage = new Message(0, 1, "a group of product has been added", false);
+                    answerMessage = new Message(0, 1, "a group of product has been added");
                     break;
                 case 5:
-                    answerMessage = new Message(0, 1, "a product's name has been added to a group", false);
+                    answerMessage = new Message(0, 1, "a product's name has been added to a group");
                     break;
                 case 6:
-                    answerMessage = new Message(0, 1, "the price has been set", false);
+                    answerMessage = new Message(0, 1, "the price has been set");
                     break;
                 default:
                     throw new Exception();
             }
             Packet answerPacket = new Packet((byte) 1,bPktId, answerMessage);
-            System.out.println(CipherMy.decode(answerMessage.getMessage()));
+
             try {
                 PacketSender sender = new PacketSender();
                 sender.send(answerPacket, os);

@@ -2,63 +2,102 @@ package com.ksondzyk.network.TCPNetwork;
 
 import com.ksondzyk.PacketGenerator;
 import com.ksondzyk.PacketReceiver;
+import com.ksondzyk.PacketSender;
 import com.ksondzyk.Processor;
 import com.ksondzyk.entities.Packet;
+import lombok.Getter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.Date;
 
 public class ClientThread extends Thread {
+    private Socket socket;
+    private InputStream inputStream;
+    private OutputStream outputStream;
+    private static int counter = 0;
+    private int clientID = counter++;
+    @Getter
+    private static int threadcount = 0;
 
-    private InputStream is;
-    private OutputStream os;
-    private final Socket socket;
 
-    public ClientThread(Socket socket){
-        this.socket= socket;
+    public ClientThread(InetAddress addr) {
+        System.out.println("Запустимо клієнт з номером " + clientID);
+        threadcount++;
 
         try {
-            is = socket.getInputStream();
-            os = socket.getOutputStream();
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            socket = new Socket(addr, Server.PORT);
         }
-      //  this.start();
+        catch (IOException e) {
+            System.err.println("Не вдалося з'єднатися з сервером");
+        }
+        try {
+
+            inputStream = socket.getInputStream();
+            outputStream = socket.getOutputStream();
+
+            start();
+        }
+        catch (IOException e) {
+            // Сокет має бути закритий при будь якій помилці
+            // крім помилки конструктора сокета
+            try {
+                socket.close();
+            }
+            catch (IOException e2) {
+                System.err.println("Сокет не закрито!");
+            }
+        }
+        // Якщо все відбудеться нормально сокет буде закрито
+        // в методі run() потоку.
     }
+
+
+
 
     public void run(){
-
-        //while (true) {
             try {
-                //synchronized (socket) {
-                    PacketGenerator pg = new PacketGenerator();
-                    Packet packet = pg.newPacket();
-                    byte[] packetBytes = packet.getData();
+                // client sends messages and gets replies
 
-                    os.write(packetBytes);
-                    os.flush();
+                for(int i=0; i<2; i++) {
+    PacketGenerator pg = new PacketGenerator();
+    Packet packet = pg.newPacket();
 
-                    System.out.println("Send" + currentThread().getName());
-                    System.out.println(Arrays.toString(packetBytes) + "\n");
+    PacketSender sender = new PacketSender();
+    sender.send(packet, outputStream);
 
-                    PacketReceiver pr = new PacketReceiver();
-                    Packet packetReceived = pr.receive(is);
-                    System.out.println("Received" + currentThread().getName());
-                    System.out.println(Arrays.toString(packetBytes) + "\n");
+    PacketReceiver pr = new PacketReceiver();
+    Packet packetReceived = pr.receive(inputStream);
 
-                    // System.err.println(packetReceived.getMessage());
+    System.out.println("Received " + currentThread().getName());
+    System.out.println("Respond: " + packetReceived.getMessage());
 
-                    Processor.process(packet, os);
-                //}
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
+
+
+}
+                PacketSender fin= new PacketSender();
+
+                fin.send(new PacketGenerator().newPacket(clientID,"END" ), outputStream);
+                System.out.println("END of "+currentThread().getName());
+
             }
-       // }
-    }
+            catch (IOException e) {
+                System.err.println("IO Exception");
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                // Завжди закриває:
+                try {
+                    socket.close();
+                }
+                catch (IOException e) {
+                    System.err.println("Socket not closed");
+                }
+                threadcount--; // Завершуємо цей потік
+            }
+        }
+
 
 }

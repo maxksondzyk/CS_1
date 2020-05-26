@@ -13,44 +13,47 @@ public class ServerThread extends Thread {
 
     private InputStream is;
     private OutputStream os;
-    private final Socket socket;
+    private Socket socket;
 
-    ServerThread(Socket socket){
+    ServerThread(Socket socket) throws IOException{
+
         this.socket= socket;
-        try {
+
             is = socket.getInputStream();
             os = socket.getOutputStream();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-      //  System.out.println("Thread is running");
-
-      //  this.start();
+           System.out.println("Ready to run");
+           start();
     }
 
     public void run(){
-            try {
-               //synchronized (socket) {
-                   System.out.println("Thread is running");
-                        PacketReceiver pr = new PacketReceiver();
-                        Packet packet = null;
-                        try {
-                            packet = pr.receive(is);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
 
-                        System.out.println("Received" + currentThread().getName());
+        try {
+            while (true) {
 
-                        System.err.println(packet.getMessage());
+                PacketReceiver pr = new PacketReceiver();
+                Packet packet = pr.receive(is);
 
-                        Processor.process(packet, os);
+                System.out.println("Server received packet " + currentThread().getName());
 
-                 //   }
-            }catch (Exception e){
+                if(packet.getMessage().equals("END"))
+                    break;
 
+                Processor.process(packet, os);
             }
+            System.out.println("Закриваємо сокет на сервері");
+        } catch (IOException e) {
+            System.err.println("IO Exception");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                System.err.println("Сокет не закрито ...");
+            }
+        }
+
 
     }
 

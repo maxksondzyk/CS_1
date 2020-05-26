@@ -6,17 +6,19 @@ import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
+
 
 public class PacketReceiver {
 
-   public Packet receive(InputStream serverInputStream) throws Exception {
+
+   public Packet receive(InputStream serverInputStream) throws IOException, PacketDamagedException {
        byte buffer[] = new byte[1024];
        ByteArrayOutputStream packetBytes = new ByteArrayOutputStream();
        synchronized (PacketReceiver.class) {
-           //   System.out.println(serverInputStream.read());
+
            while (serverInputStream.read() != Packet.bMagic) ;
 
 
@@ -65,13 +67,13 @@ public class PacketReceiver {
                throw new PacketDamagedException(crc16_2_real, crc16_2_test);
            packetBytes.write(buffer, 0, Short.BYTES);
        }
-           System.out.println(Arrays.toString(packetBytes.toByteArray()));
 
 
        return new Packet(packetBytes.toByteArray());
 
 
    }
+
 }
 
 

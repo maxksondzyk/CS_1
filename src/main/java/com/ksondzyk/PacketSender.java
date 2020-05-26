@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import static java.lang.Thread.currentThread;
+
 public class PacketSender {
 
     public void send(Packet packet, OutputStream os) throws IOException {
@@ -14,7 +16,6 @@ public class PacketSender {
         os.write(packetBytes);
         os.flush();
 
-        System.out.println("Send");
-        System.out.println(Arrays.toString(packetBytes) + "\n");
+        System.out.println("Send " + currentThread().getName());
     }
 }
