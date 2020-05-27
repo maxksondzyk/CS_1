@@ -5,17 +5,20 @@ import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 
 
+import com.ksondzyk.exceptions.PacketDamagedException;
 import com.ksondzyk.storage.ProductsStorage;
+import jdk.jfr.events.SocketWriteEvent;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.SocketException;
 
 
 public class Processor {
 
     private static ProductsStorage storage = new ProductsStorage();
 
-    public static void process(Packet packet, OutputStream os) throws Exception {
+    public static void process(Packet packet, OutputStream os) throws PacketDamagedException {
         synchronized (storage) {
             Message answerMessage;
 
@@ -43,7 +46,7 @@ public class Processor {
                     answerMessage = new Message(0, 1, "the price has been set",false);
                     break;
                 default:
-                    throw new Exception();
+                    throw new PacketDamagedException("Unknown command");
             }
             Packet answerPacket = new Packet((byte) 1,bPktId, answerMessage);
 
@@ -53,6 +56,7 @@ public class Processor {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         }
     }
 }

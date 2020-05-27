@@ -12,7 +12,7 @@ import java.util.concurrent.Executors;
 public class Client {
 
         public static void main(String[] args) throws IOException, InterruptedException {
-            Data data = new Data();
+            Data data = new Data(1);
             ExecutorService service = Executors.newFixedThreadPool(7);
             for(int i = 0;i<5;i++){//while (true) {
                     service.execute(new ClientThread(data));

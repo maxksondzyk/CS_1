@@ -15,15 +15,15 @@ public class Server {
 
         System.out.println("Сервер запущено.");
         ExecutorService service = Executors.newFixedThreadPool(7);
-        SSocket sSocket = new SSocket();
+        Data data = new Data(0);
         try {
             for(int i = 0;i<5;i++){//while (true) {
-                Socket socket = sSocket.getS().accept();
-                service.execute(new ServerThread(socket,sSocket));
+                Socket socket = data.getS().accept();
+                service.execute(new ServerThread(socket,data));
             }
             service.shutdown();
         } finally {
-            sSocket.getS().close();
+            data.getS().close();
         }
     }
 
