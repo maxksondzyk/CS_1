@@ -1,7 +1,6 @@
 package com.ksondzyk.network;
 
 import com.ksondzyk.PacketReceiver;
-import com.ksondzyk.Processor;
 import com.ksondzyk.entities.Packet;
 
 import java.io.IOException;
@@ -11,7 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 
-public class TCPNetwork_еуые implements Network {
+public class TCPNetwork_class implements Network {
 
     Socket socket;
     ServerSocket serverSocket;

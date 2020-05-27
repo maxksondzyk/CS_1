@@ -3,7 +3,6 @@ package com.ksondzyk.entities;
 import com.github.snksoft.crc.CRC;
 import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.CipherMy;
-import com.ksondzyk.entities.Message;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import lombok.Getter;
 
@@ -21,8 +20,6 @@ public class Packet {
     private Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
-    @Getter
-    private String decodedMessage = "forbidden";
 
     public Packet(byte bSrc, Message bMsq) {
         this.bSrc = bSrc;
@@ -96,11 +93,14 @@ public class Packet {
 
             bMsq = new Message(cType, bUserId, message,true);
             wCRC16_2 = bb.getShort();
-            decodedMessage = CipherMy.decode(bMsq.getMessage());
             if (!checkCRC()) {
                 throw new PacketDamagedException("CRC not expected ");
             }
         }
+    }
+
+    public String getDecodedMessage(){
+        return CipherMy.decode(bMsq.getMessage());
     }
 
     public boolean checkCRC() {

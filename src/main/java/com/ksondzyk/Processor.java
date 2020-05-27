@@ -3,20 +3,16 @@ package com.ksondzyk;
 import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
-
-
 import com.ksondzyk.exceptions.PacketDamagedException;
 import com.ksondzyk.storage.ProductsStorage;
-import jdk.jfr.events.SocketWriteEvent;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.SocketException;
 
 
 public class Processor {
 
-    private static ProductsStorage storage = new ProductsStorage();
+    private static final ProductsStorage storage = new ProductsStorage();
 
     public static void process(Packet packet, OutputStream os) throws PacketDamagedException {
         synchronized (storage) {

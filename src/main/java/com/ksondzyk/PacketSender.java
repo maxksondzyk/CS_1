@@ -24,7 +24,7 @@ try {
     os.flush();
 
     System.out.println("Send " + currentThread().getName());
-}catch (SocketException e){
+}catch (SocketException ignored){
 
 }
     }

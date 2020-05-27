@@ -11,7 +11,7 @@ public class Message {
     @Getter
     private final int bUserId;
     @Getter
-    private String message;
+    private final String message;
 
     public static final int BYTES_WITHOUT_MESSAGE = Integer.BYTES + Integer.BYTES;
 
@@ -19,6 +19,7 @@ public class Message {
     {
         this.cType = cType;
         this.bUserId = bUserId;
+
         if(!encoded)
         message = CipherMy.encode(message);
 

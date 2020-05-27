@@ -1,6 +1,5 @@
 package com.ksondzyk.network.TCPNetwork;
 
-import com.ksondzyk.CipherMy;
 import com.ksondzyk.PacketGenerator;
 import com.ksondzyk.PacketReceiver;
 import com.ksondzyk.PacketSender;
@@ -10,7 +9,6 @@ import lombok.Getter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.Socket;
 
 public class ClientThread extends Thread {
@@ -18,11 +16,10 @@ public class ClientThread extends Thread {
     private InputStream inputStream;
     private OutputStream outputStream;
     private static int counter = 0;
-    private int clientID = counter++;
+    private final int clientID = counter++;
     @Getter
     private static int threadcount = 0;
-    int state = 0;
-    private Data data;
+    private final Data data;
 
 
     public ClientThread(Data data) {
@@ -31,7 +28,7 @@ public class ClientThread extends Thread {
         threadcount++;
 
         try {
-            socket = new Socket(data.getAddr(), Server.PORT);
+            socket = new Socket(data.getAddr(), Data.PORT);
         }
         catch (IOException e) {
             System.err.println("Не вдалося з'єднатися з сервером");
@@ -64,29 +61,14 @@ public class ClientThread extends Thread {
             try {
                 // client sends messages and gets replies
                 for (int i = 0; i < 4; i++) {
-                    data.state = 1;
                     PacketGenerator pg = new PacketGenerator();
+                    Packet packet = pg.newPacket(i);
 
-                    while(data.state!=1){
-                        data.wait();
-                    }
-                        Packet packet = pg.newPacket(i);
-                    data.state = 2;
-                    data.notifyAll();
                     PacketSender sender = new PacketSender();
-                    while(data.state!=2){
-                        data.wait();
-                    }
                     sender.send(packet, outputStream,i);
-                    data.state=3;
-                    data.notifyAll();
+
                     PacketReceiver pr = new PacketReceiver();
-                    while (data.state!=3){
-                        data.wait();
-                    }
                     Packet packetReceived = pr.receive(inputStream);
-                    data.state = 1;
-                    data.notifyAll();
 
                     System.out.println("Received " + currentThread().getName());
                     System.out.println("Respond: " + packetReceived.getDecodedMessage());
