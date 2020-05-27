@@ -1,5 +1,6 @@
 package com.ksondzyk.network.TCPNetwork;
 
+import com.ksondzyk.CipherMy;
 import com.ksondzyk.PacketGenerator;
 import com.ksondzyk.PacketReceiver;
 import com.ksondzyk.PacketSender;
@@ -20,14 +21,17 @@ public class ClientThread extends Thread {
     private int clientID = counter++;
     @Getter
     private static int threadcount = 0;
+    int state = 0;
+    private Data data;
 
 
-    public ClientThread(InetAddress addr) {
+    public ClientThread(Data data) {
+        this.data = data;
         System.out.println("Запустимо клієнт з номером " + clientID);
         threadcount++;
 
         try {
-            socket = new Socket(addr, Server.PORT);
+            socket = new Socket(data.getAddr(), Server.PORT);
         }
         catch (IOException e) {
             System.err.println("Не вдалося з'єднатися з сервером");
@@ -55,34 +59,46 @@ public class ClientThread extends Thread {
 
 
 
-    public void run(){
-            try
-            {
+    public void run() {
+        synchronized (data) {
+            try {
                 // client sends messages and gets replies
-
-                for(int i=0; i<2; i++)
-                {
+                for (int i = 0; i < 4; i++) {
+                    data.state = 1;
                     PacketGenerator pg = new PacketGenerator();
-                    Packet packet = pg.newPacket();
 
+                    while(data.state!=1){
+                        data.wait();
+                    }
+                        Packet packet = pg.newPacket(i);
+                    data.state = 2;
+                    data.notifyAll();
                     PacketSender sender = new PacketSender();
-                    sender.send(packet, outputStream);
+                    while(data.state!=2){
+                        data.wait();
+                    }
+                    sender.send(packet, outputStream,i);
+                    data.state=3;
+                    data.notifyAll();
+                    PacketReceiver pr = new PacketReceiver();
+                    while (data.state!=3){
+                        data.wait();
+                    }
+                    Packet packetReceived = pr.receive(inputStream);
+                    data.state = 1;
+                    data.notifyAll();
 
-                PacketReceiver pr = new PacketReceiver();
-                Packet packetReceived = pr.receive(inputStream);
-
-                System.out.println("Received " + currentThread().getName());
-                System.out.println("Respond: " + packetReceived.getMessage());
+                    System.out.println("Received " + currentThread().getName());
+                    System.out.println("Respond: " + packetReceived.getDecodedMessage());
                 }
 
-                PacketSender fin= new PacketSender();
+                PacketSender fin = new PacketSender();
 
-                fin.send(PacketGenerator.newPacket(clientID,"END" ), outputStream);
+                fin.send(PacketGenerator.newPacket(clientID, "END"), outputStream,0);
 
-                System.out.println("END of "+currentThread().getName());
+                System.out.println("END of " + currentThread().getName());
 
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.err.println("IO Exception");
             } catch (Exception e) {
                 e.printStackTrace();
@@ -90,13 +106,13 @@ public class ClientThread extends Thread {
                 // Завжди закриває:
                 try {
                     socket.close();
-                }
-                catch (IOException e) {
+                } catch (IOException e) {
                     System.err.println("Socket not closed");
                 }
                 threadcount--; // Завершуємо цей потік
             }
         }
+    }
 
 
 }

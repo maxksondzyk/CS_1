@@ -14,8 +14,10 @@ public class ServerThread extends Thread {
     private InputStream is;
     private OutputStream os;
     private Socket socket;
+    private SSocket sSocket;
 
-    ServerThread(Socket socket) throws IOException{
+    ServerThread(Socket socket, SSocket sSocket) throws IOException{
+        this.sSocket = sSocket;
 
         this.socket= socket;
 
@@ -28,17 +30,29 @@ public class ServerThread extends Thread {
     public void run(){
 
         try {
-            while (true) {
-
+            synchronized (sSocket){
+            //while (true) {
+                for (int i = 0;i<4;i++){
+                sSocket.setState(1);
                 PacketReceiver pr = new PacketReceiver();
+                while (sSocket.getState() != 1) {
+                    sSocket.wait();
+                }
                 Packet packet = pr.receive(is);
+                sSocket.setState(2);
+                sSocket.notifyAll();
 
                 System.out.println("Server received packet " + currentThread().getName());
 
-                if(packet.getMessage().equals("END"))
+                if (packet.getMessage().equals("END"))
                     break;
-
+                while (sSocket.getState()!=2){
+                    sSocket.wait();
+                }
                 Processor.process(packet, os);
+                sSocket.setState(1);
+                sSocket.notifyAll();
+            }
             }
         } catch (IOException e) {
             System.err.println("IO Exception");

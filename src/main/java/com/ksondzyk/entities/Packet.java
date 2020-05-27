@@ -21,7 +21,7 @@ public class Packet {
     private Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
-
+    @Getter
     private String decodedMessage = "forbidden";
 
     public Packet(byte bSrc, Message bMsq) {
@@ -96,7 +96,7 @@ public class Packet {
 
             bMsq = new Message(cType, bUserId, message,true);
             wCRC16_2 = bb.getShort();
-          //  decodedMessage = CipherMy.decode(bMsq.getMessage());
+            decodedMessage = CipherMy.decode(bMsq.getMessage());
             if (!checkCRC()) {
                 throw new PacketDamagedException("CRC not expected ");
             }

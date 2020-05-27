@@ -7,4 +7,5 @@ public class PacketDamagedException extends Exception {
     public PacketDamagedException(String message) {
         super(message);
     }
+
 }

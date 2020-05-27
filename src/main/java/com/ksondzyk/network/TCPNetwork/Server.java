@@ -12,17 +12,18 @@ public class Server {
     public static final int PORT = 5087;
 
     public static void main(String[] args) throws IOException {
-        ServerSocket s = new ServerSocket(PORT);
+
         System.out.println("Сервер запущено.");
         ExecutorService service = Executors.newFixedThreadPool(7);
+        SSocket sSocket = new SSocket();
         try {
             for(int i = 0;i<5;i++){//while (true) {
-                Socket socket = s.accept();
-                service.execute(new ServerThread(socket));
+                Socket socket = sSocket.getS().accept();
+                service.execute(new ServerThread(socket,sSocket));
             }
             service.shutdown();
         } finally {
-            s.close();
+            sSocket.getS().close();
         }
     }
 

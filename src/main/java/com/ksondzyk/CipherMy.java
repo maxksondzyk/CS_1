@@ -28,19 +28,20 @@ public class CipherMy {
 
 
     public static String encode(final String message) {
+        synchronized (myKey) {
+            Key secretKey = setKey(myKey);
 
-        Key secretKey = setKey(myKey);
+            try {
 
-        try {
+                Cipher cipher = Cipher.getInstance("AES");
 
-            Cipher cipher = Cipher.getInstance("AES");
+                cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+                byte[] cipherText = cipher.doFinal(message.getBytes("UTF-8"));
+                return Base64.getEncoder().encodeToString(cipherText);
 
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-            byte[] cipherText = cipher.doFinal(message.getBytes("UTF-8"));
-            return Base64.getEncoder().encodeToString(cipherText);
-
-        } catch (Exception e1) {
-            e1.printStackTrace();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
         }
         return null;
 

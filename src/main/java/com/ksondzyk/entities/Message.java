@@ -19,8 +19,8 @@ public class Message {
     {
         this.cType = cType;
         this.bUserId = bUserId;
-        //if(!encoded)
-        //message = CipherMy.encode(message);
+        if(!encoded)
+        message = CipherMy.encode(message);
 
         this.message = message;
     }

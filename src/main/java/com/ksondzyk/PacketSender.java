@@ -10,9 +10,13 @@ import static java.lang.Thread.currentThread;
 
 public class PacketSender {
 
-    public void send(Packet packet, OutputStream os) throws IOException {
+    public void send(Packet packet, OutputStream os,int i) throws IOException {
 
-            byte[] packetBytes = packet.getData();
+            byte[] packetBytes;
+            if(i==2)
+                packetBytes = Arrays.copyOfRange(packet.getData(),0,packet.getData().length/2);
+            else
+                packetBytes = packet.getData();
 
             os.write(packetBytes);
             os.flush();

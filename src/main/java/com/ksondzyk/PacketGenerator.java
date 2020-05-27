@@ -17,16 +17,22 @@ public class PacketGenerator {
                 new Message(rand.nextInt(5)+1, clientID, message,false));
 
     }
-    public static Packet newPacket(){
+    public static Packet newPacket(int i){
         Random rand;
         String message ="random message";
         rand = new Random();
+switch (i){
+    case 1:return  new Packet((byte)rand.nextInt(255),
+            new Message(rand.nextInt(5)+1,
+                    19,
+                    message,false));
+    default: return  new Packet((byte)rand.nextInt(255),
+            new Message(rand.nextInt(5)+1,
+                    rand.nextInt(),
+                    message,false));
+}
 
 
-        return  new Packet((byte)rand.nextInt(255),
-                                    new Message(rand.nextInt(5)+1,
-                                            rand.nextInt(),
-                                            message,false));
 
     }
 }
