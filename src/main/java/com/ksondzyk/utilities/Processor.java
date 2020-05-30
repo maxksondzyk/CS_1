@@ -1,4 +1,4 @@
-package com.ksondzyk;
+package com.ksondzyk.utilities;
 
 import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.entities.Message;

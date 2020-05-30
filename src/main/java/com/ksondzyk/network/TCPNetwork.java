@@ -1,6 +1,6 @@
 package com.ksondzyk.network;
 
-import com.ksondzyk.PacketReceiver;
+import com.ksondzyk.utilities.PacketReceiver;
 import com.ksondzyk.entities.Packet;
 
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 
-public class TCPNetwork_class implements Network {
+public class TCPNetwork implements Network {
 
     Socket socket;
     ServerSocket serverSocket;
@@ -23,7 +23,6 @@ public class TCPNetwork_class implements Network {
     public void listen() throws IOException {
 
         serverSocket = new ServerSocket(2305);
-       //ExecutorService service = Executors.newFixedThreadPool(8);
 
         socket = serverSocket.accept();
 
@@ -43,7 +42,6 @@ public class TCPNetwork_class implements Network {
          System.out.println("Received");
 
          System.err.println(packet.getMessage());
-         //Processor.process(this, packet);
      }
 
 

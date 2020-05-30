@@ -2,7 +2,7 @@ package com.ksondzyk.entities;
 
 import com.github.snksoft.crc.CRC;
 import com.google.common.primitives.UnsignedLong;
-import com.ksondzyk.CipherMy;
+import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import lombok.Getter;
 
@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 
 
 public class Packet {
+
 
     public static final Byte bMagic = 0x13;
     private final Byte bSrc;
@@ -20,6 +21,11 @@ public class Packet {
     private Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
+
+    public final static Integer packetPartFirstLengthWithoutwLen = bMagic.BYTES + Byte.BYTES + Long.BYTES;
+    public final static Integer packetPartFirstLength = packetPartFirstLengthWithoutwLen + Integer.BYTES;
+    public final static Integer packetPartFirstLengthWithCRC16 = packetPartFirstLength + Short.BYTES;
+    public final static Integer packetMaxSize = packetPartFirstLengthWithCRC16 + Message.BYTES_MAX_SIZE;
 
     public Packet(byte bSrc, Message bMsq) {
         this.bSrc = bSrc;

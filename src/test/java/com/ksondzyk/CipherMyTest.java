@@ -1,5 +1,6 @@
 package com.ksondzyk;
 
+import com.ksondzyk.utilities.CipherMy;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,6 +1,5 @@
 package com.ksondzyk.storage;
 
-import com.ksondzyk.storage.ProductsGroup;
 import lombok.Getter;
 
 import java.util.ArrayList;
