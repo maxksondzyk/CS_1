@@ -9,13 +9,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class ServerThread implements Runnable {
+public class TCPServerThread implements Runnable {
 
     private final InputStream is;
     private final OutputStream os;
     private final Socket socket;
 
-    public ServerThread(Socket socket) throws IOException{
+    public TCPServerThread(Socket socket) throws IOException{
         this.socket= socket;
 
             is = socket.getInputStream();

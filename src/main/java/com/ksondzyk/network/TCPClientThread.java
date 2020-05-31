@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class ClientThread implements Runnable {
+public class TCPClientThread implements Runnable {
     private final Socket socket;
     private InputStream inputStream;
     private OutputStream outputStream;
@@ -21,7 +21,7 @@ public class ClientThread implements Runnable {
     private static int threadcount = 0;
 
 
-    public ClientThread(Socket socket) {
+    public TCPClientThread(Socket socket) {
         System.out.println("Запустимо клієнт з номером " + clientID);
         threadcount++;
         this.socket = socket;

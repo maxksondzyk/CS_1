@@ -41,7 +41,7 @@ public class TCPNetwork implements Network {
 
          System.out.println("Received");
 
-         System.err.println(packet.getMessage());
+         System.err.println(packet.getDecodedMessage());
      }
 
 

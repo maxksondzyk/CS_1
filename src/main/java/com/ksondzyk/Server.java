@@ -1,6 +1,6 @@
 package com.ksondzyk;
 
-import com.ksondzyk.network.ServerThread;
+import com.ksondzyk.network.TCPServerThread;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,7 +19,7 @@ public class Server {
         try {
             while(true){
                 Socket socket = s.accept();
-                service.execute(new ServerThread(socket));
+                service.execute(new TCPServerThread(socket));
             }
            // service.shutdown();
         } finally {
