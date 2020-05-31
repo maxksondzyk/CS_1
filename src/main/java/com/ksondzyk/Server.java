@@ -14,15 +14,14 @@ public class Server {
     public static void main(String[] args) throws IOException {
 
         System.out.println("Сервер запущено.");
-        ExecutorService service = Executors.newFixedThreadPool(7);
-       // Data data = new Data(0);
+        ExecutorService service = Executors.newFixedThreadPool(2);
         ServerSocket s = new ServerSocket(PORT);
         try {
-            for(int i = 0;i<5;i++){
+            while(true){
                 Socket socket = s.accept();
                 service.execute(new ServerThread(socket));
             }
-            service.shutdown();
+           // service.shutdown();
         } finally {
             s.close();
         }

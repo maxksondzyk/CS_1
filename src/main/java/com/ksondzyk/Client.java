@@ -16,7 +16,7 @@ public class Client {
             try {
                 InetAddress addr = InetAddress.getByName(null);
             ExecutorService service = Executors.newFixedThreadPool(7);
-            for(int i = 0;i<5;i++){
+            for(int i = 0;i<7;i++){
                 Socket socket = new Socket(addr, Server.PORT);
                     service.execute(new ClientThread(socket));
             }

@@ -17,7 +17,7 @@ public class PacketReceiver {
     public Packet receive(InputStream serverInputStream) throws IOException, PacketDamagedException {
         byte[] buffer = new byte[1024];
         ByteArrayOutputStream packetBytes = new ByteArrayOutputStream();
-        synchronized (PacketReceiver.class) {
+      //  synchronized (PacketReceiver.class) {
             try {
 
                 while (serverInputStream.read() != Packet.bMagic) ;
@@ -85,7 +85,7 @@ public class PacketReceiver {
 
             return packet;
         }
-    }
+   // }
 
 }
 
