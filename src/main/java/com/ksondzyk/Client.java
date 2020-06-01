@@ -1,5 +1,6 @@
 package com.ksondzyk;
 
+import com.ksondzyk.network.TCPClientThread;
 import com.ksondzyk.network.UDPClientThread;
 
 import java.util.concurrent.ExecutorService;
@@ -9,9 +10,10 @@ import java.util.concurrent.Executors;
 public class Client {
 
         public static void main(String[] args) {
-            ExecutorService service = Executors.newFixedThreadPool(10);
-            for(int i = 0;i<10;i++){
-                service.execute(new UDPClientThread());
+            String mode = "UDP";
+            ExecutorService service = Executors.newFixedThreadPool(1);
+            for(int i = 0;i<1;i++){
+                service.execute((mode.equals("UDP")?new UDPClientThread():new TCPClientThread()));
             }
             service.shutdown();
         }

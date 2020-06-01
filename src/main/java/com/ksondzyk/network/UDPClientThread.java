@@ -49,11 +49,14 @@ public class UDPClientThread implements Runnable{
                 for (int i = 0; i < 4; i++) {
                     Packet packet = packetGenerator.newPacket(i);
                     byte[] sentData = packet.getData();
+                    if (i == 2)
+                        sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
                     byte[] receivedData = new byte[Packet.packetMaxSize];
                     DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, Server.PORT);
-
+                    Packet packetReceived;
                     while(true) {
                         socket.send(datagramPacketSent);
+                        System.out.println("sent from "+Thread.currentThread());
                         DatagramPacket datagramPacketReceived = new DatagramPacket(receivedData,receivedData.length);
                         socket.receive(datagramPacketReceived);
 
@@ -67,7 +70,7 @@ public class UDPClientThread implements Runnable{
                         System.out.println("Received");
                         System.out.println(Arrays.toString(fullPacket) + "\n");
 
-                        Packet packetReceived = new Packet(fullPacket,"udp");
+                        packetReceived = new Packet(fullPacket,"udp");
 
                         packetReceived.setClientInetAddress(datagramPacketReceived.getAddress());
                         packetReceived.setClientPort(datagramPacketReceived.getPort());

@@ -11,8 +11,7 @@ private UnsignedLong bPktID = UnsignedLong.ZERO;
 
     public Packet newPacket(int clientID, String message){
         bPktID = bPktID.plus(UnsignedLong.ONE);
-        Random rand;
-        rand = new Random();
+        Random rand = new Random();
 
 
         return  new Packet((byte)rand.nextInt(255),bPktID,
@@ -21,9 +20,9 @@ private UnsignedLong bPktID = UnsignedLong.ZERO;
     }
     public Packet newPacket(int i){
         bPktID = bPktID.plus(UnsignedLong.ONE);
-        Random rand;
+        Random rand = new Random();
         String message ="random message";
-        rand = new Random();
+
         if (i == 1) {
             return new Packet((byte) rand.nextInt(255),bPktID,
                     new Message(rand.nextInt(5) + 1,
