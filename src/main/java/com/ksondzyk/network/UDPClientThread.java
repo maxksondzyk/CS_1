@@ -54,7 +54,7 @@ public class UDPClientThread implements Runnable{
                     byte[] receivedData = new byte[Packet.packetMaxSize];
                     DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, Server.PORT);
                     Packet packetReceived;
-                    while(true) {
+                    for(int j = 0; j<5;j++) {
                         socket.send(datagramPacketSent);
                         System.out.println("sent from "+Thread.currentThread());
                         DatagramPacket datagramPacketReceived = new DatagramPacket(receivedData,receivedData.length);
