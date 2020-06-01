@@ -1,5 +1,6 @@
 package com.ksondzyk.network;
 
+import com.ksondzyk.Server;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.PacketGenerator;
 import com.ksondzyk.utilities.PacketReceiver;
@@ -9,27 +10,32 @@ import lombok.Getter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class TCPClientThread implements Runnable {
-    private final Socket socket;
+    private Socket socket;
+    private InetAddress addr;
     private InputStream inputStream;
     private OutputStream outputStream;
+    private final PacketGenerator packetGenerator;
     private static int counter = 0;
     private final int clientID = counter++;
     @Getter
     private static int threadcount = 0;
 
 
-    public TCPClientThread(Socket socket) {
+    public TCPClientThread() {
+        packetGenerator = new PacketGenerator();
         System.out.println("Запустимо клієнт з номером " + clientID);
         threadcount++;
-        this.socket = socket;
         try {
+            addr = InetAddress.getByName("localhost");
+
+            connect();
 
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
-
         }
         catch (IOException e) {
             // Сокет має бути закритий при будь якій помилці
@@ -45,7 +51,26 @@ public class TCPClientThread implements Runnable {
         // в методі run() потоку.
     }
 
+    private void connect() {
+        for (int j = 0; j < 5; j++){
+            try {
+                socket = new Socket(addr, Server.PORT);
 
+                break;
+            }
+            catch (IOException e) {
+                System.err.println("Couldn't connect to the server: " + j);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
+                if (j == 5 - 1){
+                    return;
+                }
+            }
+        }
+    }
 
 
     public void run() {
@@ -53,8 +78,7 @@ public class TCPClientThread implements Runnable {
             try {
                 // client sends messages and gets replies
                 for (int i = 0; i < 4; i++) {
-                    PacketGenerator pg = new PacketGenerator();
-                    Packet packet = pg.newPacket(i);
+                    Packet packet = packetGenerator.newPacket(i);
 
                     PacketSender sender = new PacketSender();
                     sender.send(packet, outputStream,i);
@@ -62,18 +86,22 @@ public class TCPClientThread implements Runnable {
                     PacketReceiver pr = new PacketReceiver();
                     Packet packetReceived = pr.receive(inputStream);
 
-                    System.out.println("Received " + Thread.currentThread().getName());
-                    System.out.println("Respond: " + packetReceived.getDecodedMessage());
+                    if (packetReceived.getBPktId().equals(packet.getBPktId()))
+                        System.out.println("CORRECT");
+                    else
+                        System.out.println("WRONG PACKET RESPONSE");
+                   // System.out.println("Received " + Thread.currentThread().getName());
+                   // System.out.println("Respond: " + packetReceived.getDecodedMessage());
                 }
 
                 PacketSender fin = new PacketSender();
 
-                fin.send(PacketGenerator.newPacket(clientID, "END"), outputStream,0);
+                fin.send(packetGenerator.newPacket(clientID, "END"), outputStream,0);
 
                 System.out.println("END of " + Thread.currentThread().getName());
 
             } catch (IOException e) {
-                System.err.println("IO Exception");
+                System.err.println("Поток завершив роботу");
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

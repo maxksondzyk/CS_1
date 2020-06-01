@@ -34,14 +34,15 @@ public class TCPNetwork implements Network {
     }
 
     @Override
-    public void receive() throws Exception {
+    public Packet receive() throws Exception {
 
          PacketReceiver pr = new PacketReceiver();
          Packet packet = pr.receive(serverInputStream);
 
          System.out.println("Received");
 
-         System.err.println(packet.getDecodedMessage());
+         System.err.println(packet.getMessage());
+         return packet;
      }
 
 

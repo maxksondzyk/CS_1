@@ -1,6 +1,6 @@
 package com.ksondzyk;
 
-import com.ksondzyk.network.TCPServerThread;
+import com.ksondzyk.network.UDPServerThread;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -14,17 +14,12 @@ public class Server {
     public static void main(String[] args) throws IOException {
 
         System.out.println("Сервер запущено.");
-        ExecutorService service = Executors.newFixedThreadPool(2);
+        ExecutorService service = Executors.newFixedThreadPool(1);
         ServerSocket s = new ServerSocket(PORT);
-        try {
-            while(true){
-                Socket socket = s.accept();
-                service.execute(new TCPServerThread(socket));
-            }
+          //  while(true){
+                service.execute(new UDPServerThread());
+            //}
            // service.shutdown();
-        } finally {
-            s.close();
-        }
     }
 
 }

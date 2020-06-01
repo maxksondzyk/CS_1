@@ -42,7 +42,7 @@ public class TCPServerThread implements Runnable {
             }
             }
         } catch (IOException e) {
-            System.err.println("IO Exception");
+            System.err.println("Поток завершив роботу");
         } catch (Exception e) {
             e.printStackTrace();
         }

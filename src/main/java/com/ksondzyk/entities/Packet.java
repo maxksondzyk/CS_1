@@ -5,12 +5,18 @@ import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import lombok.Getter;
+import lombok.Setter;
 
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
 
 public class Packet {
 
+    @Getter @Setter
+    InetAddress clientInetAddress;
+    @Getter @Setter
+    Integer clientPort;
 
     public static final Byte bMagic = 0x13;
     private final Byte bSrc;
@@ -30,20 +36,16 @@ public class Packet {
     public Packet(byte bSrc, Message bMsq) {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
-        synchronized (this.bMsq) {
             bPktId = bPktId.plus(UnsignedLong.ONE);
             data = fill();
-        }
     }
 
 
     public Packet(byte bSrc, UnsignedLong bPktId, Message bMsq) {
         this.bSrc = bSrc;
         this.bMsq = bMsq;
-        synchronized (this.bMsq) {
             this.bPktId = bPktId;
             data = fill();
-        }
     }
     @Getter
     private final byte[] data;
@@ -76,16 +78,17 @@ public class Packet {
                 .putShort(wCRC16_2).array();
 }
 
-    public Packet(byte[] packet) throws PacketDamagedException {
+    public Packet(byte[] packet,String type) throws PacketDamagedException {
         data = packet;
         synchronized (this.data) {
             ByteBuffer bb = ByteBuffer.wrap(packet);
 
-            Byte expectedBMagic = bb.get();
-            if (!expectedBMagic.equals(bMagic)) {
-                throw new PacketDamagedException("Unexpected bMagic");
+            if(type.equals("udp")){
+                Byte expectedBMagic = bb.get();
+                if (!expectedBMagic.equals(bMagic)) {
+                    throw new PacketDamagedException("Unexpected bMagic");
+                }
             }
-
             bSrc = bb.get();
             bPktId = UnsignedLong.fromLongBits(bb.getLong());
             wLen = bb.getInt();

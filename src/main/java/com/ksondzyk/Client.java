@@ -1,11 +1,7 @@
 package com.ksondzyk;
 
-import com.ksondzyk.network.TCPClientThread;
+import com.ksondzyk.network.UDPClientThread;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -13,19 +9,11 @@ import java.util.concurrent.Executors;
 public class Client {
 
         public static void main(String[] args) {
-            try {
-                InetAddress addr = InetAddress.getByName(null);
-            ExecutorService service = Executors.newFixedThreadPool(7);
-            for(int i = 0;i<7;i++){
-                Socket socket = new Socket(addr, Server.PORT);
-                    service.execute(new TCPClientThread(socket));
+            ExecutorService service = Executors.newFixedThreadPool(10);
+            for(int i = 0;i<10;i++){
+                service.execute(new UDPClientThread());
             }
             service.shutdown();
-            } catch (UnknownHostException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
 

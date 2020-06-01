@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface Network {
         void listen() throws IOException;
-        void receive() throws  Exception;
+        Packet receive() throws  Exception;
 
         void connect() throws IOException;
 
