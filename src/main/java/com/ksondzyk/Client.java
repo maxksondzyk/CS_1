@@ -11,8 +11,8 @@ public class Client {
 
         public static void main(String[] args) {
             String mode = "UDP";
-            ExecutorService service = Executors.newFixedThreadPool(1);
-            for(int i = 0;i<1;i++){
+            ExecutorService service = Executors.newFixedThreadPool(5);
+            for(int i = 0;i<5;i++){
                 service.execute((mode.equals("UDP")?new UDPClientThread():new TCPClientThread()));
             }
             service.shutdown();

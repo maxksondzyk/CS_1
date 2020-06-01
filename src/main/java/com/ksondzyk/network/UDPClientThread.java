@@ -4,8 +4,6 @@ import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.PacketGenerator;
-import com.ksondzyk.utilities.PacketReceiver;
-import com.ksondzyk.utilities.PacketSender;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -16,6 +14,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class UDPClientThread implements Runnable{
+
     private DatagramSocket socket;
     private InetAddress addr;
     private final PacketGenerator packetGenerator;
@@ -23,6 +22,7 @@ public class UDPClientThread implements Runnable{
     private final int clientID = counter++;
     @Getter
     private static int threadcount = 0;
+
     public UDPClientThread() {
         packetGenerator = new PacketGenerator();
         System.out.println("Запустимо клієнт з номером " + clientID);
@@ -47,16 +47,22 @@ public class UDPClientThread implements Runnable{
             try {
                 // client sends messages and gets replies
                 for (int i = 0; i < 4; i++) {
+
                     Packet packet = packetGenerator.newPacket(i);
                     byte[] sentData = packet.getData();
+
                     if (i == 2)
                         sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
+
                     byte[] receivedData = new byte[Packet.packetMaxSize];
                     DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, Server.PORT);
                     Packet packetReceived;
+
                     for(int j = 0; j<5;j++) {
+
                         socket.send(datagramPacketSent);
                         System.out.println("sent from "+Thread.currentThread());
+
                         DatagramPacket datagramPacketReceived = new DatagramPacket(receivedData,receivedData.length);
                         socket.receive(datagramPacketReceived);
 
@@ -71,7 +77,6 @@ public class UDPClientThread implements Runnable{
                         System.out.println(Arrays.toString(fullPacket) + "\n");
 
                         packetReceived = new Packet(fullPacket,"udp");
-
                         packetReceived.setClientInetAddress(datagramPacketReceived.getAddress());
                         packetReceived.setClientPort(datagramPacketReceived.getPort());
 

@@ -5,6 +5,7 @@ import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
+import com.ksondzyk.utilities.CipherMy;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -88,6 +89,8 @@ public class UDPServerThread implements Runnable {
         Packet packetReceived = new Packet(fullPacket,"udp");
         packetReceived.setClientInetAddress(receivedPacket.getAddress());
         packetReceived.setClientPort(receivedPacket.getPort());
+
+        System.out.println(CipherMy.decode(packetReceived.getBMsq().getMessage()));
 
         counter = counter.plus(UnsignedLong.ONE);
         queue.put(receivedPacket);
