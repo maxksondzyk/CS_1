@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 
 public class Server {
-    public static final int PORT = 5087;
+    public static final int PORT = 5088;
     public static void main(String[] args) throws IOException {
         String mode = "UDP";
 

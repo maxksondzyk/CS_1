@@ -1,4 +1,4 @@
-package com.ksondzyk.network;
+package com.ksondzyk.network.TCP;
 
 import com.ksondzyk.Server;
 import com.ksondzyk.entities.Packet;

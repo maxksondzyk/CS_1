@@ -43,16 +43,18 @@ public class UDPClientThread implements Runnable{
 
 
     public void run() {
-        synchronized (socket) {
+
             try {
+                //send -> receive answer -> pkid send !=pkid answ ? send again ->close
                 // client sends messages and gets replies
                 for (int i = 0; i < 4; i++) {
 
                     Packet packet = packetGenerator.newPacket(i);
                     byte[] sentData = packet.getData();
 
-                    if (i == 2)
-                        sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
+                   // if (i == 2)
+                     //   sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
+
 
                     byte[] receivedData = new byte[Packet.packetMaxSize];
                     DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, Server.PORT);
@@ -73,10 +75,10 @@ public class UDPClientThread implements Runnable{
                         byte[] fullPacket = new byte[Packet.packetPartFirstLength + Message.BYTES_WITHOUT_MESSAGE + wLen];
                         byteBuffer.get(fullPacket);
 
-                        System.out.println("Received");
-                        System.out.println(Arrays.toString(fullPacket) + "\n");
+                        packetReceived = new Packet(fullPacket);
 
-                        packetReceived = new Packet(fullPacket,"udp");
+                        System.err.println("Answer from server: "+packetReceived.getDecodedMessage());
+
                         packetReceived.setClientInetAddress(datagramPacketReceived.getAddress());
                         packetReceived.setClientPort(datagramPacketReceived.getPort());
 
@@ -103,4 +105,4 @@ public class UDPClientThread implements Runnable{
     }
 
 
-}
+

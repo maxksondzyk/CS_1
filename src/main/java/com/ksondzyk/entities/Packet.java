@@ -27,6 +27,8 @@ public class Packet {
     private Message bMsq;
     private Short wCRC16_1;
     private Short wCRC16_2;
+    @Getter
+    private final byte[] data;
 
     public final static Integer packetPartFirstLengthWithoutwLen = bMagic.BYTES + Byte.BYTES + Long.BYTES;
     public final static Integer packetPartFirstLength = packetPartFirstLengthWithoutwLen + Integer.BYTES;
@@ -47,8 +49,6 @@ public class Packet {
             this.bPktId = bPktId;
             data = fill();
     }
-    @Getter
-    private final byte[] data;
 
     private byte[] fill() {
 
@@ -78,17 +78,14 @@ public class Packet {
                 .putShort(wCRC16_2).array();
 }
 
-    public Packet(byte[] packet,String type) throws PacketDamagedException {
-        data = packet;
-        synchronized (this.data) {
-            ByteBuffer bb = ByteBuffer.wrap(packet);
+    public Packet(byte[] packet) throws PacketDamagedException {
 
-            if(type.equals("udp")){
-                Byte expectedBMagic = bb.get();
-                if (!expectedBMagic.equals(bMagic)) {
-                    throw new PacketDamagedException("Unexpected bMagic");
-                }
-            }
+        ByteBuffer bb = ByteBuffer.wrap(packet);
+
+        if(bb.get()!=bMagic)
+            throw new PacketDamagedException("Unexpected bMagic number");
+
+
             bSrc = bb.get();
             bPktId = UnsignedLong.fromLongBits(bb.getLong());
             wLen = bb.getInt();
@@ -105,7 +102,10 @@ public class Packet {
             if (!checkCRC()) {
                 throw new PacketDamagedException("CRC not expected ");
             }
-        }
+
+
+            data = packet;
+
     }
 
     public String getDecodedMessage(){

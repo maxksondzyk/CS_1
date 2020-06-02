@@ -6,12 +6,60 @@ import com.ksondzyk.exceptions.PacketDamagedException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 
 public class PacketReceiver {
 
+
+
+    public static Packet receiveUDP(DatagramSocket serverSocket) throws IOException {
+        DatagramPacket receivedPacket;
+        byte[] receivedData;
+
+        InetAddress IPAddress=null;
+        int port=0;
+   try {
+            receivedData = new byte[Packet.packetMaxSize];
+            receivedPacket = new DatagramPacket(receivedData, receivedData.length);
+
+            serverSocket.receive(receivedPacket);
+
+            IPAddress = receivedPacket.getAddress();
+            port = receivedPacket.getPort();
+
+            ByteBuffer byteBuffer = ByteBuffer.wrap(receivedData);
+            Integer wLen = byteBuffer.getInt(Packet.packetPartFirstLengthWithoutwLen);
+
+            byte[] fullPacket = new byte[Packet.packetPartFirstLength + Message.BYTES_WITHOUT_MESSAGE + wLen];
+            byteBuffer.get(fullPacket);
+
+            Packet result = new Packet(fullPacket);
+
+       Packet packet = new Packet((byte)1,new Message(1,1,"all ok",false));
+       DatagramPacket sendPacket = new DatagramPacket(packet.getData(), packet.getData().length, IPAddress, port);
+       try{
+           serverSocket.send(sendPacket);
+       }catch (Exception e1){
+           e1.printStackTrace();
+       }
+            return result;
+
+    } catch (PacketDamagedException e) {
+       Packet packet = PacketGenerator.errorPacket();
+       DatagramPacket sendPacket = new DatagramPacket(packet.getData(), packet.getData().length, IPAddress, port);
+       try{
+           serverSocket.send(sendPacket);
+       }catch (Exception e1){
+           e1.printStackTrace();
+       }
+   }
+   return null;
+    }
 
     public Packet receive(InputStream serverInputStream) throws IOException {
 
@@ -29,7 +77,7 @@ public class PacketReceiver {
         System.out.println("Received");
         System.out.println(Arrays.toString(fullPacket) + "\n");
 
-        Packet packet = new Packet(fullPacket,"tcp");
+        Packet packet = new Packet(fullPacket);
 
         System.err.println(CipherMy.decode(packet.getBMsq().getMessage()));
 

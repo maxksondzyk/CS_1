@@ -7,7 +7,15 @@ import com.ksondzyk.entities.Packet;
 import java.util.Random;
 
 public class PacketGenerator {
-private UnsignedLong bPktID = UnsignedLong.ZERO;
+
+    public static Packet errorPacket(){
+        return new Packet((byte)1,new Message(-1,-1,"send again",false));
+    }
+    public static Packet allOkPacket(){
+        return new Packet((byte)1,new Message(1,1,"all ok",false));
+            }
+
+    private UnsignedLong bPktID = UnsignedLong.ZERO;
 
     public Packet newPacket(int clientID, String message){
         bPktID = bPktID.plus(UnsignedLong.ONE);
