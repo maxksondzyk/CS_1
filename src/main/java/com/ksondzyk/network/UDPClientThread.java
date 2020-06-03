@@ -4,6 +4,7 @@ import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.PacketGenerator;
+import com.ksondzyk.utilities.PacketReceiver;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -56,7 +57,6 @@ public class UDPClientThread implements Runnable{
                         sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
 
 
-                    byte[] receivedData = new byte[Packet.packetMaxSize];
                     DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, Server.PORT);
                     Packet packetReceived;
 
@@ -65,22 +65,11 @@ public class UDPClientThread implements Runnable{
                         socket.send(datagramPacketSent);
                         System.out.println("sent from "+Thread.currentThread());
 
-                        DatagramPacket datagramPacketReceived = new DatagramPacket(receivedData,receivedData.length);
-                        socket.receive(datagramPacketReceived);
 
-                        ByteBuffer byteBuffer = ByteBuffer.wrap(receivedData);
-
-                        Integer wLen = byteBuffer.getInt(Packet.packetPartFirstLengthWithoutwLen);
-
-                        byte[] fullPacket = new byte[Packet.packetPartFirstLength + Message.BYTES_WITHOUT_MESSAGE + wLen];
-                        byteBuffer.get(fullPacket);
-
-                        packetReceived = new Packet(fullPacket);
+                        packetReceived = PacketReceiver.receiveUDP(socket);
 
                         System.err.println("Answer from server: "+packetReceived.getDecodedMessage());
 
-                        packetReceived.setClientInetAddress(datagramPacketReceived.getAddress());
-                        packetReceived.setClientPort(datagramPacketReceived.getPort());
 
                         if(packetReceived.getBMsq().getCType()!=-1){
                             break;

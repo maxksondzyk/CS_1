@@ -13,10 +13,7 @@ import java.nio.ByteBuffer;
 
 public class Packet {
 
-    @Getter @Setter
-    InetAddress clientInetAddress;
-    @Getter @Setter
-    Integer clientPort;
+
 
     public static final Byte bMagic = 0x13;
     @Getter

@@ -10,14 +10,16 @@ public class PacketGenerator {
 
     //answers from server
         public static Packet errorPacket(){
-        return new Packet((byte)0,new Message(-1,-1,"send again",false));
+
+            return new Packet((byte)0, new Message(-1,-1,"send again",false));
     }
     //answers from server
-    public static Packet allOkPacket(){
-        return new Packet((byte)0,new Message(1,1,"all ok",false));
+        public static Packet allOkPacket(UnsignedLong bPktID){
+        return new Packet((byte)0,bPktID,new Message(1,1,"all ok",false));
             }
 
-    private UnsignedLong bPktID = UnsignedLong.ZERO;
+
+            private UnsignedLong bPktID = UnsignedLong.ZERO;
 
     public Packet newPacket(int clientID, String message){
         bPktID = bPktID.plus(UnsignedLong.ONE);

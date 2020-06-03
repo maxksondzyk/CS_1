@@ -42,7 +42,7 @@ public class PacketReceiver {
             Packet result = new Packet(fullPacket);
 
             if(result.getBSrc()==(byte)1) {
-                Packet packet = PacketGenerator.allOkPacket();
+                Packet packet = PacketGenerator.allOkPacket(result.getBPktId());
                 DatagramPacket sendPacket = new DatagramPacket(packet.getData(), packet.getData().length, IPAddress, port);
 
                 serverSocket.send(sendPacket);
@@ -55,7 +55,7 @@ public class PacketReceiver {
        serverSocket.send(sendPacket);
 
    }
-   return PacketGenerator.allOkPacket();
+   return PacketGenerator.errorPacket();
     }
 
     public Packet receive(InputStream serverInputStream) throws IOException {
@@ -87,7 +87,7 @@ public class PacketReceiver {
             System.err.println("The packet has not been fully sent");
                 return (packetGenerator.newPacket(1, "END"));
 }
-    //}
+
     }
 
 }
