@@ -1,8 +1,8 @@
 package com.ksondzyk.network;
 
-import com.ksondzyk.Server;
-import com.ksondzyk.entities.Message;
+
 import com.ksondzyk.entities.Packet;
+import com.ksondzyk.utilities.NetworkProperties;
 import com.ksondzyk.utilities.PacketGenerator;
 import com.ksondzyk.utilities.PacketReceiver;
 import lombok.Getter;
@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class UDPClientThread implements Runnable{
@@ -46,8 +45,7 @@ public class UDPClientThread implements Runnable{
     public void run() {
 
             try {
-                //send -> receive answer -> pkid send !=pkid answ ? send again ->close
-                // client sends messages and gets replies
+
                 for (int i = 0; i < 4; i++) {
 
                     Packet packet = packetGenerator.newPacket(i);
@@ -57,7 +55,7 @@ public class UDPClientThread implements Runnable{
                         sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
 
 
-                    DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, Server.PORT);
+                    DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, NetworkProperties.PORT);
                     Packet packetReceived;
 
                     for(int j = 0; j<5;j++) {
@@ -67,6 +65,7 @@ public class UDPClientThread implements Runnable{
 
 
                         packetReceived = PacketReceiver.receiveUDP(socket);
+
 
                         System.err.println("Answer from server: "+packetReceived.getDecodedMessage());
 
