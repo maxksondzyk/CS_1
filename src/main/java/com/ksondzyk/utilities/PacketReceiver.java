@@ -39,7 +39,7 @@ public class PacketReceiver {
             byte[] fullPacket = new byte[Packet.packetPartFirstLength + Message.BYTES_WITHOUT_MESSAGE + wLen];
             byteBuffer.get(fullPacket);
 
-            Packet result = new Packet(fullPacket,"UDP");
+            Packet result = new Packet(fullPacket);
 
             if(result.getBSrc()==(byte)1) {
                 Packet packet = PacketGenerator.allOkPacket();
@@ -55,7 +55,7 @@ public class PacketReceiver {
        serverSocket.send(sendPacket);
 
    }
-   return null;
+   return PacketGenerator.allOkPacket();
     }
 
     public Packet receive(InputStream serverInputStream) throws IOException {
@@ -74,7 +74,7 @@ public class PacketReceiver {
         System.out.println("Received");
         System.out.println(Arrays.toString(fullPacket) + "\n");
 
-        Packet packet = new Packet(fullPacket,"TCP");
+        Packet packet = new Packet(fullPacket);
 
         System.err.println(CipherMy.decode(packet.getBMsq().getMessage()));
 

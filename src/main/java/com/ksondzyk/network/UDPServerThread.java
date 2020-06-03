@@ -40,7 +40,7 @@ public class UDPServerThread implements Runnable {
                 }
             }
         } catch (IOException e) {
-            System.err.println("Поток завершив роботу");
+            System.err.println("Сервер завершив роботу");
         }
 
 

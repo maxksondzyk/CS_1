@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 public class Client {
 
         public static void main(String[] args) {
-            String mode = "TCP";
+            String mode = "UDP";
             ExecutorService service = Executors.newFixedThreadPool(4);
             for(int i = 0;i<4;i++){
                 service.execute((mode.equals("UDP"))?new UDPClientThread():new TCPClientThread());

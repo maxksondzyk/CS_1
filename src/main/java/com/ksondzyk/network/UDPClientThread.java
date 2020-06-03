@@ -75,7 +75,7 @@ public class UDPClientThread implements Runnable{
                         byte[] fullPacket = new byte[Packet.packetPartFirstLength + Message.BYTES_WITHOUT_MESSAGE + wLen];
                         byteBuffer.get(fullPacket);
 
-                        packetReceived = new Packet(fullPacket,"UDP");
+                        packetReceived = new Packet(fullPacket);
 
                         System.err.println("Answer from server: "+packetReceived.getDecodedMessage());
 
