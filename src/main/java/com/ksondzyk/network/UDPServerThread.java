@@ -15,15 +15,12 @@ public class UDPServerThread implements Runnable {
 
     public UDPServerThread() {
 
-
         try {
             serverSocket = new DatagramSocket(NetworkProperties.PORT);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 
     public void run() {
 
@@ -41,7 +38,6 @@ public class UDPServerThread implements Runnable {
         } catch (IOException e) {
             System.err.println("Сервер завершив роботу");
         }
-
 
     }
 }

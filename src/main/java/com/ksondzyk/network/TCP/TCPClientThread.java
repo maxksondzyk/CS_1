@@ -89,7 +89,6 @@ public class TCPClientThread implements Runnable {
                         System.out.println("CORRECT");
                     else
                         System.out.println("WRONG PACKET RESPONSE");
-                    Thread.sleep(4000);
                 }
 
                 PacketSender fin = new PacketSender();
