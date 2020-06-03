@@ -10,11 +10,11 @@ import java.util.concurrent.Executors;
 
 
 public class Server {
-    public static final int PORT = 5087;
+    public static final int PORT = 5088;
     public static void main(String[] args) throws IOException {
         String mode = "UDP";
 
-        ExecutorService service = Executors.newFixedThreadPool(1);
+        ExecutorService service = Executors.newFixedThreadPool(2);
         ServerSocket s = new ServerSocket(PORT);
         service.execute((mode.equals("UDP")?new UDPServerThread():new TCPServerThread(s.accept())));
     }

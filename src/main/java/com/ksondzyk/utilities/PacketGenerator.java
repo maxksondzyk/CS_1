@@ -7,14 +7,24 @@ import com.ksondzyk.entities.Packet;
 import java.util.Random;
 
 public class PacketGenerator {
-private UnsignedLong bPktID = UnsignedLong.ZERO;
+
+    //answers from server
+        public static Packet errorPacket(){
+        return new Packet((byte)0,new Message(-1,-1,"send again",false));
+    }
+    //answers from server
+    public static Packet allOkPacket(){
+        return new Packet((byte)0,new Message(1,1,"all ok",false));
+            }
+
+    private UnsignedLong bPktID = UnsignedLong.ZERO;
 
     public Packet newPacket(int clientID, String message){
         bPktID = bPktID.plus(UnsignedLong.ONE);
         Random rand = new Random();
 
 
-        return  new Packet((byte)rand.nextInt(255),bPktID,
+        return  new Packet((byte)1,bPktID,
                 new Message(rand.nextInt(5)+1, clientID, message,false));
 
     }
@@ -24,12 +34,12 @@ private UnsignedLong bPktID = UnsignedLong.ZERO;
         String message ="random message";
 
         if (i == 1) {
-            return new Packet((byte) rand.nextInt(255),bPktID,
+            return new Packet((byte)1,bPktID,
                     new Message(rand.nextInt(5) + 1,
                             19,
                             message, false));
         }
-        return new Packet((byte) rand.nextInt(255),bPktID,
+        return new Packet((byte) 1,bPktID,
                 new Message(rand.nextInt(5) + 1,
                         rand.nextInt(),
                         message, false));
