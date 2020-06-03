@@ -13,10 +13,7 @@ import java.nio.ByteBuffer;
 
 public class Packet {
 
-    @Getter @Setter
-    InetAddress clientInetAddress;
-    @Getter @Setter
-    Integer clientPort;
+
 
     public static final Byte bMagic = 0x13;
     @Getter
@@ -79,13 +76,13 @@ public class Packet {
                 .putShort(wCRC16_2).array();
 }
 
-    public Packet(byte[] packet, String type) throws PacketDamagedException {
+    public Packet(byte[] packet) throws PacketDamagedException {
 
         ByteBuffer bb = ByteBuffer.wrap(packet);
-        if(type.equals("UDP")) {
+
             if (bb.get() != bMagic)
                 throw new PacketDamagedException("Unexpected bMagic number");
-        }
+
 
             bSrc = bb.get();
             bPktId = UnsignedLong.fromLongBits(bb.getLong());

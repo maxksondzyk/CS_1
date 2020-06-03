@@ -28,9 +28,6 @@ public class PacketSender {
 
         }
     }
-public void sendUDP(Packet packet ){
 
-
-        }
 
 }
