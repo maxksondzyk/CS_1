@@ -1,8 +1,8 @@
 package com.ksondzyk.network;
 
-import com.ksondzyk.Server;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.CipherMy;
+import com.ksondzyk.utilities.NetworkProperties;
 import com.ksondzyk.utilities.PacketReceiver;
 import com.ksondzyk.utilities.Processor;
 
@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 
 public class UDPServerThread implements Runnable {
-    //  private UnsignedLong counter;
+
     private static DatagramSocket serverSocket;
 
 
@@ -18,7 +18,7 @@ public class UDPServerThread implements Runnable {
 
 
         try {
-            serverSocket = new DatagramSocket(Server.PORT);
+            serverSocket = new DatagramSocket(NetworkProperties.PORT);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,7 +1,7 @@
 package com.ksondzyk.network.TCP;
 
-import com.ksondzyk.Server;
 import com.ksondzyk.entities.Packet;
+import com.ksondzyk.utilities.NetworkProperties;
 import com.ksondzyk.utilities.PacketGenerator;
 import com.ksondzyk.utilities.PacketReceiver;
 import com.ksondzyk.utilities.PacketSender;
@@ -54,7 +54,7 @@ public class TCPClientThread implements Runnable {
     private void connect() {
         for (int j = 0; j < 5; j++){
             try {
-                socket = new Socket(addr, Server.PORT);
+                socket = new Socket(addr, NetworkProperties.PORT);
 
                 break;
             }
@@ -89,8 +89,7 @@ public class TCPClientThread implements Runnable {
                         System.out.println("CORRECT");
                     else
                         System.out.println("WRONG PACKET RESPONSE");
-                   // System.out.println("Received " + Thread.currentThread().getName());
-                   // System.out.println("Respond: " + packetReceived.getDecodedMessage());
+
                 }
 
                 PacketSender fin = new PacketSender();
