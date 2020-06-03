@@ -43,7 +43,6 @@ public class UDPClientThread implements Runnable{
 
 
     public void run() {
-        synchronized (socket) {
             try {
                 // client sends messages and gets replies
                 for (int i = 0; i < 4; i++) {
@@ -99,7 +98,6 @@ public class UDPClientThread implements Runnable{
                 socket.close();
                 threadcount--; // Завершуємо цей потік
             }
-        }
     }
 
 
