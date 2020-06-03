@@ -68,7 +68,7 @@ public class Processor {
             Packet answerPacket = new Packet((byte) 1,bPktId, answerMessage);
                 try {
                     PacketSender sender = new PacketSender();
-                    sender.send(answerPacket, os, 0);
+                    sender.send(answerPacket, os, 1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

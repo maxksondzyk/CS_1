@@ -74,7 +74,6 @@ public class TCPClientThread implements Runnable {
 
 
     public void run() {
-        synchronized (socket) {
             try {
                 // client sends messages and gets replies
                 for (int i = 0; i < 4; i++) {
@@ -113,7 +112,6 @@ public class TCPClientThread implements Runnable {
                 }
                 threadcount--; // Завершуємо цей потік
             }
-        }
     }
 
 

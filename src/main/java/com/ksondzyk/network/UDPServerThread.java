@@ -1,23 +1,13 @@
 package com.ksondzyk.network;
 
-import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.Server;
-import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
-import com.ksondzyk.exceptions.PacketDamagedException;
 import com.ksondzyk.utilities.CipherMy;
-import com.ksondzyk.utilities.PacketGenerator;
 import com.ksondzyk.utilities.PacketReceiver;
 import com.ksondzyk.utilities.Processor;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 
 public class UDPServerThread implements Runnable {
     //  private UnsignedLong counter;

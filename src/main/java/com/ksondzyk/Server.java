@@ -1,6 +1,6 @@
 package com.ksondzyk;
 
-import com.ksondzyk.network.TCPServerThread;
+import com.ksondzyk.network.TCP.TCPServerThread;
 import com.ksondzyk.network.UDPServerThread;
 
 import java.io.IOException;
@@ -12,11 +12,17 @@ import java.util.concurrent.Executors;
 public class Server {
     public static final int PORT = 5088;
     public static void main(String[] args) throws IOException {
-        String mode = "UDP";
+        String mode = "TCP";
 
-        ExecutorService service = Executors.newFixedThreadPool(2);
+        ExecutorService service = Executors.newFixedThreadPool(5);
         ServerSocket s = new ServerSocket(PORT);
-        service.execute((mode.equals("UDP")?new UDPServerThread():new TCPServerThread(s.accept())));
+        if(mode=="TCP") {
+            while (true)
+                service.execute(new TCPServerThread(s.accept()));
+        }
+        else{
+            service.execute(new UDPServerThread());
+        }
     }
 
 }
