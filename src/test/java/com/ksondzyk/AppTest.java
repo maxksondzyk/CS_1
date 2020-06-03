@@ -18,7 +18,7 @@ private String INPUT = "test";
         try {
             Message testMessage = new Message(100, 7731265, INPUT,false);
             Packet p = new Packet((byte)10, testMessage);
-            Packet pr = new Packet(p.getData());
+            Packet pr = new Packet(p.getData(),"TCP");
             Assert.assertTrue(pr.checkCRC());
             Assert.assertEquals(INPUT, pr.getMessage());
         }  catch (Exception e) {

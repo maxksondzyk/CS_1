@@ -10,7 +10,6 @@ public class PacketGenerator {
 
     //answers from server
         public static Packet errorPacket(){
-
             return new Packet((byte)0, new Message(-1,-1,"send again",false));
     }
     //answers from server

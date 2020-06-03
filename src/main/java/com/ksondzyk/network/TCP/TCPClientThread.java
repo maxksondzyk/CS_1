@@ -77,6 +77,7 @@ public class TCPClientThread implements Runnable {
             try {
                 // client sends messages and gets replies
                 for (int i = 0; i < 4; i++) {
+                    connect();
                     Packet packet = packetGenerator.newPacket(i);
 
                     PacketSender sender = new PacketSender();
@@ -89,7 +90,7 @@ public class TCPClientThread implements Runnable {
                         System.out.println("CORRECT");
                     else
                         System.out.println("WRONG PACKET RESPONSE");
-
+                    Thread.sleep(4000);
                 }
 
                 PacketSender fin = new PacketSender();

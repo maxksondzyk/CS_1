@@ -35,9 +35,9 @@ public class TCPServerThread implements Runnable {
 
                 System.out.println("Server received packet " + Thread.currentThread().getName());
 
-                if (packet.getMessage().equals("END"))
+                if (packet.getMessage().equals("END")) {
                     break;
-
+                }
                 Processor.process(packet, os);
             }
             }

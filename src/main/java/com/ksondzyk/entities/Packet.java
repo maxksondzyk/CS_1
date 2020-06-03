@@ -76,13 +76,14 @@ public class Packet {
                 .putShort(wCRC16_2).array();
 }
 
-    public Packet(byte[] packet) throws PacketDamagedException {
+    public Packet(byte[] packet, String type) throws PacketDamagedException {
 
         ByteBuffer bb = ByteBuffer.wrap(packet);
 
+        if(type=="UDP") {
             if (bb.get() != bMagic)
                 throw new PacketDamagedException("Unexpected bMagic number");
-
+        }
 
             bSrc = bb.get();
             bPktId = UnsignedLong.fromLongBits(bb.getLong());

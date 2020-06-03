@@ -16,7 +16,7 @@ public class Server {
     public static void main(String[] args) throws IOException {
         String mode = NetworkProperties.MODE;
 
-        ExecutorService service = Executors.newFixedThreadPool(5);
+        ExecutorService service = Executors.newFixedThreadPool(1);
         ServerSocket s = new ServerSocket( NetworkProperties.PORT);
         if(mode.equals("TCP")) {
             while (true)

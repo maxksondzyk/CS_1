@@ -30,6 +30,9 @@ public class Processor {
         Message answerMessage;
 
         switch (cType) {
+            case -1:
+                answerMessage = new Message(0, 1, "send again",false);
+                break;
             case 1:
                 answerMessage = new Message(0, 1, "the amount of products",false);
                 break;
