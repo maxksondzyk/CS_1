@@ -14,7 +14,7 @@ public class Server {
     public static void main(String[] args) throws IOException {
         String mode = "UDP";
 
-        ExecutorService service = Executors.newFixedThreadPool(1);
+        ExecutorService service = Executors.newFixedThreadPool(2);
         ServerSocket s = new ServerSocket(PORT);
         service.execute((mode.equals("UDP")?new UDPServerThread():new TCPServerThread(s.accept())));
     }

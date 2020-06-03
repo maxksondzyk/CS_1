@@ -52,8 +52,8 @@ public class UDPClientThread implements Runnable{
                     Packet packet = packetGenerator.newPacket(i);
                     byte[] sentData = packet.getData();
 
-                   // if (i == 2)
-                     //   sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
+                    if (i == 2)
+                        sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
 
 
                     byte[] receivedData = new byte[Packet.packetMaxSize];

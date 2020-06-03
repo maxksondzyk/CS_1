@@ -19,7 +19,8 @@ public class Packet {
     Integer clientPort;
 
     public static final Byte bMagic = 0x13;
-    private final Byte bSrc;
+    @Getter
+    private final Byte bSrc; //server or client
     @Getter
     private UnsignedLong bPktId = UnsignedLong.ZERO;
     private Integer wLen;
