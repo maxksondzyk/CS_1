@@ -7,14 +7,6 @@ import lombok.Setter;
 import java.nio.ByteBuffer;
 
 public class Message {
-    enum cTypes {
-        GET_PRODUCT_COUNT,
-        GET_PRODUCT,
-        ADD_PRODUCT,
-        ADD_PRODUCT_TITLE,
-        SET_PRODUCT_PRICE,
-        ADD_PRODUCT_TO_GROUP
-    }
 
 
     @Getter

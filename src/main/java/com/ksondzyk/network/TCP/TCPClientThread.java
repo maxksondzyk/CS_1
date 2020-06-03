@@ -75,7 +75,6 @@ public class TCPClientThread implements Runnable {
 
     public void run() {
             try {
-                // client sends messages and gets replies
                 for (int i = 0; i < 4; i++) {
                     connect();
                     Packet packet = packetGenerator.newPacket(i);

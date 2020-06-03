@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.DatagramSocket;
 
 public class UDPServerThread implements Runnable {
-
     private static DatagramSocket serverSocket;
 
 
@@ -34,7 +33,7 @@ public class UDPServerThread implements Runnable {
                 Packet packetReceived = PacketReceiver.receiveUDP(serverSocket);
 
 
-                if(packetReceived!=null) {
+                if(packetReceived.getBMsq().getCType()!=-1) {
                     System.out.println(CipherMy.decode(packetReceived.getBMsq().getMessage()));
                     System.out.println(Processor.processUDP(packetReceived));
                 }

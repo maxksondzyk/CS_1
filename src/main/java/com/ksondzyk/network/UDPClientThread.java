@@ -1,5 +1,6 @@
 package com.ksondzyk.network;
 
+
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.NetworkProperties;
 import com.ksondzyk.utilities.PacketGenerator;
@@ -44,8 +45,7 @@ public class UDPClientThread implements Runnable{
     public void run() {
 
             try {
-                //send -> receive answer -> pkid send !=pkid answ ? send again ->close
-                // client sends messages and gets replies
+
                 for (int i = 0; i < 4; i++) {
 
                     Packet packet = packetGenerator.newPacket(i);
@@ -65,6 +65,7 @@ public class UDPClientThread implements Runnable{
 
 
                         packetReceived = PacketReceiver.receiveUDP(socket);
+
 
                         System.err.println("Answer from server: "+packetReceived.getDecodedMessage());
 

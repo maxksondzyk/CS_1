@@ -5,9 +5,7 @@ import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import lombok.Getter;
-import lombok.Setter;
 
-import java.net.InetAddress;
 import java.nio.ByteBuffer;
 
 
