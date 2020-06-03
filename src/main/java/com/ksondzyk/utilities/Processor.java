@@ -57,7 +57,7 @@ public class Processor {
     public static void process(Packet packet, OutputStream os) throws PacketDamagedException {
         synchronized (storage) {
 
-            System.out.println("Message received: "+ packet.getMessage());
+            System.out.println("Message received: "+ CipherMy.decode(packet.getMessage()));
             Message answerMessage;
 
             UnsignedLong bPktId= packet.getBPktId();
