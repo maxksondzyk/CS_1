@@ -35,6 +35,7 @@ public class Processor {
                 break;
             case 1:
                 answerMessage = new Message(0, 1, "the amount of products",false);
+
                 break;
             case 2:
                 answerMessage = new Message(0, 1, "some product has been deleted",false);

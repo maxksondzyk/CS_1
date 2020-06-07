@@ -15,7 +15,7 @@ public class Client {
             String mode = NetworkProperties.MODE;
             ExecutorService service = Executors.newFixedThreadPool(4);
             for(int i = 0;i<4;i++){
-                service.execute((mode.equals("UDP"))?new UDPClientThread():new TCPClientThread());
+                service.execute((mode.equals("TCP"))?new UDPClientThread():new TCPClientThread());
             }
             service.shutdown();
         }
