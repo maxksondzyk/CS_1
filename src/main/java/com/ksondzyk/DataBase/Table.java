@@ -9,7 +9,7 @@ import java.sql.Statement;
 
 public class Table {
     public static void create(String name) {
-        String sqlQuery = "CREATE TABLE IF NOT EXISTS " + name + " (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, quantity INTEGER)";
+        String sqlQuery = "CREATE TABLE IF NOT EXISTS " + name + " (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, quantity INTEGER, price INTEGER)";
 
         try {
             Statement statement = DB.connection.createStatement();
@@ -23,14 +23,15 @@ public class Table {
         }
     }
 
-    public static Integer insert(String tableName, String title, int quantity) {
-        String sqlQuery = "INSERT INTO " + tableName +  " (title) VALUES (?, ?)";
+    public static Integer insert(String tableName, String title, int quantity, int price) {
+        String sqlQuery = "INSERT INTO " + tableName +  " (title) VALUES (?, ?, price)";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, title);
             preparedStatement.setInt(2, quantity);
+            preparedStatement.setInt(3, price);
 
             preparedStatement.executeUpdate();
 
@@ -53,26 +54,27 @@ public class Table {
         return null;
     }
 
-    public static void insert(String tableName, int id, int quantity, String title) {
-        String sqlQuery = "INSERT INTO " + tableName +  " (id, title, quantity) VALUES (?, ?, ?)";
+    public static void insert(String tableName, int id, int quantity, int price, String title) {
+        String sqlQuery = "INSERT INTO " + tableName +  " (id, title, quantity, price) VALUES (?, ?, ?, ?)";
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, id);
             preparedStatement.setString(2, title);
             preparedStatement.setInt(3, quantity);
+            preparedStatement.setInt(4, price);
 
             preparedStatement.executeUpdate();
 
-            System.out.println("Inserted " + id + " " + title + "" + quantity + " into " + tableName);
+            System.out.println("Inserted #" + id + " Title: " + title + " Quantity" + quantity + " Price:" + price + " into " + tableName);
             System.out.println();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
     }
 
-    public static void update(String tableName, int id, int quantity, String title) {
-        String sqlQuery = "UPDATE " + tableName + " SET title = ? quantity = ? WHERE id = ?";
+    public static void update(String tableName, int id, int quantity, String title, int price) {
+        String sqlQuery = "UPDATE " + tableName + " SET title = ? quantity = ? price = ? WHERE id = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -80,10 +82,11 @@ public class Table {
             preparedStatement.setInt(1, id);
             preparedStatement.setString(2, title);
             preparedStatement.setInt(3, quantity);
+            preparedStatement.setInt(4, price);
 
             preparedStatement.executeUpdate();
 
-            System.out.println("Updated " + id + " " + title + "" + quantity + " in " + tableName);
+            System.out.println("Updated #" + id + " Title: " + title + " Quantity" + quantity + " Price:" + price + " into " + tableName);
             System.out.println();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
