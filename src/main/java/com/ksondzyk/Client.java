@@ -13,8 +13,8 @@ public class Client {
 
         public static void main(String[] args) {
             String mode = NetworkProperties.MODE;
-            ExecutorService service = Executors.newFixedThreadPool(4);
-            for(int i = 0;i<4;i++){
+            ExecutorService service = Executors.newFixedThreadPool(1);
+            for(int i = 0;i<1;i++){
                 service.execute((mode.equals("TCP"))?new UDPClientThread():new TCPClientThread());
             }
             service.shutdown();

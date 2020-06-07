@@ -29,29 +29,30 @@ public class TCPServerThread implements Runnable {
     public void run(){
 
         try {
-            synchronized (socket){
-                PacketReceiver pr = new PacketReceiver();
+            synchronized (socket) {
+                while (true) {
+                    PacketReceiver pr = new PacketReceiver();
 
-                Packet packet = pr.receive(is);
-                int id = packet.getBMsq().getBUserId();
-                while(true){
-                    ProcessingQueue.Task processingQueueTask = ProcessingQueue.process(id);
+                    Packet packet = pr.receive(is);
+                    int id = packet.getBMsq().getBUserId();
+                    // while(true){
+                    //   ProcessingQueue.Task processingQueueTask = ProcessingQueue.process(id);
 
-                    while (!processingQueueTask.isDone()) {
-                        Thread.sleep(10);
-                        System.out.println("Waiting for client #"+id);
-                        System.out.println("wait");
+//                    while (!processingQueueTask.isDone()) {
+//                        Thread.sleep(10);
+//                       // System.out.println("Waiting for client #"+id);
+//                       // System.out.println("wait");
+//                    }
+
+
+                    System.out.println("Server received packet " + Thread.currentThread().getName());
+
+                    if (packet.getMessage().equals("END")) {
+                        break;
                     }
-
-
-
-                System.out.println("Server received packet " + Thread.currentThread().getName());
-
-                if (packet.getMessage().equals("END")) {
-                    break;
+                    Processor.process(packet, os);
+//            }
                 }
-                Processor.process(packet, os);
-            }
             }
         } catch (IOException e) {
             System.err.println("Поток завершив роботу");

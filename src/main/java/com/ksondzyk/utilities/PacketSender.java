@@ -15,9 +15,9 @@ public class PacketSender {
         try {
 
             byte[] packetBytes;
-            if (i == 2)
-                packetBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
-            else
+//            if (i == 2)
+//                packetBytes = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
+//            else
                 packetBytes = packet.getData();
 
             os.write(packetBytes);

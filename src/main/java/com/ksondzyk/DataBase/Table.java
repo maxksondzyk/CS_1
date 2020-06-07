@@ -8,28 +8,29 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Table {
-    public static void create() {
-        String sqlQuery = "CREATE TABLE IF NOT EXISTS " + NetworkProperties.tableName + " (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT)";
+    public static void create(String name) {
+        String sqlQuery = "CREATE TABLE IF NOT EXISTS " + name + " (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, quantity INTEGER)";
 
         try {
             Statement statement = DB.connection.createStatement();
 
             statement.execute(sqlQuery);
 
-            System.out.println("Table " + NetworkProperties.tableName + " created");
+            System.out.println("Table " + name + " created");
             System.out.println();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
     }
 
-    public static Integer insert(String title) {
-        String sqlQuery = "INSERT INTO " + NetworkProperties.tableName +  " (title) VALUES (?)";
+    public static Integer insert(String tableName, String title, int quantity) {
+        String sqlQuery = "INSERT INTO " + tableName +  " (title) VALUES (?, ?)";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, title);
+            preparedStatement.setInt(2, quantity);
 
             preparedStatement.executeUpdate();
 
@@ -52,44 +53,45 @@ public class Table {
         return null;
     }
 
-    public static void insert(int id, String title) {
-        String sqlQuery = "INSERT INTO " + NetworkProperties.tableName +  " (id, title) VALUES (?, ?)";
+    public static void insert(String tableName, int id, int quantity, String title) {
+        String sqlQuery = "INSERT INTO " + tableName +  " (id, title, quantity) VALUES (?, ?, ?)";
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.setString(2, title);
+            preparedStatement.setInt(3, quantity);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("Inserted " + id + " " + title + "" + quantity + " into " + tableName);
+            System.out.println();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+    }
+
+    public static void update(String tableName, int id, int quantity, String title) {
+        String sqlQuery = "UPDATE " + tableName + " SET title = ? quantity = ? WHERE id = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
             preparedStatement.setInt(1, id);
             preparedStatement.setString(2, title);
+            preparedStatement.setInt(3, quantity);
 
             preparedStatement.executeUpdate();
 
-            System.out.println("Inserted " + id + " " + title);
+            System.out.println("Updated " + id + " " + title + "" + quantity + " in " + tableName);
             System.out.println();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
     }
 
-    public static void update(int id, String title) {
-        String sqlQuery = "UPDATE " + NetworkProperties.tableName + " SET title = ? WHERE id = ?";
-
-        try {
-            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
-
-            preparedStatement.setString(1, title);
-            preparedStatement.setInt(2, id);
-
-            preparedStatement.executeUpdate();
-
-            System.out.println("Updated " + id + " " + title);
-            System.out.println();
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-    }
-
-    public static ResultSet selectOneByTitle(String title) {
-        String sqlQuery = "SELECT * FROM " + NetworkProperties.tableName +  " WHERE title = ?";
+    public static ResultSet selectOneByTitle(String tableName, String title) {
+        String sqlQuery = "SELECT * FROM " + tableName +  " WHERE title = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -104,8 +106,8 @@ public class Table {
         return null;
     }
 
-    public static ResultSet selectOneLimitOffset(int limit, int offset) {
-        String sqlQuery = "SELECT * FROM " + NetworkProperties.tableName +  " LIMIT ?, ?";
+    public static ResultSet selectOneLimitOffset(String tableName, int limit, int offset) {
+        String sqlQuery = "SELECT * FROM " + tableName +  " LIMIT ?, ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -122,8 +124,8 @@ public class Table {
     }
 
 
-    public static ResultSet selectAll() {
-        String sqlQuery = "SELECT * FROM " + NetworkProperties.tableName;
+    public static ResultSet selectAll(String tableName) {
+        String sqlQuery = "SELECT * FROM " + tableName;
 
         try {
             Statement statement  = DB.connection.createStatement();
@@ -136,8 +138,8 @@ public class Table {
         return null;
     }
 
-    public static void delete(int id) {
-        String sqlQuery = "DELETE FROM " + NetworkProperties.tableName + " WHERE id = ?";
+    public static void delete(String tableName, int id) {
+        String sqlQuery = "DELETE FROM " + tableName + " WHERE id = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -153,15 +155,15 @@ public class Table {
         }
     }
 
-    public static void truncate() {
-        String sqlQuery = "DELETE FROM " + NetworkProperties.tableName;
+    public static void truncate(String tableName) {
+        String sqlQuery = "DELETE FROM " + tableName;
 
         try {
             Statement statement = DB.connection.createStatement();
 
             statement.execute(sqlQuery);
 
-            System.out.println("Table " + NetworkProperties.tableName + " truncated");
+            System.out.println("Table " + tableName + " truncated");
             System.out.println();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

@@ -16,9 +16,9 @@ import java.util.concurrent.Executors;
 
 
 public class Server {
-    static int networkThreadCount = 100;
+    static int networkThreadCount = 1;
     static ExecutorService executorPool;
-    public static int processingThreadCount = 10;
+    public static int processingThreadCount = 1;
     enum ProcessingType { Queue, Async }
     static ProcessingType processingType = ProcessingType.Queue;
     public static Boolean serverIsWorking = true;

@@ -1,6 +1,7 @@
 package com.ksondzyk.utilities;
 
 import com.google.common.primitives.UnsignedLong;
+import com.ksondzyk.DataBase.Table;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
@@ -8,6 +9,7 @@ import com.ksondzyk.storage.ProductsStorage;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.sql.SQLException;
 
 
 public class Processor {
@@ -19,23 +21,29 @@ public class Processor {
         try {
 
         int cType = packet.getBMsq().getCType();
-        answerMessage=answer(cType);
+        answerMessage=answer(cType,CipherMy.decode(answerMessage.getMessage()));
 
         } catch (PacketDamagedException e) {
             e.printStackTrace();
         }
         return CipherMy.decode(answerMessage.getMessage());
     }
-    private static Message answer(int cType) throws PacketDamagedException {
-        Message answerMessage;
+    private static Message answer(int cType,String message) throws PacketDamagedException {
+        Message answerMessage = new Message(0,0,"error",false);
+        try {
+            int quantity = Integer.parseInt(message.replaceAll("[A-Za-z,]+",""));
+        String letters = message.replaceAll("[^A-Za-z]+", " ");
+        String arr[] = letters.split(" +", 2);
+        String tableName = arr[0];
+        String title = arr[1];
+
 
         switch (cType) {
             case -1:
                 answerMessage = new Message(0, 1, "send again",false);
                 break;
             case 1:
-                answerMessage = new Message(0, 1, "the amount of products",false);
-
+                answerMessage = new Message(0, 1,  String.valueOf(Table.selectOneByTitle(tableName,title).getInt("quantity")),false);
                 break;
             case 2:
                 answerMessage = new Message(0, 1, "some product has been deleted",false);
@@ -45,9 +53,11 @@ public class Processor {
                 break;
             case 4:
                 answerMessage = new Message(0, 1, "a group of product has been added",false);
+                Table.create(tableName);
                 break;
             case 5:
-                answerMessage = new Message(0, 1, "a product's name has been added to a group",false);
+                answerMessage = new Message(0, 1, title+ " have been added to "+ tableName,false);
+                Table.insert(tableName,1,quantity,title);
                 break;
             case 6:
                 answerMessage = new Message(0, 1, "the price has been set",false);
@@ -55,6 +65,9 @@ public class Processor {
             default:
                 throw new PacketDamagedException("Unknown command");
 
+        }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
         return answerMessage;
     }
@@ -68,7 +81,7 @@ public class Processor {
 
             int cType = packet.getBMsq().getCType();
 
-            answerMessage = answer(cType);
+            answerMessage = answer(cType,CipherMy.decode(packet.getBMsq().getMessage()));
             Packet answerPacket = new Packet((byte) 1,bPktId, answerMessage);
                 try {
                     PacketSender sender = new PacketSender();
