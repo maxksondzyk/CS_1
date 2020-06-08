@@ -11,6 +11,7 @@ public class DB {
 
     public static void connect() {
         try {
+
             String url = "jdbc:sqlite:" + NetworkProperties.dbName;
             connection = DriverManager.getConnection(url);
 

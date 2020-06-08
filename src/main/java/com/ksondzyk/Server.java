@@ -3,7 +3,7 @@ package com.ksondzyk;
 import com.ksondzyk.DataBase.DB;
 import com.ksondzyk.DataBase.Table;
 import com.ksondzyk.Processing.ProcessingQueue;
-import com.ksondzyk.network.TCP.TCPClientThread;
+
 import com.ksondzyk.network.TCP.TCPServerThread;
 import com.ksondzyk.network.UDPServerThread;
 import com.ksondzyk.utilities.NetworkProperties;
@@ -50,16 +50,7 @@ public class Server {
             e.printStackTrace();
         }
 
-//
-//        ExecutorService service = Executors.newFixedThreadPool(1);
-//        ServerSocket s = new ServerSocket( NetworkProperties.PORT);
-//        if(mode.equals("TCP")) {
-//            while (true)
-//                service.execute(new TCPServerThread(s.accept()));
-//        }
-//        else{
-//            service.execute(new UDPServerThread());
-//        }
+
     }
 
 }
