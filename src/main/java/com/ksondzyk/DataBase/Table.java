@@ -1,6 +1,7 @@
 package com.ksondzyk.DataBase;
 
-import com.ksondzyk.utilities.NetworkProperties;
+
+import com.ksondzyk.utilities.Properties;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,15 +9,41 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Table {
-    public static void create(String name) {
-        String sqlQuery = "CREATE TABLE IF NOT EXISTS " + name + " (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, quantity INTEGER, price INTEGER)";
 
+    public static void create() {
+        String sqlQuery = "CREATE TABLE IF NOT EXISTS "+ Properties.tableName +" (\n"
+                + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + "	title text NOT NULL,\n"
+                + "	quantity INTEGER, \n"
+                + " price INTEGER\n"
+                + ");";
         try {
             Statement statement = DB.connection.createStatement();
 
             statement.execute(sqlQuery);
 
-            System.out.println("Table " + name + " created");
+            System.out.println("Table created");
+            System.out.println();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+    }
+
+
+    public static void create(String name) {
+   //     String sqlQuery = "CREATE TABLE IF NOT EXISTS " + name + " (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, quantity INTEGER, price INTEGER)";
+        String sqlQuery = "CREATE TABLE IF NOT EXISTS Warehouse (\n"
+                + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + "	title text NOT NULL,\n"
+                + "	quantity INTEGER, \n"
+                + " price INTEGER\n"
+                + ");";
+        try {
+            Statement statement = DB.connection.createStatement();
+
+            statement.execute(sqlQuery);
+
+            System.out.println("Table created");
             System.out.println();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
@@ -24,7 +51,7 @@ public class Table {
     }
 
     public static Integer insert(String tableName, String title, int quantity, int price) {
-        String sqlQuery = "INSERT INTO " + tableName +  " (title) VALUES (?, ?, price)";
+        String sqlQuery = "INSERT INTO " + tableName +  " (title) VALUES (?, ?, ?)";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
@@ -172,4 +199,5 @@ public class Table {
             System.out.println(e.getMessage());
         }
     }
+
 }

@@ -2,7 +2,7 @@ package com.ksondzyk.network;
 
 
 import com.ksondzyk.entities.Packet;
-import com.ksondzyk.utilities.NetworkProperties;
+import com.ksondzyk.utilities.Properties;
 import com.ksondzyk.utilities.PacketGenerator;
 import com.ksondzyk.utilities.PacketReceiver;
 import lombok.Getter;
@@ -55,7 +55,7 @@ public class UDPClientThread implements Runnable{
                         sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
 
 
-                    DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, NetworkProperties.PORT);
+                    DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, Properties.PORT);
                     Packet packetReceived;
 
                     for(int j = 0; j<5;j++) {

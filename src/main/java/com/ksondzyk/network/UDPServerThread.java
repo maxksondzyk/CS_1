@@ -2,7 +2,7 @@ package com.ksondzyk.network;
 
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.CipherMy;
-import com.ksondzyk.utilities.NetworkProperties;
+import com.ksondzyk.utilities.Properties;
 import com.ksondzyk.utilities.PacketReceiver;
 import com.ksondzyk.utilities.Processor;
 
@@ -16,7 +16,7 @@ public class UDPServerThread implements Runnable {
     public UDPServerThread() {
 
         try {
-            serverSocket = new DatagramSocket(NetworkProperties.PORT);
+            serverSocket = new DatagramSocket(Properties.PORT);
         } catch (Exception e) {
             e.printStackTrace();
         }
