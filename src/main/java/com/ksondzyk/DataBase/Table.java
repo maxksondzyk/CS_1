@@ -10,12 +10,14 @@ import java.sql.Statement;
 
 public class Table {
 
-    public static void create() {
+    public static void createTable() {
         String sqlQuery = "CREATE TABLE IF NOT EXISTS "+ Properties.tableName +" (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + "	category text NOT NULL,\n"
                 + "	title text NOT NULL,\n"
                 + "	quantity INTEGER, \n"
-                + " price INTEGER\n"
+                + " price INTEGER,\n"
+                + " UNIQUE(title)"
                 + ");";
         try {
             Statement statement = DB.connection.createStatement();
@@ -24,41 +26,66 @@ public class Table {
 
             System.out.println("Table created");
             System.out.println();
+            statement.close();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
     }
+    public static void deleteTable() {
 
-
-    public static void create(String name) {
-   //     String sqlQuery = "CREATE TABLE IF NOT EXISTS " + name + " (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, quantity INTEGER, price INTEGER)";
-        String sqlQuery = "CREATE TABLE IF NOT EXISTS Warehouse (\n"
-                + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
-                + "	title text NOT NULL,\n"
-                + "	quantity INTEGER, \n"
-                + " price INTEGER\n"
-                + ");";
         try {
-            Statement statement = DB.connection.createStatement();
+            Statement   stmt = DB.connection.createStatement();
 
-            statement.execute(sqlQuery);
+        String sqlCommand = "DROP TABLE IF EXISTS "+Properties.tableName;
 
-            System.out.println("Table created");
-            System.out.println();
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
+        System.out.println("output : " + stmt.executeUpdate(sqlCommand));
+
+        stmt.close(); }
+        catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
-    public static Integer insert(String tableName, String title, int quantity, int price) {
-        String sqlQuery = "INSERT INTO " + tableName +  " (title) VALUES (?, ?, ?)";
+    public static ResultSet selectOneByTitle(String title) {
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " WHERE title = ?";
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setString(1, title);
+
+            return preparedStatement.executeQuery();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+    public static ResultSet selectAll() {
+        String sqlQuery = "SELECT * FROM " + Properties.tableName;
+
+        try {
+            Statement statement  = DB.connection.createStatement();
+
+            return statement.executeQuery(sqlQuery);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static Integer insert(String category, String title, int quantity, int price) {
+        String sqlQuery = "INSERT OR IGNORE INTO " + Properties.tableName
+                +  " (category,title,quantity,price) VALUES (?,?, ?, ?)";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
-            preparedStatement.setString(1, title);
-            preparedStatement.setInt(2, quantity);
-            preparedStatement.setInt(3, price);
+            preparedStatement.setString(1, category);
+            preparedStatement.setString(2, title);
+            preparedStatement.setInt(3, quantity);
+            preparedStatement.setInt(4, price);
 
             preparedStatement.executeUpdate();
 
@@ -81,44 +108,48 @@ public class Table {
         return null;
     }
 
-    public static void insert(String tableName, int id, int quantity, int price, String title) {
-        String sqlQuery = "INSERT INTO " + tableName +  " (id, title, quantity, price) VALUES (?, ?, ?, ?)";
+    public static void update( int id, String title,String category , int price, int quantity ) {
+        String sqlQuery = "UPDATE " + Properties.tableName
+                + " SET title =?, category = ?, price =?, quantity = ? WHERE id = ? ";
+
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
-            preparedStatement.setInt(1, id);
-            preparedStatement.setString(2, title);
-            preparedStatement.setInt(3, quantity);
-            preparedStatement.setInt(4, price);
+            preparedStatement.setInt(5, id);
+            preparedStatement.setString(1, title);
+            preparedStatement.setInt(4, quantity);
+            preparedStatement.setInt(3, price);
+            preparedStatement.setString(2, category);
+
 
             preparedStatement.executeUpdate();
 
-            System.out.println("Inserted #" + id + " Title: " + title + " Quantity" + quantity + " Price:" + price + " into " + tableName);
+            System.out.println("Updated #" + id + " Title: " + title + " Quantity" + quantity + " Price:" + price + " into " + Properties.tableName);
             System.out.println();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
     }
-
-    public static void update(String tableName, int id, int quantity, String title, int price) {
-        String sqlQuery = "UPDATE " + tableName + " SET title = ? quantity = ? price = ? WHERE id = ?";
+    public static void update(String title,  int quantity,  int price ) {
+        String sqlQuery = "UPDATE " + Properties.tableName + " SET quantity = ?, price =? WHERE title = ? ";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
-            preparedStatement.setInt(1, id);
-            preparedStatement.setString(2, title);
-            preparedStatement.setInt(3, quantity);
-            preparedStatement.setInt(4, price);
+            preparedStatement.setString(3, title);
+            preparedStatement.setInt(1, quantity);
+            preparedStatement.setInt(2, price);
+
+
 
             preparedStatement.executeUpdate();
 
-            System.out.println("Updated #" + id + " Title: " + title + " Quantity" + quantity + " Price:" + price + " into " + tableName);
-            System.out.println();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
     }
+
+
 
     public static ResultSet selectOneByTitle(String tableName, String title) {
         String sqlQuery = "SELECT * FROM " + tableName +  " WHERE title = ?";
@@ -153,23 +184,45 @@ public class Table {
         return null;
     }
 
-
-    public static ResultSet selectAll(String tableName) {
-        String sqlQuery = "SELECT * FROM " + tableName;
+    public static ResultSet listByPrice(){
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " ORDERED BY price";
 
         try {
-            Statement statement  = DB.connection.createStatement();
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
-            return statement.executeQuery(sqlQuery);
+
+            return preparedStatement.executeQuery();
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
 
         return null;
+
+
+
     }
 
-    public static void delete(String tableName, int id) {
-        String sqlQuery = "DELETE FROM " + tableName + " WHERE id = ?";
+    public static ResultSet listByPrice(String category){
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  "WHERE category =? ORDERED BY price";
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+            preparedStatement.setString(1, category);
+
+
+            return preparedStatement.executeQuery();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+
+
+
+    }
+
+    public static void delete(int id) {
+        String sqlQuery = "DELETE FROM " + Properties.tableName + " WHERE id = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -184,16 +237,32 @@ public class Table {
             System.out.println(e.getMessage());
         }
     }
+    public static void delete(String title) {
+        String sqlQuery = "DELETE FROM " + Properties.tableName + " WHERE title = ?";
 
-    public static void truncate(String tableName) {
-        String sqlQuery = "DELETE FROM " + tableName;
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setString(1, title);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("Deleted " + title);
+            System.out.println();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    public static void truncate() {
+        String sqlQuery = "DELETE FROM " + Properties.tableName;
 
         try {
             Statement statement = DB.connection.createStatement();
 
             statement.execute(sqlQuery);
 
-            System.out.println("Table " + tableName + " truncated");
+            System.out.println("Table  truncated");
             System.out.println();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
