@@ -31,11 +31,16 @@ public class Processor {
     private static Message answer(int cType,String message) throws PacketDamagedException {
         Message answerMessage = new Message(0,0,"error",false);
         try {
-            int quantity = Integer.parseInt(message.replaceAll("[A-Za-z,]+",""));
+            String nums = message.replaceAll("[^0-9]+"," ");
         String letters = message.replaceAll("[^A-Za-z]+", " ");
-        String arr[] = letters.split(" +", 2);
+        nums = nums.replaceAll(" +[^0-9]","");
+        nums = nums.replaceAll("^ ", "");
+        String[] arrNum = nums.split(" ", 2);
+        String[] arr = letters.split(" ", 2);
         String tableName = arr[0];
         String title = arr[1];
+        int quantity = Integer.parseInt(arrNum[0]);
+        int price = Integer.parseInt(arrNum[1]);
 
 
         switch (cType) {
@@ -57,7 +62,7 @@ public class Processor {
                 break;
             case 5:
                 answerMessage = new Message(0, 1, title+ " have been added to "+ tableName,false);
-                Table.insert(tableName,1,quantity,title);
+                Table.insert(tableName,1,quantity,price,title);
                 break;
             case 6:
                 answerMessage = new Message(0, 1, "the price has been set",false);

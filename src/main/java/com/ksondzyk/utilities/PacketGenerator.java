@@ -32,7 +32,7 @@ public class PacketGenerator {
     public Packet newPacket(int i){
         bPktID = bPktID.plus(UnsignedLong.ONE);
         Random rand = new Random();
-        String message ="fruits,apples,123";
+        String message ="fruits,apples,123,10";
 
 //        if (i == 1) {
 //            return new Packet((byte)1,bPktID,
