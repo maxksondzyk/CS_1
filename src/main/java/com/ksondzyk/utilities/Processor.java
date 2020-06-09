@@ -48,7 +48,7 @@ public class Processor {
                 answerMessage = new Message(0, 1, "send again",false);
                 break;
             case 1:
-                answerMessage = new Message(0, 1,  String.valueOf(Table.selectOneByTitle(tableName,title).getInt("quantity")),false);
+                answerMessage = new Message(0, 1,  String.valueOf(Table.selectOneByTitle(title).getInt("quantity")),false);
                 break;
             case 2:
                 answerMessage = new Message(0, 1, "some product has been deleted",false);
@@ -58,11 +58,11 @@ public class Processor {
                 break;
             case 4:
                 answerMessage = new Message(0, 1, "a group of product has been added",false);
-                Table.create(tableName);
+                Table.createTable();
                 break;
             case 5:
                 answerMessage = new Message(0, 1, title+ " have been added to "+ tableName,false);
-                Table.insert(tableName,1,quantity,price,title);
+                Table.insert(tableName,title , quantity,price);
                 break;
             case 6:
                 answerMessage = new Message(0, 1, "the price has been set",false);

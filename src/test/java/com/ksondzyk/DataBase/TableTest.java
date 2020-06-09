@@ -16,14 +16,14 @@ public class TableTest {
     @Before
     public void init() {
         DB.connect();
-        Table.create();
+        Table.createTable();
     }
 
     @Test
     public void create() throws SQLException {
-        Table.create();
+        Table.createTable();
 
-        ResultSet results = Table.selectAll(Properties.tableName);
+        ResultSet results = Table.selectAll();
         ResultSetMetaData md = results.getMetaData();
         int columnCount = md.getColumnCount();
 
