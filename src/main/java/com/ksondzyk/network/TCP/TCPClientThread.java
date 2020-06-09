@@ -1,7 +1,7 @@
 package com.ksondzyk.network.TCP;
 
 import com.ksondzyk.entities.Packet;
-import com.ksondzyk.utilities.NetworkProperties;
+import com.ksondzyk.utilities.Properties;
 import com.ksondzyk.utilities.PacketGenerator;
 import com.ksondzyk.utilities.PacketReceiver;
 import com.ksondzyk.utilities.PacketSender;
@@ -54,7 +54,7 @@ public class TCPClientThread implements Runnable {
     private void connect() {
         for (int j = 0; j < 5; j++){
             try {
-                socket = new Socket(addr, NetworkProperties.PORT);
+                socket = new Socket(addr, Properties.PORT);
 
                 break;
             }

@@ -1,6 +1,6 @@
 package com.ksondzyk.DataBase;
 
-import com.ksondzyk.utilities.NetworkProperties;
+import com.ksondzyk.utilities.Properties;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -11,7 +11,8 @@ public class DB {
 
     public static void connect() {
         try {
-            String url = "jdbc:sqlite:" + NetworkProperties.dbName;
+
+            String url = "jdbc:sqlite:" + Properties.dbName;
             connection = DriverManager.getConnection(url);
 
             System.out.println("Connection to SQLite has been established.");
