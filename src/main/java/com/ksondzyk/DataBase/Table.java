@@ -149,6 +149,29 @@ public class Table {
         }
     }
 
+    public static void update(String title,  int value, String mode) {
+        String sqlQuery;
+
+        if(mode.equals("quantity")) {
+            sqlQuery = "UPDATE " + Properties.tableName + " SET quantity = ? WHERE title = ? ";
+        }
+        else {
+            sqlQuery = "UPDATE " + Properties.tableName + " SET price = ? WHERE title = ? ";
+        }
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setString(2, title);
+            preparedStatement.setInt(1, value);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+    }
+
 
 
     public static ResultSet selectOneByTitle(String tableName, String title) {

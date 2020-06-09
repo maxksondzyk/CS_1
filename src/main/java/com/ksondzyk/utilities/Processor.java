@@ -6,6 +6,7 @@ import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import com.ksondzyk.storage.ProductsStorage;
+import javafx.scene.control.Tab;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -32,40 +33,50 @@ public class Processor {
         Message answerMessage = new Message(0,0,"error",false);
         try {
             String nums = message.replaceAll("[^0-9]+"," ");
-        String letters = message.replaceAll("[^A-Za-z]+", " ");
-        nums = nums.replaceAll(" +[^0-9]","");
-        nums = nums.replaceAll("^ ", "");
-        String[] arrNum = nums.split(" ", 2);
-        String[] arr = letters.split(" ", 2);
-        String tableName = arr[0];
-        String title = arr[1];
-        int quantity = Integer.parseInt(arrNum[0]);
-        int price = Integer.parseInt(arrNum[1]);
+            nums = nums.replaceAll(" +[^0-9]","");
+            nums = nums.replaceAll("^ ", "");
+            String[] arrNum = nums.split(" ", 2);
+
+            int quantity = Integer.parseInt(arrNum[0]);
+            int price = Integer.parseInt(arrNum[1]);
 
 
+            String letters = message.replaceAll("[^A-Za-z]+", " ");
+            String[] arr = letters.split(" ", 2);
+
+            String category = arr[0];
+            String title = arr[1];
+
+
+            int currentValue;
+            int newValue;
         switch (cType) {
             case -1:
                 answerMessage = new Message(0, 1, "send again",false);
                 break;
             case 1:
-                answerMessage = new Message(0, 1,  String.valueOf(Table.selectOneByTitle(title).getInt("quantity")),false);
+                answerMessage = new Message(0, 1,  "There are "+String.valueOf(Table.selectOneByTitle(title).getInt("quantity"))+" "+title + "for the price of " + Table.selectOneByTitle(title).getInt("price"),false);
                 break;
             case 2:
-                answerMessage = new Message(0, 1, "some product has been deleted",false);
+                answerMessage = new Message(0, 1, quantity+" of "+title+" has been deleted",false);
+                currentValue = Table.selectOneByTitle(title).getInt("quantity");
+                newValue = currentValue - quantity;
+                Table.update(title,newValue,"quantity");
                 break;
             case 3:
-                answerMessage = new Message(0, 1, "some product has been added:",false);
+                answerMessage = new Message(0, 1, quantity+" of "+title+" has been added",false);
+                currentValue = Table.selectOneByTitle(title).getInt("quantity");
+                newValue = currentValue - quantity;
+                Table.update(title,newValue,"quantity");
                 break;
             case 4:
-                answerMessage = new Message(0, 1, "a group of product has been added",false);
-                Table.createTable();
+                answerMessage = new Message(0, 1, title+ " have been added to "+ category,false);
+                Table.insert(category,title , quantity,price);
                 break;
             case 5:
-                answerMessage = new Message(0, 1, title+ " have been added to "+ tableName,false);
-                Table.insert(tableName,title , quantity,price);
-                break;
-            case 6:
-                answerMessage = new Message(0, 1, "the price has been set",false);
+                answerMessage = new Message(0, 1, "the price of "+title+" has been set to "+price,false);
+                Table.update(title,price,"price");
+
                 break;
             default:
                 throw new PacketDamagedException("Unknown command");
