@@ -3,7 +3,7 @@ package com.ksondzyk;
 import com.ksondzyk.DataBase.DB;
 import com.ksondzyk.Processing.Processor;
 import com.ksondzyk.network.TCP.TCPServerThread;
-import com.ksondzyk.network.UDPServerThread;
+import com.ksondzyk.network.UDP.UDPServerThread;
 import com.ksondzyk.utilities.Properties;
 
 import java.io.IOException;

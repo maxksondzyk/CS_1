@@ -1,10 +1,10 @@
-package com.ksondzyk.network;
+package com.ksondzyk.network.UDP;
 
 
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.Properties;
 import com.ksondzyk.utilities.PacketGenerator;
-import com.ksondzyk.utilities.PacketReceiver;
+import com.ksondzyk.network.TCP.TCPPacketReceiver;
 import lombok.Getter;
 
 import java.io.IOException;
@@ -51,10 +51,6 @@ public class UDPClientThread implements Runnable{
                     Packet packet = packetGenerator.newPacket(i);
                     byte[] sentData = packet.getData();
 
-                    if (i == 2)
-                        sentData = Arrays.copyOfRange(packet.getData(), 0, packet.getData().length / 2);
-
-
                     DatagramPacket datagramPacketSent = new DatagramPacket(sentData,sentData.length,addr, Properties.PORT);
                     Packet packetReceived;
 
@@ -64,7 +60,7 @@ public class UDPClientThread implements Runnable{
                         System.out.println("sent from "+Thread.currentThread());
 
 
-                        packetReceived = PacketReceiver.receiveUDP(socket);
+                        packetReceived = UDPPacketReceiver.receive(socket);
 
 
                         System.err.println("Answer from server: "+packetReceived.getDecodedMessage());

@@ -1,7 +1,7 @@
 package com.ksondzyk;
 
 import com.ksondzyk.network.TCP.TCPClientThread;
-import com.ksondzyk.network.UDPClientThread;
+import com.ksondzyk.network.UDP.UDPClientThread;
 import com.ksondzyk.utilities.Properties;
 
 import java.util.concurrent.ExecutorService;

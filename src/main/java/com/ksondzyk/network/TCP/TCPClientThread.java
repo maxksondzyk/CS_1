@@ -3,7 +3,6 @@ package com.ksondzyk.network.TCP;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.Properties;
 import com.ksondzyk.utilities.PacketGenerator;
-import com.ksondzyk.utilities.PacketReceiver;
 import com.ksondzyk.utilities.PacketSender;
 import lombok.Getter;
 
@@ -81,7 +80,7 @@ public class TCPClientThread implements Runnable {
                     PacketSender sender = new PacketSender();
                     sender.send(packet, outputStream,i);
 
-                    PacketReceiver pr = new PacketReceiver();
+                    TCPPacketReceiver pr = new TCPPacketReceiver();
                     Packet packetReceived = pr.receive(inputStream);
 
                     if (packetReceived.getBPktId().equals(packet.getBPktId()))

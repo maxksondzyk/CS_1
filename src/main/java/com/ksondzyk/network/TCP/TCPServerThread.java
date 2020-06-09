@@ -4,7 +4,6 @@ import com.ksondzyk.Processing.Processor;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.CipherMy;
-import com.ksondzyk.utilities.PacketReceiver;
 import com.ksondzyk.utilities.PacketSender;
 
 import java.io.IOException;
@@ -35,7 +34,7 @@ public class TCPServerThread implements Runnable {
         try {
             synchronized (socket) {
                 while (true) {
-                    PacketReceiver pr = new PacketReceiver();
+                    TCPPacketReceiver pr = new TCPPacketReceiver();
 
                     Packet packet = pr.receive(is);
 

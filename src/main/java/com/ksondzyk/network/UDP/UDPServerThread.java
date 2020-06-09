@@ -1,15 +1,13 @@
-package com.ksondzyk.network;
+package com.ksondzyk.network.UDP;
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.CipherMy;
-import com.ksondzyk.utilities.PacketSender;
 import com.ksondzyk.utilities.Properties;
-import com.ksondzyk.utilities.PacketReceiver;
+import com.ksondzyk.network.TCP.TCPPacketReceiver;
 import com.ksondzyk.Processing.Processor;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.DatagramSocket;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -32,7 +30,7 @@ public class UDPServerThread implements Runnable {
         try {
             while (true) {
 
-                Packet packetReceived = PacketReceiver.receiveUDP(serverSocket);
+                Packet packetReceived = UDPPacketReceiver.receive(serverSocket);
 
 
                 if(packetReceived.getBMsq().getCType()!=-1) {
