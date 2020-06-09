@@ -1,36 +1,35 @@
-package com.ksondzyk.utilities;
+package com.ksondzyk.Processing;
 
 import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.DataBase.Table;
+import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
-import com.ksondzyk.storage.ProductsStorage;
-import javafx.scene.control.Tab;
+import com.ksondzyk.utilities.CipherMy;
+import com.ksondzyk.utilities.PacketSender;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.concurrent.*;
 
 
-public class Processor {
+public class Processor implements Callable{
+    Packet packet;
+    static OutputStream os;
 
-    private static final ProductsStorage storage = new ProductsStorage();
-
-    public static String processUDP(Packet packet){
-        Message answerMessage = packet.getBMsq();
-        try {
-
-        int cType = packet.getBMsq().getCType();
-        answerMessage=answer(cType,CipherMy.decode(answerMessage.getMessage()));
-
-        } catch (PacketDamagedException e) {
-            e.printStackTrace();
-        }
-        return CipherMy.decode(answerMessage.getMessage());
+    Processor(Packet packet){
+        this.packet = packet;
+        run();
     }
+
+    static ExecutorService executorPool = Executors.newFixedThreadPool(Server.processingThreadCount);
+
+    static Message answerMessage;
+
     private static Message answer(int cType,String message) throws PacketDamagedException {
-        Message answerMessage = new Message(0,0,"error",false);
+        answerMessage = new Message(0,0,"error",false);
         try {
             String nums = message.replaceAll("[^0-9]+"," ");
             nums = nums.replaceAll(" +[^0-9]","");
@@ -66,7 +65,7 @@ public class Processor {
             case 3:
                 answerMessage = new Message(0, 1, quantity+" of "+title+" has been added",false);
                 currentValue = Table.selectOneByTitle(title).getInt("quantity");
-                newValue = currentValue - quantity;
+                newValue = currentValue + quantity;
                 Table.update(title,newValue,"quantity");
                 break;
             case 4:
@@ -87,24 +86,50 @@ public class Processor {
         }
         return answerMessage;
     }
-    public static void process(Packet packet, OutputStream os) throws PacketDamagedException {
-        synchronized (storage) {
+    public static Future<Message> process(Packet packet, OutputStream ostream) {
+        os = ostream;
+        Callable<Message> processingAsync = new Processor(packet);
+        return executorPool.submit(processingAsync);
+    }
+    public static Future<Message> process(Packet packet) {
+        Callable<Message> processingAsync = new Processor(packet);
+        return executorPool.submit(processingAsync);
+    }
+    public void run(){
+        synchronized (packet) {
 
             System.out.println("Message received: "+ CipherMy.decode(packet.getMessage()));
-            Message answerMessage;
-
-            UnsignedLong bPktId= packet.getBPktId();
 
             int cType = packet.getBMsq().getCType();
-
+            try {
             answerMessage = answer(cType,CipherMy.decode(packet.getBMsq().getMessage()));
-            Packet answerPacket = new Packet((byte) 1,bPktId, answerMessage);
-                try {
-                    PacketSender sender = new PacketSender();
-                    sender.send(answerPacket, os, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+            } catch (PacketDamagedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+//    private static String process(Packet packet, OutputStream os) throws PacketDamagedException {
+//
+//        return CipherMy.decode(answerMessage.getMessage());
+//    }
+
+    @Override
+    public Message call() throws Exception {
+        try {
+            Thread.sleep(1000 * Server.secondsPerTask);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return answerMessage;
+    }
+    public static void shutdown() {
+        executorPool.shutdown();
+        try {
+            if (!executorPool.awaitTermination(60, TimeUnit.SECONDS))
+                System.err.println("ProcessingAsync threads didn't finish in 60 seconds!");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }

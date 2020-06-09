@@ -1,13 +1,18 @@
 package com.ksondzyk.network;
 
+import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.utilities.CipherMy;
+import com.ksondzyk.utilities.PacketSender;
 import com.ksondzyk.utilities.Properties;
 import com.ksondzyk.utilities.PacketReceiver;
-import com.ksondzyk.utilities.Processor;
+import com.ksondzyk.Processing.Processor;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.DatagramSocket;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 public class UDPServerThread implements Runnable {
     private static DatagramSocket serverSocket;
@@ -32,11 +37,18 @@ public class UDPServerThread implements Runnable {
 
                 if(packetReceived.getBMsq().getCType()!=-1) {
                     System.out.println(CipherMy.decode(packetReceived.getBMsq().getMessage()));
-                    System.out.println(Processor.processUDP(packetReceived));
+
+                    Future<Message> response = Processor.process(packetReceived);
+
+                    System.out.println(CipherMy.decode(response.get().getMessage()));
                 }
             }
         } catch (IOException e) {
             System.err.println("Сервер завершив роботу");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
         }
 
     }
