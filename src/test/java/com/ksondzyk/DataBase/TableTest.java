@@ -54,9 +54,6 @@ public class TableTest {
         Table.insert(Properties.tableName, "apple", 100, 38);
     }
 
-    @Test
-    public void insert1() {
-    }
 
     @Test
     public void update() {

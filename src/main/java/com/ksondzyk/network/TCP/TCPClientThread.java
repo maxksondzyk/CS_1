@@ -55,7 +55,6 @@ public class TCPClientThread implements Runnable {
         for (int j = 0; j < 5; j++){
             try {
                 socket = new Socket(addr, Properties.PORT);
-
                 break;
             }
             catch (IOException e) {
@@ -75,7 +74,7 @@ public class TCPClientThread implements Runnable {
 
     public void run() {
             try {
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 16; i++) {
                     connect();
                     Packet packet = packetGenerator.newPacket(i);
 

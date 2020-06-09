@@ -40,35 +40,35 @@ public class PacketGenerator {
 //                            19,
 //                            message, false));
 //        }
-                if (i == 0) {
-            return new Packet((byte)1,bPktID,
-                    new Message(4,
-                            1,
-                            message, false));
-        }
-        if (i == 1) {
-            message = "fruits,apples,23,10";
-            return new Packet((byte)1,bPktID,
-                    new Message(2,
-                            1,
-                            message, false));
-        }
-        if (i == 2) {
-            message = "fruits,apples,123,15";
-            return new Packet((byte)1,bPktID,
-                    new Message(5,
-                            1,
-                            message, false));
-        }
-        if (i == 3) {
-            message = "fruits,apples,123,15";
-            return new Packet((byte)1,bPktID,
-                    new Message(1,
-                            1,
-                            message, false));
-        }
+//                if (i == 0) {
+//            return new Packet((byte)1,bPktID,
+//                    new Message(4,
+//                            1,
+//                            message, false));
+//        }
+//        if (i == 1) {
+//            message = "fruits,apples,23,10";
+//            return new Packet((byte)1,bPktID,
+//                    new Message(2,
+//                            1,
+//                            message, false));
+//        }
+//        if (i == 2) {
+//            message = "fruits,apples,123,15";
+//            return new Packet((byte)1,bPktID,
+//                    new Message(5,
+//                            1,
+//                            message, false));
+//        }
+//        if (i == 3) {
+//            message = "fruits,apples,123,15";
+//            return new Packet((byte)1,bPktID,
+//                    new Message(1,
+//                            1,
+//                            message, false));
+//        }
         return new Packet((byte) 1,bPktID,
-                new Message(rand.nextInt(5) + 1,
+                new Message(rand.nextInt(4) + 1,
                         rand.nextInt(),
                         message, false));
 
