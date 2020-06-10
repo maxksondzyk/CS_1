@@ -9,4 +9,5 @@ public class Properties {
     public static String tableName = "Warehouse";
 
 
+
 }

@@ -61,6 +61,21 @@ public class Table {
 
         return null;
     }
+    public static ResultSet selectOneById(int id) {
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " WHERE id = ?";
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setInt(1, id);
+
+            return preparedStatement.executeQuery();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
     public static ResultSet selectAll() {
         String sqlQuery = "SELECT * FROM " + Properties.tableName;
 
@@ -174,24 +189,8 @@ public class Table {
 
 
 
-    public static ResultSet selectOneByTitle(String tableName, String title) {
-        String sqlQuery = "SELECT * FROM " + tableName +  " WHERE title = ?";
-
-        try {
-            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
-
-            preparedStatement.setString(1, title);
-
-            return preparedStatement.executeQuery();
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static ResultSet selectOneLimitOffset(String tableName, int limit, int offset) {
-        String sqlQuery = "SELECT * FROM " + tableName +  " LIMIT ?, ?";
+    public static ResultSet selectOneLimitOffset( int limit, int offset) {
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " LIMIT ?, ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -207,8 +206,13 @@ public class Table {
         return null;
     }
 
-    public static ResultSet listByPrice(){
-        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " ORDERED BY price";
+    public static ResultSet listByPrice(boolean fromLower){
+        String order;
+        if(fromLower)
+            order = "ASC";
+        else
+            order = "DESC";
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " ORDER BY price "+order;
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -221,12 +225,13 @@ public class Table {
 
         return null;
 
-
-
     }
 
-    public static ResultSet listByPrice(String category){
-        String sqlQuery = "SELECT * FROM " + Properties.tableName +  "WHERE category =? ORDERED BY price";
+    public static ResultSet listByPrice(boolean fromLowest, String category){
+
+        String order = fromLowest? "ASC":"DESC";
+
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " WHERE category = ? ORDER BY price "+order;
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
