@@ -20,14 +20,11 @@ public class TCPClientThread implements Runnable {
     private final PacketGenerator packetGenerator;
     private static int counter = 0;
     private final int clientID = counter++;
-    @Getter
-    private static int threadcount = 0;
 
 
     public TCPClientThread() {
         packetGenerator = new PacketGenerator();
         System.out.println("Запустимо клієнт з номером " + clientID);
-        threadcount++;
         try {
             addr = InetAddress.getByName("localhost");
 
@@ -106,7 +103,6 @@ public class TCPClientThread implements Runnable {
                 } catch (IOException e) {
                     System.err.println("Socket not closed");
                 }
-                threadcount--; // Завершуємо цей потік
             }
     }
 

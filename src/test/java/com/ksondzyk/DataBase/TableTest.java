@@ -102,7 +102,7 @@ public class TableTest {
 
     }
 @Test
-    public void listByPrice() throws SQLException {
+    public void listBy() throws SQLException {
         Table.insert("fruits", "cherry", 1, 25);
         Table.insert("fruits", "strawberry", 1, 20);
         Table.insert("fruits", "pear", 1, 15);
@@ -110,7 +110,7 @@ public class TableTest {
         Table.insert("fruits", "banana", 1, 5);
         Table.insert("fruits", "apple", 1, 25);
 
-        ResultSet result = Table.listByPrice(true);
+        ResultSet result = Table.listBy("price",true);
 
 
     result.next();
@@ -126,7 +126,7 @@ public class TableTest {
     }
 
     @Test
-    public void listByPrice2() throws SQLException {
+    public void listByPrice() throws SQLException {
         Table.insert("berry", "cherry", 1, 25);
         Table.insert("berry", "strawberry", 1, 20);
         Table.insert("berry", "raspberry", 1, 15);

@@ -54,7 +54,7 @@ public class Processor implements Callable{
                 answerMessage = new Message(0, 1, "send again",false);
                 break;
             case 1:
-                answerMessage = new Message(0, 1,  "There are "+String.valueOf(Table.selectOneByTitle(title).getInt("quantity"))+" "+title + "for the price of " + Table.selectOneByTitle(title).getInt("price"),false);
+                answerMessage = new Message(0, 1,  "There are "+ Table.selectOneByTitle(title).getInt("quantity") +" "+title + "for the price of " + Table.selectOneByTitle(title).getInt("price"),false);
                 break;
             case 2:
                 answerMessage = new Message(0, 1, quantity+" of "+title+" has been deleted",false);
@@ -75,7 +75,10 @@ public class Processor implements Callable{
             case 5:
                 answerMessage = new Message(0, 1, "the price of "+title+" has been set to "+price,false);
                 Table.update(title,price,"price");
-
+                break;
+            case 6:
+                answerMessage = new Message(0,1,"listed by "+category+"; ascending: "+title,false);
+                Table.listBy(category, title.equals("true"));
                 break;
             default:
                 throw new PacketDamagedException("Unknown command");

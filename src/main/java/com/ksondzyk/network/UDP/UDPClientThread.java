@@ -2,16 +2,14 @@ package com.ksondzyk.network.UDP;
 
 
 import com.ksondzyk.entities.Packet;
-import com.ksondzyk.utilities.Properties;
 import com.ksondzyk.utilities.PacketGenerator;
-import com.ksondzyk.network.TCP.TCPPacketReceiver;
+import com.ksondzyk.utilities.Properties;
 import lombok.Getter;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.Arrays;
 
 public class UDPClientThread implements Runnable{
 
@@ -20,13 +18,10 @@ public class UDPClientThread implements Runnable{
     private final PacketGenerator packetGenerator;
     private static int counter = 0;
     private final int clientID = counter++;
-    @Getter
-    private static int threadcount = 0;
 
     public UDPClientThread() {
         packetGenerator = new PacketGenerator();
         System.out.println("Запустимо клієнт з номером " + clientID);
-        threadcount++;
         try {
             addr = InetAddress.getByName("localhost");
             socket = new DatagramSocket();
@@ -83,7 +78,6 @@ public class UDPClientThread implements Runnable{
             } finally {
                 // Завжди закриває:
                 socket.close();
-                threadcount--; // Завершуємо цей потік
             }
         }
     }

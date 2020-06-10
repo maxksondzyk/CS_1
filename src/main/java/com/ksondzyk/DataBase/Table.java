@@ -205,14 +205,13 @@ public class Table {
 
         return null;
     }
-
-    public static ResultSet listByPrice(boolean fromLower){
+    public static ResultSet listBy(String prop, boolean fromLower){
         String order;
         if(fromLower)
             order = "ASC";
         else
             order = "DESC";
-        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " ORDER BY price "+order;
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " ORDER BY "+prop+" "+order;
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
