@@ -1,15 +1,13 @@
 package com.ksondzyk.Processing;
 
-import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.DataBase.Table;
 import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import com.ksondzyk.utilities.CipherMy;
-import com.ksondzyk.utilities.PacketSender;
+import com.ksondzyk.utilities.Properties;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.concurrent.*;
@@ -54,17 +52,17 @@ public class Processor implements Callable{
                 answerMessage = new Message(0, 1, "send again",false);
                 break;
             case 1:
-                answerMessage = new Message(0, 1,  "There are "+ Table.selectOneByTitle(title).getInt("quantity") +" "+title + "for the price of " + Table.selectOneByTitle(title).getInt("price"),false);
+                answerMessage = new Message(0, 1,  "There are "+ Table.selectOneByTitle(title, Properties.tableName).getInt("quantity") +" "+title + "for the price of " + Table.selectOneByTitle(title, Properties.tableName).getInt("price"),false);
                 break;
             case 2:
                 answerMessage = new Message(0, 1, quantity+" of "+title+" has been deleted",false);
-                currentValue = Table.selectOneByTitle(title).getInt("quantity");
+                currentValue = Table.selectOneByTitle(title, Properties.tableName).getInt("quantity");
                 newValue = currentValue - quantity;
                 Table.update(title,newValue,"quantity");
                 break;
             case 3:
                 answerMessage = new Message(0, 1, quantity+" of "+title+" has been added",false);
-                currentValue = Table.selectOneByTitle(title).getInt("quantity");
+                currentValue = Table.selectOneByTitle(title, Properties.tableName).getInt("quantity");
                 newValue = currentValue + quantity;
                 Table.update(title,newValue,"quantity");
                 break;
@@ -79,6 +77,10 @@ public class Processor implements Callable{
             case 6:
                 answerMessage = new Message(0,1,"listed by "+category+"; ascending: "+title,false);
                 Table.listBy(category, title.equals("true"));
+                break;
+            case 7:
+                answerMessage = new Message(0, 1, category+ " category has been added",false);
+                Table.insertCategory(category);
                 break;
             default:
                 throw new PacketDamagedException("Unknown command");

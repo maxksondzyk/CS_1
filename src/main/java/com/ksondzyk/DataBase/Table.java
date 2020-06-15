@@ -7,26 +7,33 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.UUID;
 
 public class Table {
 
     public static void createTable() {
         String sqlQuery = "CREATE TABLE IF NOT EXISTS "+ Properties.tableName +" (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
-                + "	category text NOT NULL,\n"
+                + "	categoryID integer NOT NULL,\n"
                 + "	title text NOT NULL,\n"
                 + "	quantity INTEGER, \n"
                 + " price INTEGER,\n"
                 + " UNIQUE(title)"
                 + ");";
+        String sqlQueryCategories = "CREATE TABLE IF NOT EXISTS "+ "Categories" +" (\n"
+                + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + "	title text NOT NULL\n"
+                + ");";
         try {
             Statement statement = DB.connection.createStatement();
 
             statement.execute(sqlQuery);
+            statement.execute(sqlQueryCategories);
 
-            System.out.println("Table created");
-            System.out.println();
+            System.out.println("Table created\n");
+
             statement.close();
+
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
@@ -46,8 +53,8 @@ public class Table {
         }
     }
 
-    public static ResultSet selectOneByTitle(String title) {
-        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " WHERE title = ?";
+    public static ResultSet selectOneByTitle(String title, String table) {
+        String sqlQuery = "SELECT * FROM " + table +  " WHERE title = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -80,6 +87,7 @@ public class Table {
         String sqlQuery = "SELECT * FROM " + Properties.tableName;
 
         try {
+
             Statement statement  = DB.connection.createStatement();
 
             return statement.executeQuery(sqlQuery);
@@ -92,12 +100,13 @@ public class Table {
 
     public static Integer insert(String category, String title, int quantity, int price) {
         String sqlQuery = "INSERT OR IGNORE INTO " + Properties.tableName
-                +  " (category,title,quantity,price) VALUES (?,?, ?, ?)";
+                +  " (categoryID,title,quantity,price) VALUES (?,?, ?, ?)";
 
         try {
+            int categoryID = Table.selectOneByTitle(category,"Categories").getInt(1);
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
-            preparedStatement.setString(1, category);
+            preparedStatement.setInt(1, categoryID);
             preparedStatement.setString(2, title);
             preparedStatement.setInt(3, quantity);
             preparedStatement.setInt(4, price);
@@ -296,4 +305,20 @@ public class Table {
         }
     }
 
+    public static void insertCategory(String category) {
+        String sqlQuery = "INSERT OR IGNORE INTO " + "Categories"
+                +  " (id,title) VALUES (?,?)";
+        Long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setLong(1, id);
+            preparedStatement.setString(2, category);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+    }
 }

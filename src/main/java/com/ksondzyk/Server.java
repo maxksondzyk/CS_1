@@ -1,6 +1,7 @@
 package com.ksondzyk;
 
 import com.ksondzyk.DataBase.DB;
+import com.ksondzyk.DataBase.Table;
 import com.ksondzyk.Processing.Processor;
 import com.ksondzyk.network.TCP.TCPServerThread;
 import com.ksondzyk.network.UDP.UDPServerThread;
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 
 public class Server {
+
     static int networkThreadCount = 5;
     static ExecutorService executorPool;
     public static int processingThreadCount = 5;
@@ -24,6 +26,7 @@ public class Server {
     public static void main(String[] args) {
         try {
             DB.connect();
+            Table.createTable();
             s = new ServerSocket( Properties.PORT);
 
         executorPool = Executors.newFixedThreadPool(networkThreadCount);

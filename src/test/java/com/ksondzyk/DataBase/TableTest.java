@@ -1,6 +1,7 @@
 package com.ksondzyk.DataBase;
 
 
+import com.ksondzyk.utilities.Properties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -59,7 +60,7 @@ public class TableTest {
         Table.insert( "fruits","apple", 0, 0);
 
 
-        ResultSet apple = Table.selectOneByTitle("apple");
+        ResultSet apple = Table.selectOneByTitle("apple", Properties.tableName);
 
         assertEquals(100, apple.getInt("quantity"));
         assertEquals("apple", apple.getString("title"));
@@ -71,7 +72,7 @@ public class TableTest {
         Table.insert( "fruits","cherry", 999, 25);
         Table.update("cherry",1000, 24);
 
-        ResultSet cherry = Table.selectOneByTitle("cherry");
+        ResultSet cherry = Table.selectOneByTitle("cherry", Properties.tableName);
 
         assertEquals(1000, cherry.getInt("quantity"));
         assertEquals(24, cherry.getInt("price"));
@@ -83,7 +84,7 @@ public class TableTest {
         Table.insert( "fruits","cherry", 999, 25);
         Table.update("cherry",1000, "price");
 
-        ResultSet cherry = Table.selectOneByTitle("cherry");
+        ResultSet cherry = Table.selectOneByTitle("cherry", Properties.tableName);
 
         assertEquals(1000, cherry.getInt("price"));
 
@@ -150,7 +151,7 @@ public class TableTest {
     @Test
     public void selectOneByTitle() throws SQLException {
         Table.insert( "fruits","cherry", 999, 25);
-        ResultSet cherry = Table.selectOneByTitle("cherry");
+        ResultSet cherry = Table.selectOneByTitle("cherry", Properties.tableName);
 
         assertEquals("cherry", cherry.getString("title"));
         assertEquals("fruits", cherry.getString("category"));
@@ -192,7 +193,7 @@ public class TableTest {
         Table.delete("small");
 
 
-        assert(Table.selectOneByTitle("small").isClosed());
+        assert(Table.selectOneByTitle("small", Properties.tableName).isClosed());
 
     }
 
@@ -203,8 +204,8 @@ public class TableTest {
         Table.insert("fruits", "pear", 1, 9);
 
         Table.truncate();
-        assert(Table.selectOneByTitle("cherry").isClosed());
-        assert(Table.selectOneByTitle("pear").isClosed());
+        assert(Table.selectOneByTitle("cherry", Properties.tableName).isClosed());
+        assert(Table.selectOneByTitle("pear", Properties.tableName).isClosed());
         assert (Table.selectOneById(1).isClosed());
 
     }
