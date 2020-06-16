@@ -25,6 +25,8 @@ public class HttpServerOneMethod {
 
             HttpContext context = server.createContext("/login"); // http://localhost:8888/hello
             context.setHandler(ExampleHelloController::login);
+            HttpContext contextGet = server.createContext("/api/good"); // http://localhost:8888/hello
+            contextGet.setHandler(ExampleHelloController::get);
 
             server.start();
         } catch (IOException e) {

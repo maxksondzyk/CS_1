@@ -8,6 +8,7 @@ import com.ksondzyk.HTTP.views.View;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class ExampleHelloController {
     private static View view;
@@ -15,7 +16,17 @@ public class ExampleHelloController {
     public static void setView(View newView) {
         view = newView;
     }
+    static Random random;
 
+
+
+//    public String generateToken() {
+//        long longToken = Math.abs( random.nextLong() );
+//        String random = Long.toString( longToken, 16 );
+//        return random;
+//
+//
+//    }
     public static void login(HttpExchange httpExchange) {
 
         Response response = new Response();
@@ -24,7 +35,9 @@ public class ExampleHelloController {
         Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
         if (params.get("login").equals("me")&&params.get("password").equals("pass")) {
             response.setStatusCode(200);
-            response.setData("Authorized");
+          //  long longToken = Math.abs( random.nextLong() );
+            //String random = Long.toString( longToken, 16 );
+            response.setData("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdHJ1c3R5YXBwLmNvbS8iLCJleHAiOjEzMDA4MTkzODAsInN1YiI6InVzZXJzLzg5ODM0NjIiLCJzY29wZSI6InNlbGYgYXBpL2J1eSJ9.43DXvhrwMGeLLlP4P4izjgsBB2yrpo82oiUPhADakLs");
         }
         else{
             response.setStatusCode(401);
@@ -39,10 +52,7 @@ public class ExampleHelloController {
         DateTime dateTime = DataTimeService.getCurrentDateTimeMinusThreeHours();
 
         Response response = new Response();
-
-        response.setTemplate("datetime");
-        Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
-        if (params.get("login").equals("me")&&params.get("password").equals("pass")) {
+        if(httpExchange.getRequestHeaders().get("token").equals("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdHJ1c3R5YXBwLmNvbS8iLCJleHAiOjEzMDA4MTkzODAsInN1YiI6InVzZXJzLzg5ODM0NjIiLCJzY29wZSI6InNlbGYgYXBpL2J1eSJ9.43DXvhrwMGeLLlP4P4izjgsBB2yrpo82oiUPhADakLs")){
             response.setStatusCode(200);
             response.setData(dateTime);
         }

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HttpClientOne {
-
+    private static String authToken;
     // one instance, reuse
     private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
@@ -34,11 +34,11 @@ public class HttpClientOne {
         HttpClientOne obj = new HttpClientOne();
 
         try {
-            System.out.println("Testing 1 - Send Http GET request");
+            System.out.println("Testing 1 - Send Http GET login request");
             obj.sendGetLogin();
 
-            System.out.println("Testing 2 - Send Http POST request");
-            obj.sendPost();
+            System.out.println("Testing 2 - Send Http GET request");
+            obj.sendGet();
         } finally {
             obj.close();
         }
@@ -56,6 +56,33 @@ public class HttpClientOne {
 
         // add request headers
        // request.addHeader("custom-key", "mkyong");
+
+        try (CloseableHttpResponse response = httpClient.execute(request)) {
+
+            // Get HttpResponse Status
+            System.out.println(response.getStatusLine().toString());
+
+            HttpEntity entity = response.getEntity();
+            Header headers = entity.getContentType();
+            System.out.println(headers);
+
+            if (entity != null) {
+                // return it as a String
+                String result = EntityUtils.toString(entity);
+                authToken = result;
+                System.out.println(result);
+            }
+
+        }
+
+    }
+
+    private void sendGet() throws Exception {
+
+        HttpGet request = new HttpGet("http://localhost:8888/api/good");
+
+        // add request headers
+         request.addHeader("token", authToken);
 
         try (CloseableHttpResponse response = httpClient.execute(request)) {
 
