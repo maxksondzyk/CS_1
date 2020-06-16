@@ -23,8 +23,8 @@ public class HttpServerOneMethod {
 
             server.bind(new InetSocketAddress(HTTP_SERVER_PORT), 0);
 
-            HttpContext context = server.createContext("/hello"); // http://localhost:8888/hello
-            context.setHandler(ExampleHelloController::hello);
+            HttpContext context = server.createContext("/login"); // http://localhost:8888/hello
+            context.setHandler(ExampleHelloController::login);
 
             server.start();
         } catch (IOException e) {
