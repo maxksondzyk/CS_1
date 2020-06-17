@@ -12,21 +12,22 @@ import java.util.Random;
 
 public class ExampleHelloController {
     private static View view;
-
     public static void setView(View newView) {
         view = newView;
     }
     static Random random;
 
+    private static String authToken;
 
 
-//    public String generateToken() {
-//        long longToken = Math.abs( random.nextLong() );
-//        String random = Long.toString( longToken, 16 );
-//        return random;
-//
-//
-//    }
+
+    public static String generateToken() {
+        long longToken = Math.abs( random.nextLong() );
+        String random = Long.toString( longToken, 16 );
+        return random;
+
+
+    }
     public static void handler(HttpExchange httpExchange){
         if(httpExchange.getRequestURI().getPath().contains("login")){
             login(httpExchange);
@@ -45,7 +46,8 @@ public class ExampleHelloController {
             response.setStatusCode(200);
           //  long longToken = Math.abs( random.nextLong() );
             //String random = Long.toString( longToken, 16 );
-            response.setData("123");
+            authToken = generateToken();
+            response.setData(authToken);
         }
         else{
             response.setStatusCode(401);
@@ -60,10 +62,8 @@ public class ExampleHelloController {
         DateTime dateTime = DataTimeService.getCurrentDateTimeMinusThreeHours();
 
         Response response = new Response();
-        System.err.println(httpExchange.getRequestHeaders().get("token"));
         String tok = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
-        System.out.println(tok);
-        if(tok.equals("123")){
+        if(tok.equals(authToken)){
             response.setStatusCode(200);
             response.setData(dateTime);
         }
