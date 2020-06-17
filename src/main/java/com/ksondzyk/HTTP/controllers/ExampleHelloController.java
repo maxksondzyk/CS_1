@@ -27,6 +27,14 @@ public class ExampleHelloController {
 //
 //
 //    }
+    public static void handler(HttpExchange httpExchange){
+        if(httpExchange.getRequestURI().getPath().contains("login")){
+            login(httpExchange);
+        }
+        else{
+            get(httpExchange);
+        }
+    }
     public static void login(HttpExchange httpExchange) {
 
         Response response = new Response();
@@ -37,7 +45,7 @@ public class ExampleHelloController {
             response.setStatusCode(200);
           //  long longToken = Math.abs( random.nextLong() );
             //String random = Long.toString( longToken, 16 );
-            response.setData("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdHJ1c3R5YXBwLmNvbS8iLCJleHAiOjEzMDA4MTkzODAsInN1YiI6InVzZXJzLzg5ODM0NjIiLCJzY29wZSI6InNlbGYgYXBpL2J1eSJ9.43DXvhrwMGeLLlP4P4izjgsBB2yrpo82oiUPhADakLs");
+            response.setData("123");
         }
         else{
             response.setStatusCode(401);
@@ -52,7 +60,10 @@ public class ExampleHelloController {
         DateTime dateTime = DataTimeService.getCurrentDateTimeMinusThreeHours();
 
         Response response = new Response();
-        if(httpExchange.getRequestHeaders().get("token").equals("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdHJ1c3R5YXBwLmNvbS8iLCJleHAiOjEzMDA4MTkzODAsInN1YiI6InVzZXJzLzg5ODM0NjIiLCJzY29wZSI6InNlbGYgYXBpL2J1eSJ9.43DXvhrwMGeLLlP4P4izjgsBB2yrpo82oiUPhADakLs")){
+        System.err.println(httpExchange.getRequestHeaders().get("token"));
+        String tok = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+        System.out.println(tok);
+        if(tok.equals("123")){
             response.setStatusCode(200);
             response.setData(dateTime);
         }

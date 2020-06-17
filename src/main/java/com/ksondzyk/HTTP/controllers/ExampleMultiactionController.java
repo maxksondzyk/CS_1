@@ -47,6 +47,19 @@ public class ExampleMultiactionController implements HttpHandler {
                 e.printStackTrace();
             }
         }
+        if (requestMethodLowercased.equals("get")) {
+            try {
+                InputStreamReader inputStreamReader = new InputStreamReader(httpExchange.getRequestBody(), "UTF-8");
+
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String postRequest = bufferedReader.readLine();
+
+                Map<String, Object> postRequestParameters = HttpUtil.parseQuery(postRequest);
+                result.put("postRequestParameters", postRequestParameters);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
         Response response = new Response();
 

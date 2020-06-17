@@ -1,9 +1,7 @@
 package com.ksondzyk.HTTP;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHeaders;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -12,15 +10,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import sun.net.www.http.HttpClient;
-import com.fasterxml.jackson.core.type.TypeReference;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,10 +71,12 @@ public class HttpClientOne {
 
     private void sendGet() throws Exception {
 
-        HttpGet request = new HttpGet("http://localhost:8888/api/good");
+        URIBuilder builder = new URIBuilder("http://localhost:8888/api/good");
+        builder.setParameter("login", "me").setParameter("password", "pass");
 
-        // add request headers
-         request.addHeader("token", authToken);
+        HttpGet request = new HttpGet(builder.build());
+        //add request headers
+        request.addHeader("token", authToken);
 
         try (CloseableHttpResponse response = httpClient.execute(request)) {
 
@@ -91,13 +85,12 @@ public class HttpClientOne {
 
             HttpEntity entity = response.getEntity();
             Header headers = entity.getContentType();
-            System.out.println(headers);
+            System.out.println(headers+"get");
 
-            if (entity != null) {
-                // return it as a String
-                String result = EntityUtils.toString(entity);
-                System.out.println(result);
-            }
+
+            // return it as a String
+            String result = EntityUtils.toString(entity);
+            System.out.println(result);
 
         }
 

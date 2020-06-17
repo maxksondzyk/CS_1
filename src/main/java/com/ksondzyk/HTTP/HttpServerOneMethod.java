@@ -8,6 +8,8 @@ import com.ksondzyk.HTTP.views.View;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class HttpServerOneMethod {
 
@@ -23,12 +25,10 @@ public class HttpServerOneMethod {
 
             server.bind(new InetSocketAddress(HTTP_SERVER_PORT), 0);
 
-            HttpContext context = server.createContext("/login"); // http://localhost:8888/hello
-            context.setHandler(ExampleHelloController::login);
-            HttpContext contextGet = server.createContext("/api/good"); // http://localhost:8888/hello
-            contextGet.setHandler(ExampleHelloController::get);
-
-            server.start();
+            HttpContext context = server.createContext("/"); // http://localhost:8888/hello
+            context.setHandler(ExampleHelloController::handler);
+            server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
+           server.start();
         } catch (IOException e) {
             e.printStackTrace();
         }
