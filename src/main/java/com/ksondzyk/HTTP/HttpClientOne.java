@@ -7,6 +7,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -31,6 +32,8 @@ public class HttpClientOne {
 
             System.out.println("Testing 2 - Send Http GET request");
             obj.sendGet();
+
+            obj.sendPut();
         } finally {
             obj.close();
         }
@@ -71,12 +74,12 @@ public class HttpClientOne {
 
     private void sendGet() throws Exception {
 
-        URIBuilder builder = new URIBuilder("http://localhost:8888/api/good");
+        URIBuilder builder = new URIBuilder("http://localhost:8888/api/good/1");
         builder.setParameter("login", "me").setParameter("password", "pass");
 
         HttpGet request = new HttpGet(builder.build());
         //add request headers
-        request.addHeader("token", authToken);
+        request.addHeader("token", "authToken");
 
         try (CloseableHttpResponse response = httpClient.execute(request)) {
 
@@ -86,6 +89,33 @@ public class HttpClientOne {
             HttpEntity entity = response.getEntity();
             Header headers = entity.getContentType();
             System.out.println(headers+"get");
+
+
+            // return it as a String
+            String result = EntityUtils.toString(entity);
+            System.out.println(result);
+
+        }
+
+    }
+
+    private void sendPut() throws Exception {
+
+        URIBuilder builder = new URIBuilder("http://localhost:8888/api/good");
+        builder.setParameter("login", "me").setParameter("password", "pass");
+
+        HttpPut request = new HttpPut(builder.build());
+        //add request headers
+        request.addHeader("token", "authToken");
+
+        try (CloseableHttpResponse response = httpClient.execute(request)) {
+
+            // Get HttpResponse Status
+            System.out.println(response.getStatusLine().toString());
+
+            HttpEntity entity = response.getEntity();
+            Header headers = entity.getContentType();
+            System.out.println(headers);
 
 
             // return it as a String
