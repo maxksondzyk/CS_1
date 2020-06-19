@@ -5,6 +5,7 @@ import com.google.common.primitives.UnsignedLong;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import lombok.Getter;
+import org.json.JSONObject;
 
 import java.nio.ByteBuffer;
 
@@ -15,7 +16,7 @@ public class Packet {
 
     public static final Byte bMagic = 0x13;
     @Getter
-    private final Byte bSrc; //server or client
+    private Byte bSrc; //server or client
     @Getter
     private UnsignedLong bPktId = UnsignedLong.ZERO;
     private Integer wLen;
@@ -24,7 +25,9 @@ public class Packet {
     private Short wCRC16_1;
     private Short wCRC16_2;
     @Getter
-    private final byte[] data;
+    private JSONObject jsonObject;
+    @Getter
+    private byte[] data;
 
     public final static Integer packetPartFirstLengthWithoutwLen = bMagic.BYTES + Byte.BYTES + Long.BYTES;
     public final static Integer packetPartFirstLength = packetPartFirstLengthWithoutwLen + Integer.BYTES;
@@ -72,6 +75,9 @@ public class Packet {
                 .putShort(wCRC16_1)
                 .put(packetPartSecond)
                 .putShort(wCRC16_2).array();
+}
+public Packet(JSONObject jsonObject){
+        this.jsonObject = jsonObject;
 }
 
     public Packet(byte[] packet, String type) throws PacketDamagedException {

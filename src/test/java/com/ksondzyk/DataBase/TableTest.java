@@ -1,6 +1,7 @@
 package com.ksondzyk.DataBase;
 
 
+import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.utilities.Properties;
 import org.junit.After;
 import org.junit.Before;

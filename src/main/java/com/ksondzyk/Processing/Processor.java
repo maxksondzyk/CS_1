@@ -1,12 +1,12 @@
 package com.ksondzyk.Processing;
 
-import com.ksondzyk.DataBase.Table;
+import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
-import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
+import org.json.JSONObject;
 
 import java.io.OutputStream;
 import java.sql.SQLException;
@@ -17,71 +17,95 @@ public class Processor implements Callable{
     Packet packet;
     static OutputStream os;
 
-    Processor(Packet packet){
+    public Processor(Packet packet){
         this.packet = packet;
         run();
     }
 
     static ExecutorService executorPool = Executors.newFixedThreadPool(Server.processingThreadCount);
 
-    static Message answerMessage;
+    static JSONObject answerMessage;
 
-    private static Message answer(int cType,String message) throws PacketDamagedException {
-        answerMessage = new Message(0,0,"error",false);
+    public static boolean idPresent(int id){
         try {
-            String nums = message.replaceAll("[^0-9]+"," ");
-            nums = nums.replaceAll(" +[^0-9]","");
-            nums = nums.replaceAll("^ ", "");
-            String[] arrNum = nums.split(" ", 2);
+            Table.selectOneById(id).getInt("id");
+            return true;
+        } catch (SQLException throwables) {
+            return false;
+        }
+    }
 
-            int quantity = Integer.parseInt(arrNum[0]);
-            int price = Integer.parseInt(arrNum[1]);
-
-
-            String letters = message.replaceAll("[^A-Za-z]+", " ");
-            String[] arr = letters.split(" ", 2);
-
-            String category = arr[0];
-            String title = arr[1];
-
-
-            int currentValue;
-            int newValue;
+    private static JSONObject answer(int cType,JSONObject jsonObject) throws PacketDamagedException {
+        answerMessage = new JSONObject();
+        try {
+            String category;
+            String title;
+            int id;
+            int quantity;
+            int price;
         switch (cType) {
-            case -1:
-                answerMessage = new Message(0, 1, "send again",false);
-                break;
             case 1:
-                answerMessage = new Message(0, 1,  "There are "+ Table.selectOneByTitle(title, Properties.tableName).getInt("quantity") +" "+title + "for the price of " + Table.selectOneByTitle(title, Properties.tableName).getInt("price"),false);
+                id = (int) jsonObject.get("id");
+                title = Table.selectOneById(id).getString("title");
+                quantity = Table.selectOneById(id).getInt("quantity");
+                price = Table.selectOneByTitle(title, Properties.tableName).getInt("price");
+
+                answerMessage.put("id",id);
+                answerMessage.put("title",title);
+                answerMessage.put("quantity",quantity);
+                answerMessage.put("price",price);
+
                 break;
+
             case 2:
-                answerMessage = new Message(0, 1, quantity+" of "+title+" has been deleted",false);
-                currentValue = Table.selectOneByTitle(title, Properties.tableName).getInt("quantity");
-                newValue = currentValue - quantity;
-                Table.update(title,newValue,"quantity");
+                category = (String) jsonObject.get("category");
+                title = (String) jsonObject.get("title");
+                price = (int) jsonObject.get("price");
+                quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
+
+                Table.insert(category,title,quantity,price);
+
+                id = Table.selectOneByTitle(title,Properties.tableName).getInt("id");
+
+                answerMessage.put("id",id);
+
                 break;
+
             case 3:
-                answerMessage = new Message(0, 1, quantity+" of "+title+" has been added",false);
-                currentValue = Table.selectOneByTitle(title, Properties.tableName).getInt("quantity");
-                newValue = currentValue + quantity;
-                Table.update(title,newValue,"quantity");
+                id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+
+                if(jsonObject.has("category")) {
+                    category = (String) jsonObject.get("category");
+                }
+                else
+                    category = Table.selectOneById(id).getString("category");
+
+                if(jsonObject.has("title")) {
+                    title = (String) jsonObject.get("title");
+                }
+                else
+                    title = Table.selectOneById(id).getString("title");
+
+                if(jsonObject.has("price")) {
+                    price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
+                }
+                else
+                    price = Table.selectOneById(id).getInt("price");
+
+                if(jsonObject.has("quantity")) {
+                    quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
+                }
+                else
+                    quantity = Table.selectOneById(id).getInt("quantity");
+
+                Table.update(id,title,category,price,quantity);
+
                 break;
             case 4:
-                answerMessage = new Message(0, 1, title+ " have been added to "+ category,false);
-                Table.insert(category,title , quantity,price);
+                id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+                Table.delete(id);
                 break;
-            case 5:
-                answerMessage = new Message(0, 1, "the price of "+title+" has been set to "+price,false);
-                Table.update(title,price,"price");
-                break;
-            case 6:
-                answerMessage = new Message(0,1,"listed by "+category+"; ascending: "+title,false);
-                Table.listBy(category, title.equals("true"));
-                break;
-            case 7:
-                answerMessage = new Message(0, 1, category+ " category has been added",false);
-                Table.insertCategory(category);
-                break;
+
             default:
                 throw new PacketDamagedException("Unknown command");
 
@@ -96,18 +120,17 @@ public class Processor implements Callable{
         Callable<Message> processingAsync = new Processor(packet);
         return executorPool.submit(processingAsync);
     }
-    public static Future<Message> process(Packet packet) {
-        Callable<Message> processingAsync = new Processor(packet);
+    public static Future<JSONObject> process(JSONObject jsonObject) {
+        Packet packet = new Packet(jsonObject);
+        Callable<JSONObject> processingAsync = new Processor(packet);
         return executorPool.submit(processingAsync);
     }
     public void run(){
         synchronized (packet) {
 
-            System.out.println("Message received: "+ CipherMy.decode(packet.getMessage()));
-
-            int cType = packet.getBMsq().getCType();
+            int cType = Integer.parseInt(String.valueOf(packet.getJsonObject().get("cType")));
             try {
-            answerMessage = answer(cType,CipherMy.decode(packet.getBMsq().getMessage()));
+            answerMessage = answer(cType,packet.getJsonObject());
 
             } catch (PacketDamagedException e) {
                 e.printStackTrace();
@@ -120,7 +143,7 @@ public class Processor implements Callable{
 //    }
 
     @Override
-    public Message call() throws Exception {
+    public JSONObject call() throws Exception {
         try {
             Thread.sleep(1000 * Server.secondsPerTask);
         } catch (InterruptedException e) {

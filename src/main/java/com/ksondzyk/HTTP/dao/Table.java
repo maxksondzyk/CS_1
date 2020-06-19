@@ -1,6 +1,7 @@
-package com.ksondzyk.DataBase;
+package com.ksondzyk.HTTP.dao;
 
 
+import com.ksondzyk.DataBase.DB;
 import com.ksondzyk.utilities.Properties;
 
 import java.sql.PreparedStatement;
@@ -118,7 +119,7 @@ public class Table {
             if (resultSet.next()) {
                 Integer id = resultSet.getInt(1);
 
-                System.out.println("Inserted " + id + " " + title);
+                System.out.println("Inserted id:" + id + " " + title);
                 System.out.println();
 
                 return id;
@@ -134,16 +135,16 @@ public class Table {
 
     public static void update( int id, String title,String category , int price, int quantity ) {
         String sqlQuery = "UPDATE " + Properties.tableName
-                + " SET title =?, category = ?, price =?, quantity = ? WHERE id = ? ";
+                + " SET title =?, categoryID = ?, price =?, quantity = ? WHERE id = ? ";
 
         try {
+            int categoryID = Table.selectOneByTitle(category,"Categories").getInt(1);
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
-            preparedStatement.setInt(5, id);
-            preparedStatement.setString(1, title);
-            preparedStatement.setInt(4, quantity);
-            preparedStatement.setInt(3, price);
-            preparedStatement.setString(2, category);
+            preparedStatement.setInt(1, categoryID);
+            preparedStatement.setString(2, title);
+            preparedStatement.setInt(3, quantity);
+            preparedStatement.setInt(4, price);
 
 
             preparedStatement.executeUpdate();
@@ -252,9 +253,6 @@ public class Table {
         }
 
         return null;
-
-
-
     }
 
     public static void delete(int id) {

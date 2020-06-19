@@ -36,18 +36,19 @@ public class UDPServerThread implements Runnable {
                 if(packetReceived.getBMsq().getCType()!=-1) {
                     System.out.println(CipherMy.decode(packetReceived.getBMsq().getMessage()));
 
-                    Future<Message> response = Processor.process(packetReceived);
+                   // Future<Message> response = Processor.process(packetReceived);
 
-                    System.out.println(CipherMy.decode(response.get().getMessage()));
+                   // System.out.println(CipherMy.decode(response.get().getMessage()));
                 }
             }
         } catch (IOException e) {
             System.err.println("Сервер завершив роботу");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
         }
 
     }
+
 }
