@@ -119,6 +119,8 @@ public class HTTPController implements HttpHandler {
 
         String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
 
+        String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
+
         if(cleanToken.equals(authToken)){
 
             InputStream is = httpExchange.getRequestBody();
@@ -129,16 +131,17 @@ public class HTTPController implements HttpHandler {
 
                 Map<String, String> jsonMap = mapper.readValue(is,Map.class);
                 jsonMap.put("cType","2");
+                jsonMap.put("type",type);
+                    if (type.equals("good")&&(Integer.parseInt(jsonMap.get("quantity")) < 0 || Integer.parseInt(jsonMap.get("price")) < 0))
+                        response.setStatusCode(409);
 
-                if(Integer.parseInt(jsonMap.get("quantity"))<0||Integer.parseInt(jsonMap.get("price"))<0)
-                    response.setStatusCode(409);
+                    else {
+                        JSONObject jsonObject = new JSONObject(jsonMap);
+                        Future<JSONObject> responseMessage = Processor.process(jsonObject);
+                        response.setStatusCode(201);
+                        response.setData("id: " + responseMessage.get().get("id"));
+                    }
 
-                else {
-                    JSONObject jsonObject = new JSONObject(jsonMap);
-                    Future<JSONObject> responseMessage = Processor.process(jsonObject);
-                    response.setStatusCode(201);
-                    //response.setData("id: " + responseMessage.get().get("id"));
-                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -154,6 +157,8 @@ public class HTTPController implements HttpHandler {
     public static void post(HttpExchange httpExchange){
         Response response = new Response();
 
+        String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
+
         String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
         if(cleanToken.equals(authToken)){
             InputStream is = httpExchange.getRequestBody();
@@ -166,11 +171,12 @@ public class HTTPController implements HttpHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if(Integer.parseInt(jsonMap.get("quantity"))<0||Integer.parseInt(jsonMap.get("price"))<0)
+            if(type.equals("good")&&(Integer.parseInt(jsonMap.get("quantity"))<0||Integer.parseInt(jsonMap.get("price"))<0))
                 response.setStatusCode(409);
             else {
                 JSONObject jsonObject = new JSONObject(jsonMap);
                 jsonObject.put("cType", "3");
+                jsonObject.put("type",type);
 
                 int id = Integer.parseInt(jsonMap.get("id"));
                 if (Processor.idPresent(id)) {
@@ -205,8 +211,9 @@ public class HTTPController implements HttpHandler {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("cType","4");
             int id = Integer.parseInt(httpExchange.getRequestURI().getPath().split("/")[3]);
+            String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
             jsonObject.put("id",id);
-
+            jsonObject.put("type",type);
             if(!Processor.idPresent(id)) {
                 response.setStatusCode(404);
             }
@@ -244,7 +251,7 @@ public class HTTPController implements HttpHandler {
     }
 
     @Override
-    public void handle(HttpExchange httpExchange) throws IOException {
+    public void handle(HttpExchange httpExchange) {
         switch (httpExchange.getRequestMethod()) {
             case "GET":
                 if (httpExchange.getRequestURI().getPath().contains("login")) {

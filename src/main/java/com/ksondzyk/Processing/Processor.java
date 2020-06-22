@@ -6,6 +6,7 @@ import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import com.ksondzyk.utilities.Properties;
+import javafx.scene.control.Tab;
 import org.json.JSONObject;
 
 import java.io.OutputStream;
@@ -43,6 +44,7 @@ public class Processor implements Callable{
             int id;
             int quantity;
             int price;
+            String type = (String) jsonObject.get("type");
         switch (cType) {
             case 1:
                 id = (int) jsonObject.get("id");
@@ -60,14 +62,19 @@ public class Processor implements Callable{
                 break;
 
             case 2:
-                category = (String) jsonObject.get("category");
-                title = (String) jsonObject.get("title");
-                price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
-                quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
+                if(type.equals("good")) {
+                    category = (String) jsonObject.get("category");
+                    title = (String) jsonObject.get("title");
+                    price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
+                    quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
 
-                id = Table.insert(category,title,quantity,price);
+                    id = Table.insert(category, title, quantity, price);
+                }
+                else {
+                    title = (String) jsonObject.get("title");
+                    id = Table.insertCategory(title);
+                }
 
-                //id = Table.selectOneByTitle(title,Properties.tableName).getInt("id");
 
                 answerMessage.put("id",id);
 
@@ -75,37 +82,41 @@ public class Processor implements Callable{
 
             case 3:
                 id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+                if(jsonObject.get("type").equals("good")) {
+                    if (jsonObject.has("category")) {
+                        category = (String) jsonObject.get("category");
+                    } else
+                        category = Table.selectOneById(id, Properties.tableName).getString("category");
 
-                if(jsonObject.has("category")) {
-                    category = (String) jsonObject.get("category");
+                    if (jsonObject.has("title")) {
+                        title = (String) jsonObject.get("title");
+                    } else
+                        title = Table.selectOneById(id, Properties.tableName).getString("title");
+
+                    if (jsonObject.has("price")) {
+                        price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
+                    } else
+                        price = Table.selectOneById(id, Properties.tableName).getInt("price");
+
+                    if (jsonObject.has("quantity")) {
+                        quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
+                    } else
+                        quantity = Table.selectOneById(id, Properties.tableName).getInt("quantity");
+
+                    Table.update(id, title, category, price, quantity);
                 }
-                else
-                    category = Table.selectOneById(id,Properties.tableName).getString("category");
-
-                if(jsonObject.has("title")) {
+                else {
                     title = (String) jsonObject.get("title");
+                    Table.updateCategory(id,title);
                 }
-                else
-                    title = Table.selectOneById(id,Properties.tableName).getString("title");
-
-                if(jsonObject.has("price")) {
-                    price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
-                }
-                else
-                    price = Table.selectOneById(id,Properties.tableName).getInt("price");
-
-                if(jsonObject.has("quantity")) {
-                    quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
-                }
-                else
-                    quantity = Table.selectOneById(id,Properties.tableName).getInt("quantity");
-
-                Table.update(id,title,category,price,quantity);
 
                 break;
             case 4:
                 id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+                if(type.equals("good"))
                 Table.delete(id);
+                else
+                    Table.deleteCategory(id);
                 break;
 
             default:

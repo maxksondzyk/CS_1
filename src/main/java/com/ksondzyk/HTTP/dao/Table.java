@@ -104,14 +104,14 @@ public class Table {
                 +  " (categoryID,title,quantity,price) VALUES (?, ?, ?, ?)";
         PreparedStatement preparedStatement;
         try {
-//            String name = Table.selectOneByTitle(category,"Categories").getString("title");
-//            if(name==null){
-                String sqlCatQuery = "INSERT OR IGNORE INTO " + "Categories"
-                        +  " (title) VALUES (?)";
-                preparedStatement = DB.connection.prepareStatement(sqlCatQuery, Statement.RETURN_GENERATED_KEYS);
-                preparedStatement.setString(1, category);
-                preparedStatement.executeUpdate();
-//            }
+
+                insertCategory(category);
+//                String sqlCatQuery = "INSERT OR IGNORE INTO " + "Categories"
+//                        +  " (title) VALUES (?)";
+//                preparedStatement = DB.connection.prepareStatement(sqlCatQuery, Statement.RETURN_GENERATED_KEYS);
+//                preparedStatement.setString(1, category);
+//                preparedStatement.executeUpdate();
+
             int categoryID = Table.selectOneByTitle(category,"Categories").getInt("id");
             preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
@@ -141,6 +141,35 @@ public class Table {
         return null;
     }
 
+    public static Integer insertCategory(String title) {
+        try {
+            String sqlCatQuery = "INSERT OR IGNORE INTO " + "Categories"
+                    +  " (title) VALUES (?)";
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlCatQuery, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, title);
+            preparedStatement.executeUpdate();
+
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+            if (resultSet.next()) {
+                Integer id = resultSet.getInt(1);
+
+                System.out.println("Inserted Category id:" + id + " " + title);
+                System.out.println();
+
+                return id;
+            } else {
+                System.err.println("Can't insert :(");
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+
     public static void update( int id, String title,String category , int price, int quantity ) {
         String sqlQuery = "UPDATE " + Properties.tableName
                 + " SET title =?, categoryID = ?, price =?, quantity = ? WHERE id = ? ";
@@ -163,6 +192,8 @@ public class Table {
             sqlException.printStackTrace();
         }
     }
+
+
     public static void update(String title,  int quantity,  int price ) {
         String sqlQuery = "UPDATE " + Properties.tableName + " SET quantity = ?, price =? WHERE title = ? ";
 
@@ -205,6 +236,22 @@ public class Table {
         }
     }
 
+    public static void updateCategory( int id, String title) {
+        String sqlQuery = "UPDATE " + "Categories"
+                + " SET title = ? WHERE id = ? ";
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+            preparedStatement.setString(1, title);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("Updated #" + id + " Title: " + title +" into Categories");
+            System.out.println();
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+    }
 
 
     public static ResultSet selectOneLimitOffset( int limit, int offset) {
@@ -295,6 +342,22 @@ public class Table {
             System.out.println(e.getMessage());
         }
     }
+    public static void deleteCategory(int id) {
+        String sqlQuery = "DELETE FROM " + "Categories" + " WHERE id = ?";
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setInt(1, id);
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("Deleted " + id);
+            System.out.println();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     public static void truncate() {
         String sqlQuery = "DELETE FROM " + Properties.tableName;
@@ -311,20 +374,4 @@ public class Table {
         }
     }
 
-    public static void insertCategory(String category) {
-        String sqlQuery = "INSERT OR IGNORE INTO " + "Categories"
-                +  " (id,title) VALUES (?,?)";
-        Long id = UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE;
-        try {
-            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-
-            preparedStatement.setLong(1, id);
-            preparedStatement.setString(2, category);
-
-            preparedStatement.executeUpdate();
-
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-    }
 }
