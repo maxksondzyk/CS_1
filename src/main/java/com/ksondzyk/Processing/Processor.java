@@ -9,7 +9,7 @@ import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
-import javafx.scene.control.Tab;
+//import javafx.scene.control.Tab;
 
 import org.json.JSONObject;
 

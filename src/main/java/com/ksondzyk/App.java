@@ -13,7 +13,7 @@ import java.net.InetSocketAddress;
 
 @SpringBootApplication
 public class App {
-    final static int HTTP_SERVER_PORT = 8888;
+    final static int HTTP_SERVER_PORT = 8887;
 
     final static View VIEW = new JsonView();
     public static void main(String[] args) {
