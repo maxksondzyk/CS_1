@@ -26,9 +26,9 @@ public class Table {
                 + "	title text NOT NULL,\n"
                 + " UNIQUE(title)"
                 + ");";
+
         try {
             Statement statement = DB.connection.createStatement();
-
             statement.execute(sqlQuery);
             statement.execute(sqlQueryCategories);
 
@@ -39,12 +39,31 @@ public class Table {
             sqlException.printStackTrace();
         }
     }
+    public static void createUsersTable(){
+
+        String sqlQueryUsers = "CREATE TABLE IF NOT EXISTS "+ "Users" +" (\n"
+                + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + "	title text NOT NULL,\n"
+                + "	password text, \n"
+                + " UNIQUE(title)"
+                + ");";
+        try {
+            Statement statement = DB.connection.createStatement();
+            statement.execute(sqlQueryUsers);
+        System.out.println("Table created\n");
+        statement.close();
+
+    } catch (SQLException sqlException) {
+        sqlException.printStackTrace();
+    }
+}
+
     public static void deleteTable() {
 
         try {
             Statement   stmt = DB.connection.createStatement();
 
-        String sqlCommand = "DROP TABLE IF EXISTS "+Properties.tableName;
+        String sqlCommand = "DROP TABLE IF EXISTS "+"Users";
 
         System.out.println("output : " + stmt.executeUpdate(sqlCommand));
 
@@ -55,12 +74,12 @@ public class Table {
     }
 
     public static ResultSet selectOneByTitle(String title, String table) {
-        String sqlQuery = "SELECT * FROM " + table +  " WHERE title = ?";
+        String sqlQuery = "SELECT * FROM " + table +  " WHERE id = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
-            preparedStatement.setString(1, title);
+            preparedStatement.setInt(1, 0);
 
             return preparedStatement.executeQuery();
         } catch (SQLException sqlException) {
@@ -167,7 +186,33 @@ public class Table {
 
         return null;
     }
+    public static Integer insertUser(String login, String password) {
+        try {
+            String sqlQuery = "INSERT OR IGNORE INTO " + "Users"
+                    +  " (title, password) VALUES (?, ?)";
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, login);
+            preparedStatement.setString(2, password);
+            preparedStatement.executeUpdate();
 
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+            if (resultSet.next()) {
+                Integer id = resultSet.getInt(1);
+
+                System.out.println("Inserted User id:" + id + " " + login);
+                System.out.println();
+
+                return id;
+            } else {
+                System.err.println("Can't insert :(");
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
 
 
     public static void update( int id, String title,String category , int price, int quantity ) {

@@ -16,17 +16,19 @@ import java.util.concurrent.TimeUnit;
 
 public class Server {
 
-    static int networkThreadCount = 5;
+    static int networkThreadCount = 1;
     static ExecutorService executorPool;
-    public static int processingThreadCount = 5;
+    public static int processingThreadCount = 10;
     public static Boolean serverIsWorking = true;
-    public static int secondsPerTask = 1;
+    public static int secondsPerTask = 10;
     static ServerSocket s;
 
     public static void main(String[] args) {
         try {
             DB.connect();
             Table.createTable();
+            Table.createUsersTable();
+            Table.insertUser("user","pass");
             s = new ServerSocket( Properties.PORT);
 
         executorPool = Executors.newFixedThreadPool(networkThreadCount);

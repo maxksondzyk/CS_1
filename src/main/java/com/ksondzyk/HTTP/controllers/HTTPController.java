@@ -4,6 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksondzyk.HTTP.dto.Response;
 import com.ksondzyk.HTTP.views.View;
 import com.ksondzyk.Processing.Processor;
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
+import com.ksondzyk.network.TCP.TCPClientThread;
+import com.ksondzyk.utilities.CipherMy;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
@@ -85,6 +89,7 @@ public class HTTPController implements HttpHandler {
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("cType","1");
+            jsonObject.put("type","good");
 
             int id = Integer.parseInt(httpExchange.getRequestURI().getPath().split("/")[3]);
 
@@ -92,15 +97,15 @@ public class HTTPController implements HttpHandler {
 
                 jsonObject.put("id", id);
 
-                Future<JSONObject> responseMessage = Processor.process(jsonObject);
+                Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+                TCPClientThread tcpClientThread = new TCPClientThread(packet);
+                Packet answer = tcpClientThread.send();
 
-                try {
-                    response.setData(responseMessage.get().toMap());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
+                String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+                JSONObject responseMessage = new JSONObject(jsonString);
+
+                response.setData(responseMessage.toMap());
 
             }
             else{
@@ -137,9 +142,19 @@ public class HTTPController implements HttpHandler {
 
                     else {
                         JSONObject jsonObject = new JSONObject(jsonMap);
-                        Future<JSONObject> responseMessage = Processor.process(jsonObject);
+
+                        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+                        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+                        Packet answer = tcpClientThread.send();
+
+                        String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+                        JSONObject responseMessage = new JSONObject(jsonString);
+
+                        response.setData(responseMessage.toMap());
+
                         response.setStatusCode(201);
-                        response.setData("id: " + responseMessage.get().get("id"));
+                        response.setData("id: " + responseMessage.get("id"));
                     }
 
             } catch (Exception e) {
