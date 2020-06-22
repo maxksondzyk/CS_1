@@ -21,9 +21,6 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class HTTPController implements HttpHandler {
     private static View view;

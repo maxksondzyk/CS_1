@@ -19,7 +19,8 @@ public class Table {
                 + "	title text NOT NULL,\n"
                 + "	quantity INTEGER, \n"
                 + " price INTEGER,\n"
-                + " UNIQUE(title)"
+                + " UNIQUE(title),\n"
+                + " FOREIGN KEY(categoryID) REFERENCES Categories (id)"
                 + ");";
 
         try {
@@ -84,12 +85,12 @@ public class Table {
     }
 
     public static ResultSet selectOneByTitle(String title, String table) {
-        String sqlQuery = "SELECT * FROM " + table +  " WHERE id = ?";
+        String sqlQuery = "SELECT * FROM " + table +  " WHERE title = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
-            preparedStatement.setInt(1, 0);
+            preparedStatement.setString(1, title);
 
             return preparedStatement.executeQuery();
         } catch (SQLException sqlException) {
