@@ -74,22 +74,22 @@ public class TCPClientThread implements Runnable {
 
     public void run() {
             try {
-                for (int i = 0; i < 4; i++) {
+                //for (int i = 0; i < 4; i++) {
                     connect();
 
                     PacketSender sender = new PacketSender();
-                    sender.send(packet, outputStream,i);
+                    sender.send(packet, outputStream);
 
                     TCPPacketReceiver pr = new TCPPacketReceiver();
                     answer = pr.receive(inputStream);
 
                     if (answer.getBPktId().equals(packet.getBPktId())) {
                         System.out.println("CORRECT");
-                        break;
+                        //break;
                     }
                     else
                         System.out.println("WRONG PACKET RESPONSE");
-                }
+               // }
 
             } catch (IOException e) {
                 System.err.println("Поток завершив роботу");

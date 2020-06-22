@@ -21,17 +21,27 @@ public class Table {
                 + " price INTEGER,\n"
                 + " UNIQUE(title)"
                 + ");";
+
+        try {
+            Statement statement = DB.connection.createStatement();
+            statement.execute(sqlQuery);
+
+            System.out.println("Table created\n");
+            statement.close();
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+    }
+    public static void createCategoriesTable(){
         String sqlQueryCategories = "CREATE TABLE IF NOT EXISTS "+ "Categories" +" (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + "	title text NOT NULL,\n"
                 + " UNIQUE(title)"
                 + ");";
-
         try {
             Statement statement = DB.connection.createStatement();
-            statement.execute(sqlQuery);
             statement.execute(sqlQueryCategories);
-
             System.out.println("Table created\n");
             statement.close();
 
@@ -124,12 +134,12 @@ public class Table {
         PreparedStatement preparedStatement;
         try {
 
-                insertCategory(category);
-//                String sqlCatQuery = "INSERT OR IGNORE INTO " + "Categories"
-//                        +  " (title) VALUES (?)";
-//                preparedStatement = DB.connection.prepareStatement(sqlCatQuery, Statement.RETURN_GENERATED_KEYS);
-//                preparedStatement.setString(1, category);
-//                preparedStatement.executeUpdate();
+
+                String sqlCatQuery = "INSERT OR IGNORE INTO " + "Categories"
+                        +  " (title) VALUES (?)";
+                preparedStatement = DB.connection.prepareStatement(sqlCatQuery, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, category);
+                preparedStatement.executeUpdate();
 
             int categoryID = Table.selectOneByTitle(category,"Categories").getInt("id");
             preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);

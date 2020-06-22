@@ -17,9 +17,11 @@ public class App {
 
     final static View VIEW = new JsonView();
     public static void main(String[] args) {
+        SpringApplication.run(App.class, args);
         try {
             DB.connect();
             Table.createTable();
+            Table.createCategoriesTable();
             Table.createUsersTable();
             Table.insertUser("admin","pass");
             HTTPController.setView(VIEW);
@@ -38,7 +40,7 @@ public class App {
         }
 
 
-        SpringApplication.run(App.class, args);
+
 
     }
 

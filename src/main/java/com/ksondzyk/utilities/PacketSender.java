@@ -11,7 +11,7 @@ import static java.lang.Thread.currentThread;
 
 public class PacketSender {
 
-    public void send(Packet packet, OutputStream os,int i) throws IOException {
+    public void send(Packet packet, OutputStream os) throws IOException {
         try {
 
             byte[] packetBytes;
