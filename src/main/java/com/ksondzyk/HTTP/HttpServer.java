@@ -26,8 +26,9 @@ public class HttpServer {
 
             server.bind(new InetSocketAddress(HTTP_SERVER_PORT), 0);
 
-            HttpContext context = server.createContext("/"); // http://localhost:8888/
-            context.setHandler(HTTPController::handler);
+            HTTPController httpController = new HTTPController();
+            server.createContext("/",httpController); // http://localhost:8888/
+
             server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
             server.start();
         } catch (IOException e) {

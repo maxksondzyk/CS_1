@@ -23,7 +23,8 @@ public class Table {
                 + ");";
         String sqlQueryCategories = "CREATE TABLE IF NOT EXISTS "+ "Categories" +" (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
-                + "	title text NOT NULL\n"
+                + "	title text NOT NULL,\n"
+                + " UNIQUE(title)"
                 + ");";
         try {
             Statement statement = DB.connection.createStatement();
@@ -32,7 +33,6 @@ public class Table {
             statement.execute(sqlQueryCategories);
 
             System.out.println("Table created\n");
-
             statement.close();
 
         } catch (SQLException sqlException) {
@@ -69,8 +69,8 @@ public class Table {
 
         return null;
     }
-    public static ResultSet selectOneById(int id) {
-        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " WHERE id = ?";
+    public static ResultSet selectOneById(int id, String table) {
+        String sqlQuery = "SELECT * FROM " + table +  " WHERE id = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -101,11 +101,19 @@ public class Table {
 
     public static Integer insert(String category, String title, int quantity, int price) {
         String sqlQuery = "INSERT OR IGNORE INTO " + Properties.tableName
-                +  " (categoryID,title,quantity,price) VALUES (?,?, ?, ?)";
-
+                +  " (categoryID,title,quantity,price) VALUES (?, ?, ?, ?)";
+        PreparedStatement preparedStatement;
         try {
-            int categoryID = Table.selectOneByTitle(category,"Categories").getInt(1);
-            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+//            String name = Table.selectOneByTitle(category,"Categories").getString("title");
+//            if(name==null){
+                String sqlCatQuery = "INSERT OR IGNORE INTO " + "Categories"
+                        +  " (title) VALUES (?)";
+                preparedStatement = DB.connection.prepareStatement(sqlCatQuery, Statement.RETURN_GENERATED_KEYS);
+                preparedStatement.setString(1, category);
+                preparedStatement.executeUpdate();
+//            }
+            int categoryID = Table.selectOneByTitle(category,"Categories").getInt("id");
+            preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setInt(1, categoryID);
             preparedStatement.setString(2, title);

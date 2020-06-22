@@ -96,7 +96,7 @@ public class TableTest {
         Table.insert( "fruits","cherry", 999, 25);
         Table.update(1,"cherryBoy","fruits",1000, 100);
 
-        ResultSet cherry = Table.selectOneById(1);
+        ResultSet cherry = Table.selectOneById(1,Properties.tableName);
 
 
         assertEquals("cherryBoy", cherry.getString("title"));
@@ -207,7 +207,7 @@ public class TableTest {
         Table.truncate();
         assert(Table.selectOneByTitle("cherry", Properties.tableName).isClosed());
         assert(Table.selectOneByTitle("pear", Properties.tableName).isClosed());
-        assert (Table.selectOneById(1).isClosed());
+        assert (Table.selectOneById(1,Properties.tableName).isClosed());
 
     }
 

@@ -28,7 +28,7 @@ public class Processor implements Callable{
 
     public static boolean idPresent(int id){
         try {
-            Table.selectOneById(id).getInt("id");
+            Table.selectOneById(id,Properties.tableName).getInt("id");
             return true;
         } catch (SQLException throwables) {
             return false;
@@ -46,26 +46,28 @@ public class Processor implements Callable{
         switch (cType) {
             case 1:
                 id = (int) jsonObject.get("id");
-                title = Table.selectOneById(id).getString("title");
-                quantity = Table.selectOneById(id).getInt("quantity");
+                title = Table.selectOneById(id,Properties.tableName).getString("title");
+                quantity = Table.selectOneById(id,Properties.tableName).getInt("quantity");
                 price = Table.selectOneByTitle(title, Properties.tableName).getInt("price");
-
+                int categoryId = Table.selectOneById(id,Properties.tableName).getInt("categoryID");
+                category = Table.selectOneById(categoryId,"Categories").getString("title");
                 answerMessage.put("id",id);
                 answerMessage.put("title",title);
                 answerMessage.put("quantity",quantity);
                 answerMessage.put("price",price);
+                answerMessage.put("category",category);
 
                 break;
 
             case 2:
                 category = (String) jsonObject.get("category");
                 title = (String) jsonObject.get("title");
-                price = (int) jsonObject.get("price");
+                price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
                 quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
 
-                Table.insert(category,title,quantity,price);
+                id = Table.insert(category,title,quantity,price);
 
-                id = Table.selectOneByTitle(title,Properties.tableName).getInt("id");
+                //id = Table.selectOneByTitle(title,Properties.tableName).getInt("id");
 
                 answerMessage.put("id",id);
 
@@ -78,25 +80,25 @@ public class Processor implements Callable{
                     category = (String) jsonObject.get("category");
                 }
                 else
-                    category = Table.selectOneById(id).getString("category");
+                    category = Table.selectOneById(id,Properties.tableName).getString("category");
 
                 if(jsonObject.has("title")) {
                     title = (String) jsonObject.get("title");
                 }
                 else
-                    title = Table.selectOneById(id).getString("title");
+                    title = Table.selectOneById(id,Properties.tableName).getString("title");
 
                 if(jsonObject.has("price")) {
                     price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
                 }
                 else
-                    price = Table.selectOneById(id).getInt("price");
+                    price = Table.selectOneById(id,Properties.tableName).getInt("price");
 
                 if(jsonObject.has("quantity")) {
                     quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
                 }
                 else
-                    quantity = Table.selectOneById(id).getInt("quantity");
+                    quantity = Table.selectOneById(id,Properties.tableName).getInt("quantity");
 
                 Table.update(id,title,category,price,quantity);
 

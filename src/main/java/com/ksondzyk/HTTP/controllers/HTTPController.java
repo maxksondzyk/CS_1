@@ -5,6 +5,7 @@ import com.ksondzyk.HTTP.dto.Response;
 import com.ksondzyk.HTTP.views.View;
 import com.ksondzyk.Processing.Processor;
 import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-public class HTTPController {
+public class HTTPController implements HttpHandler {
     private static View view;
     public static void setView(View newView) {
         view = newView;
@@ -30,28 +31,6 @@ public class HTTPController {
 
     private static final SecureRandom secureRandom = new SecureRandom(); //threadsafe
     private static final Base64.Encoder base64Encoder = Base64.getUrlEncoder(); //threadsafe
-
-    public static void handler(HttpExchange httpExchange){
-
-        switch (httpExchange.getRequestMethod()) {
-            case "GET":
-                if (httpExchange.getRequestURI().getPath().contains("login")) {
-                    login(httpExchange);
-                } else {
-                    get(httpExchange);
-                }
-                break;
-            case "PUT":
-                put(httpExchange);
-                break;
-            case "POST":
-                post(httpExchange);
-                break;
-            case "DELETE":
-                delete(httpExchange);
-                break;
-        }
-    }
 
     public static boolean matching(String orig, String compare){
         String md5;
@@ -158,7 +137,7 @@ public class HTTPController {
                     JSONObject jsonObject = new JSONObject(jsonMap);
                     Future<JSONObject> responseMessage = Processor.process(jsonObject);
                     response.setStatusCode(201);
-                    response.setData("id: " + responseMessage.get().get("id"));
+                    //response.setData("id: " + responseMessage.get().get("id"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -262,5 +241,27 @@ public class HTTPController {
             }
         }
         return result;
+    }
+
+    @Override
+    public void handle(HttpExchange httpExchange) throws IOException {
+        switch (httpExchange.getRequestMethod()) {
+            case "GET":
+                if (httpExchange.getRequestURI().getPath().contains("login")) {
+                    login(httpExchange);
+                } else {
+                    get(httpExchange);
+                }
+                break;
+            case "PUT":
+                put(httpExchange);
+                break;
+            case "POST":
+                post(httpExchange);
+                break;
+            case "DELETE":
+                delete(httpExchange);
+                break;
+        }
     }
 }
