@@ -31,7 +31,6 @@ public class HttpServer {
             HTTPController httpController = new HTTPController();
             server.createContext("/",httpController); // http://localhost:8888/
 
-            //server.setExecutor(java.util.concurrent.Executors.newCachedThreadPool());
             server.start();
         } catch (IOException e) {
             e.printStackTrace();

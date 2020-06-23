@@ -22,7 +22,6 @@ public class HtmlView implements View {
 
         try {
             Object data = response.getData();
-            response.setTemplate("list");
             String templateName = response.getTemplate();
 
             Configuration configuration = getConfiguration();
