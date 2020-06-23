@@ -21,7 +21,7 @@ public class App {
         try {
             DB.connect();
             Table.createTable();
-            Table.createCategoriesTable();
+           // Table.createCategoriesTable();
             Table.createUsersTable();
             Table.insertUser("admin","pass");
             HTTPController.setView(VIEW);

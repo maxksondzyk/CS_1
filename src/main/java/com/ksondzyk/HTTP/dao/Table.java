@@ -47,7 +47,8 @@ public class Table {
         try {
             Statement   stmt = DB.connection.createStatement();
 
-        String sqlCommand = "DROP TABLE IF EXISTS "+Properties.tableName;
+        //String sqlCommand = "DROP TABLE IF EXISTS "+Properties.tableName;
+            String sqlCommand = "DROP TABLE IF EXISTS "+"Users";
 
         System.out.println("output : " + stmt.executeUpdate(sqlCommand));
 
@@ -55,6 +56,52 @@ public class Table {
         catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void createUsersTable(){
+
+        String sqlQueryUsers = "CREATE TABLE IF NOT EXISTS "+ "Users" +" (\n"
+                + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
+                + "	title text NOT NULL,\n"
+                + "	password text, \n"
+                + " UNIQUE(title)"
+                + ");";
+        try {
+            Statement statement = DB.connection.createStatement();
+            statement.execute(sqlQueryUsers);
+            System.out.println("Table created\n");
+            statement.close();
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+    }
+    public static Integer insertUser(String login, String password) {
+        try {
+            String sqlQuery = "INSERT OR IGNORE INTO " + "Users"
+                    +  " (title, password) VALUES (?, ?)";
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+            preparedStatement.setString(1, login);
+            preparedStatement.setString(2, password);
+            preparedStatement.executeUpdate();
+
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+
+            if (resultSet.next()) {
+                Integer id = resultSet.getInt(1);
+
+                System.out.println("Inserted User id:" + id + " " + login);
+                System.out.println();
+
+                return id;
+            } else {
+                System.err.println("Can't insert :(");
+            }
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
     }
 
     public static Product selectProductByTitle(String title) {
