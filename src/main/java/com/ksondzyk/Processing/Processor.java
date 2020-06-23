@@ -1,7 +1,5 @@
 package com.ksondzyk.Processing;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
@@ -9,12 +7,10 @@ import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
-import javafx.scene.control.Tab;
 
 import org.json.JSONObject;
 
 import java.io.OutputStream;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.*;
 

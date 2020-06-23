@@ -19,8 +19,8 @@ public class HttpServer {
         try {
             DB.connect();
             Table.createTable();
-            Table.createTable();
-            Table.ins("admin","pass");
+            Table.createUsersTable();
+            Table.insertUser("admin","pass");
             HTTPController.setView(VIEW);
 
             com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create();
