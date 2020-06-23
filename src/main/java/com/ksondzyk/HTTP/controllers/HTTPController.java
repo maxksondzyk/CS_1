@@ -1,6 +1,7 @@
 package com.ksondzyk.HTTP.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.HTTP.dto.Response;
 import com.ksondzyk.HTTP.views.View;
 import com.ksondzyk.Processing.Processor;
@@ -18,12 +19,11 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
+
 
 public class HTTPController implements HttpHandler {
     private static View view;
@@ -62,9 +62,18 @@ public class HTTPController implements HttpHandler {
         Response response = new Response();
 
         Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
-        if (params.get("login").equals("me")&&matching(params.get("password"), "pass"))
+        String login = "";
+        String password = "";
+        try {
+             login = Table.selectOneByTitle("admin","Users").getString("title");
+             password = Table.selectOneByTitle("admin","Users").getString("password");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        if (params.get("login").equals(login)&&matching(params.get("password"), password))
         {
             response.setStatusCode(200);
+
             authToken = generateNewToken();
             response.setData(authToken);
         }
@@ -77,8 +86,7 @@ public class HTTPController implements HttpHandler {
 
         view.view(response);
     }
-
-    public static void get(HttpExchange httpExchange) {
+       public static void get(HttpExchange httpExchange) {
         Response response = new Response();
 
         String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
@@ -87,9 +95,11 @@ public class HTTPController implements HttpHandler {
 
             response.setStatusCode(200);
 
+            String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("cType","1");
-            jsonObject.put("type","good");
+            jsonObject.put("type",type);
 
             int id = Integer.parseInt(httpExchange.getRequestURI().getPath().split("/")[3]);
 
@@ -119,6 +129,7 @@ public class HTTPController implements HttpHandler {
 
         view.view(response);
     }
+
     public static void put(HttpExchange httpExchange){
         Response response = new Response();
 
@@ -216,6 +227,7 @@ public class HTTPController implements HttpHandler {
         view.view(response);
 
     }
+
     public static void delete(HttpExchange httpExchange){
         Response response = new Response();
 
@@ -264,14 +276,29 @@ public class HTTPController implements HttpHandler {
         }
         return result;
     }
+    public static void hello(HttpExchange httpExchange) {
 
+        Response response = new Response();
+
+
+        response.setStatusCode(200);
+        response.setData(authToken);
+        response.setTemplate("list");
+        response.setHttpExchange(httpExchange);
+
+        view.view(response);
+    }
     @Override
     public void handle(HttpExchange httpExchange) {
         switch (httpExchange.getRequestMethod()) {
             case "GET":
                 if (httpExchange.getRequestURI().getPath().contains("login")) {
                     login(httpExchange);
-                } else {
+                }
+                else if((httpExchange.getRequestURI().getPath().contains("hello"))){
+                    hello(httpExchange);
+                }
+                else {
                     get(httpExchange);
                 }
                 break;
@@ -279,11 +306,51 @@ public class HTTPController implements HttpHandler {
                 put(httpExchange);
                 break;
             case "POST":
+
+                if((httpExchange.getRequestURI().getPath().contains("hello"))){
+                    helloLogin(httpExchange);
+                }else
                 post(httpExchange);
                 break;
             case "DELETE":
                 delete(httpExchange);
                 break;
         }
+    }
+
+    private void helloLogin(HttpExchange httpExchange) {
+
+        Response response = new Response();
+
+        Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
+        String login = "";
+        String password = "";
+        System.err.println("here");
+        try {
+            login = Table.selectOneByTitle("admin","Users").getString("title");
+            password = Table.selectOneByTitle("admin","Users").getString("password");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        System.err.println(params.get("login"));
+       // System.err.println(login.);
+        if (params.get("login").equals(login)&&matching(params.get("password"), password))
+        {
+            response.setStatusCode(200);
+
+
+            authToken = generateNewToken();
+            response.setData(authToken);
+        }
+        else{
+
+            response.setStatusCode(401);
+            response.setData("Access denied");
+        }
+        response.setTemplate("mainpage");
+        response.setHttpExchange(httpExchange);
+
+        view.view(response);
     }
 }

@@ -16,29 +16,29 @@ import java.util.concurrent.TimeUnit;
 
 public class Server {
 
-    static int networkThreadCount = 1;
+    static int networkThreadCount = 10;
     static ExecutorService executorPool;
     public static int processingThreadCount = 10;
     public static Boolean serverIsWorking = true;
-    public static int secondsPerTask = 10;
+    public static int secondsPerTask = 1;
     static ServerSocket s;
 
     public static void main(String[] args) {
         try {
             DB.connect();
-            Table.createTable();
-            Table.createUsersTable();
-            Table.insertUser("user","pass");
+            //Table.createTable();
+            //Table.createCategoriesTable();
+            //Table.createUsersTable();
+            //Table.insertUser("user","pass");
             s = new ServerSocket( Properties.PORT);
 
         executorPool = Executors.newFixedThreadPool(networkThreadCount);
         if(Properties.MODE.equals("TCP")) {
-            while (serverIsWorking)
+            while (true)
                 try {
                     executorPool.execute(new TCPServerThread(s.accept()));
                 } catch (Exception e) {
-                    if (serverIsWorking)
-                        e.printStackTrace();
+
                 }
         }
         else{

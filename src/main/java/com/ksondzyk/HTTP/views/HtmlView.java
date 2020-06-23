@@ -23,7 +23,7 @@ public class HtmlView implements View {
         try {
             Object data = response.getData();
             String templateName = response.getTemplate();
-
+            response.setData(data);
             Configuration configuration = getConfiguration();
             Template template = configuration.getTemplate(templateName + ".flth");
 

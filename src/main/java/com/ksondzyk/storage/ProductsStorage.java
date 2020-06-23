@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public class ProductsStorage {
 
     @Getter
-    private ArrayList<ProductsGroup> groups;
+    private ArrayList<ProductGroup> groups;
 
     public ProductsStorage() {
         this.groups = new ArrayList<>();
