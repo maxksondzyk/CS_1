@@ -2,12 +2,15 @@ package com.ksondzyk.HTTP.dao;
 
 
 import com.ksondzyk.DataBase.DB;
+import com.ksondzyk.storage.Product;
 import com.ksondzyk.utilities.Properties;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Table {
@@ -21,7 +24,7 @@ public class Table {
                 + " price INTEGER,\n"
                 + " UNIQUE(title)"
                 + ");";
-        String sqlQueryCategories = "CREATE TABLE IF NOT EXISTS "+ "Categories" +" (\n"
+        String sqlQueryCategories = "CREATE TABLE IF NOT EXISTS "+ Properties.tableCategories +" (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + "	title text NOT NULL,\n"
                 + " UNIQUE(title)"
@@ -54,6 +57,24 @@ public class Table {
         }
     }
 
+    public static Product selectProductByTitle(String title) {
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " WHERE title = ?";
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setString(1, title);
+            ResultSet rs =  preparedStatement.executeQuery();
+
+
+            return extractProduct(rs);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static ResultSet selectOneByTitle(String title, String table) {
         String sqlQuery = "SELECT * FROM " + table +  " WHERE title = ?";
 
@@ -61,14 +82,30 @@ public class Table {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
             preparedStatement.setString(1, title);
-
             return preparedStatement.executeQuery();
+
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
 
         return null;
     }
+    public static Product selectProductById(int id, String table) {
+        String sqlQuery = "SELECT * FROM " + table +  " WHERE id = ?";
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setInt(1, id);
+
+            return extractProduct(preparedStatement.executeQuery());
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static ResultSet selectOneById(int id, String table) {
         String sqlQuery = "SELECT * FROM " + table +  " WHERE id = ?";
 
@@ -106,11 +143,7 @@ public class Table {
         try {
 
                 insertCategory(category);
-//                String sqlCatQuery = "INSERT OR IGNORE INTO " + "Categories"
-//                        +  " (title) VALUES (?)";
-//                preparedStatement = DB.connection.prepareStatement(sqlCatQuery, Statement.RETURN_GENERATED_KEYS);
-//                preparedStatement.setString(1, category);
-//                preparedStatement.executeUpdate();
+
 
             int categoryID = Table.selectOneByTitle(category,"Categories").getInt("id");
             preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
@@ -254,6 +287,31 @@ public class Table {
     }
 
 
+    public static List<Product> selectOneLimitOffsetProducts( int limit, int offset) {
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " LIMIT ?, ?";
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setInt(1, offset);
+            preparedStatement.setInt(2, limit);
+
+
+            List<Product> products = new ArrayList<>();
+            ResultSet rs =  preparedStatement.executeQuery();
+
+            while(rs.next()){
+                products.add(extractProduct(rs));
+            }
+
+            return products;
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static ResultSet selectOneLimitOffset( int limit, int offset) {
         String sqlQuery = "SELECT * FROM " + Properties.tableName +  " LIMIT ?, ?";
 
@@ -270,6 +328,34 @@ public class Table {
 
         return null;
     }
+    public static List<Product> listProductsBy(String prop, boolean fromLower){
+        String order;
+        if(fromLower)
+            order = "ASC";
+        else
+            order = "DESC";
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " ORDER BY "+prop+" "+order;
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            List<Product> products = new ArrayList<>();
+            ResultSet rs =  preparedStatement.executeQuery();
+
+            while(rs.next()){
+                products.add(extractProduct(rs));
+            }
+
+            return products;
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+
     public static ResultSet listBy(String prop, boolean fromLower){
         String order;
         if(fromLower)
@@ -289,6 +375,31 @@ public class Table {
 
         return null;
 
+    }
+    public static List<Product> listProductsByPrice(boolean fromLowest, String category){
+
+        String order = fromLowest? "ASC":"DESC";
+
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " WHERE category = ? ORDER BY price "+order;
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+            preparedStatement.setString(1, category);
+
+            List<Product> products = new ArrayList<>();
+            ResultSet rs =  preparedStatement.executeQuery();
+
+        while(rs.next()){
+            products.add(extractProduct(rs));
+        }
+
+        return products;
+
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
     }
 
     public static ResultSet listByPrice(boolean fromLowest, String category){
@@ -373,5 +484,16 @@ public class Table {
             System.out.println(e.getMessage());
         }
     }
+    private static Product extractProduct(ResultSet rs) throws SQLException {
+        Product product = new Product();
 
+        product.setName(rs.getString("title"));
+        product.setGroup(rs.getString("category"));
+        product.setPrice(rs.getInt("price"));
+        product.setAmount(rs.getInt("quantity"));
+        product.setId(rs.getInt("id"));
+
+        return product;
+
+    }
 }

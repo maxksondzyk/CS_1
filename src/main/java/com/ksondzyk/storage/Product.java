@@ -1,19 +1,18 @@
 package com.ksondzyk.storage;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
+@Data
 public class Product {
+
     @Getter @Setter
     private int amount;
-
-    @Getter @Setter
     private String name;
+    private String group;
+    private int price;
+    private int id;
 
-    public Product(int amount, String name){
-        this.amount = amount;
-        this.name = name;
-    }
 
     public String toString(){
         return name+": "+amount+";";
