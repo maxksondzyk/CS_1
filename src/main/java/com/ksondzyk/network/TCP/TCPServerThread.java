@@ -47,7 +47,7 @@ public class TCPServerThread implements Runnable {
                     }
                     Packet answerPacket = new Packet((byte) 1,packet.getBPktId(), response.get());
                     PacketSender sender = new PacketSender();
-                    sender.send(answerPacket, os, 1);
+                    sender.send(answerPacket, os);
 
                     System.out.println(CipherMy.decode(response.get().getMessage()));
 

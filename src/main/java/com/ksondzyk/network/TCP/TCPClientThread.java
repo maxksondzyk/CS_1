@@ -17,13 +17,17 @@ public class TCPClientThread implements Runnable {
     private InetAddress addr;
     private InputStream inputStream;
     private OutputStream outputStream;
-    private final PacketGenerator packetGenerator;
     private static int counter = 0;
     private final int clientID = counter++;
+    private Packet packet;
+    private Packet answer;
 
-
-    public TCPClientThread() {
-        packetGenerator = new PacketGenerator();
+    public Packet send(){
+        run();
+        return answer;
+    }
+    public TCPClientThread(Packet packet) {
+        this.packet = packet;
         System.out.println("Запустимо клієнт з номером " + clientID);
         try {
             addr = InetAddress.getByName("localhost");
@@ -70,27 +74,22 @@ public class TCPClientThread implements Runnable {
 
     public void run() {
             try {
-                for (int i = 0; i < 16; i++) {
+                //for (int i = 0; i < 4; i++) {
                     connect();
-                    Packet packet = packetGenerator.newPacket(i);
 
                     PacketSender sender = new PacketSender();
-                    sender.send(packet, outputStream,i);
+                    sender.send(packet, outputStream);
 
                     TCPPacketReceiver pr = new TCPPacketReceiver();
-                    Packet packetReceived = pr.receive(inputStream);
+                    answer = pr.receive(inputStream);
 
-                    if (packetReceived.getBPktId().equals(packet.getBPktId()))
+                    if (answer.getBPktId().equals(packet.getBPktId())) {
                         System.out.println("CORRECT");
+                        //break;
+                    }
                     else
                         System.out.println("WRONG PACKET RESPONSE");
-                }
-
-                PacketSender fin = new PacketSender();
-
-                fin.send(packetGenerator.newPacket(clientID, "END"), outputStream,0);
-
-                System.out.println("END of " + Thread.currentThread().getName());
+               // }
 
             } catch (IOException e) {
                 System.err.println("Поток завершив роботу");

@@ -1,15 +1,20 @@
 package com.ksondzyk.Processing;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
+import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
 import javafx.scene.control.Tab;
+
 import org.json.JSONObject;
 
 import java.io.OutputStream;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.*;
 
@@ -26,6 +31,7 @@ public class Processor implements Callable{
     static ExecutorService executorPool = Executors.newFixedThreadPool(Server.processingThreadCount);
 
     static JSONObject answerMessage;
+    static Message answer;
 
     public static boolean idPresent(int id){
         try {
@@ -36,7 +42,7 @@ public class Processor implements Callable{
         }
     }
 
-    private static JSONObject answer(int cType,JSONObject jsonObject) throws PacketDamagedException {
+    private static Message answer(int cType,JSONObject jsonObject) throws PacketDamagedException {
         answerMessage = new JSONObject();
         try {
             String category;
@@ -47,17 +53,31 @@ public class Processor implements Callable{
             String type = (String) jsonObject.get("type");
         switch (cType) {
             case 1:
-                id = (int) jsonObject.get("id");
-                title = Table.selectOneById(id,Properties.tableName).getString("title");
-                quantity = Table.selectOneById(id,Properties.tableName).getInt("quantity");
-                price = Table.selectOneByTitle(title, Properties.tableName).getInt("price");
-                int categoryId = Table.selectOneById(id,Properties.tableName).getInt("categoryID");
-                category = Table.selectOneById(categoryId,"Categories").getString("title");
-                answerMessage.put("id",id);
-                answerMessage.put("title",title);
-                answerMessage.put("quantity",quantity);
-                answerMessage.put("price",price);
-                answerMessage.put("category",category);
+                if(type.equals("good")) {
+                    id = (int) jsonObject.get("id");
+                    title = Table.selectOneById(id, Properties.tableName).getString("title");
+                    quantity = Table.selectOneById(id, Properties.tableName).getInt("quantity");
+                    price = Table.selectOneById(id, Properties.tableName).getInt("price");
+                    int categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryID");
+                    category = Table.selectOneById(categoryId, "Categories").getString("title");
+                    answerMessage.put("id", id);
+                    answerMessage.put("title", title);
+                    answerMessage.put("quantity", quantity);
+                    answerMessage.put("price", price);
+                    answerMessage.put("category", category);
+                    answerMessage.put("categoryId",categoryId);
+                }
+                else if(type.equals("user")){
+                   // String login = Table.selectOneByTitle((String) jsonObject.get("login"),"Users").getString("title");
+                    String password = Table.selectOneByTitle("user","Users").getString("password");
+                    answerMessage.put("password",password);
+                }
+                else{
+                    id = (int) jsonObject.get("id");
+                    title = Table.selectOneById(id,"Categories").getString("title");
+                    answerMessage.put("id",id);
+                    answerMessage.put("title",title);
+                }
 
                 break;
 
@@ -126,24 +146,27 @@ public class Processor implements Callable{
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return answerMessage;
+        answer = new Message(1,1,answerMessage.toString(),false);
+        return answer;
     }
     public static Future<Message> process(Packet packet, OutputStream ostream) {
         os = ostream;
         Callable<Message> processingAsync = new Processor(packet);
         return executorPool.submit(processingAsync);
     }
-    public static Future<JSONObject> process(JSONObject jsonObject) {
+    public static Future<Message> process(JSONObject jsonObject) {
         Packet packet = new Packet(jsonObject);
-        Callable<JSONObject> processingAsync = new Processor(packet);
+        Callable<Message> processingAsync = new Processor(packet);
         return executorPool.submit(processingAsync);
     }
     public void run(){
         synchronized (packet) {
+        String jsonString = CipherMy.decode(packet.getBMsq().getMessage());
 
-            int cType = Integer.parseInt(String.valueOf(packet.getJsonObject().get("cType")));
+           JSONObject jsonObject = new JSONObject(jsonString);
+            int cType = Integer.parseInt(String.valueOf(jsonObject.get("cType")));
             try {
-            answerMessage = answer(cType,packet.getJsonObject());
+            answer = answer(cType,jsonObject);
 
             } catch (PacketDamagedException e) {
                 e.printStackTrace();
@@ -156,13 +179,13 @@ public class Processor implements Callable{
 //    }
 
     @Override
-    public JSONObject call() throws Exception {
+    public Message call() throws Exception {
         try {
             Thread.sleep(1000 * Server.secondsPerTask);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return answerMessage;
+        return answer;
     }
     public static void shutdown() {
         executorPool.shutdown();
