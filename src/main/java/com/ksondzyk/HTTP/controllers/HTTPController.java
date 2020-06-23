@@ -1,6 +1,7 @@
 package com.ksondzyk.HTTP.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.HTTP.dto.Response;
 import com.ksondzyk.HTTP.views.View;
 import com.ksondzyk.Processing.Processor;
@@ -18,6 +19,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +61,15 @@ public class HTTPController implements HttpHandler {
         Response response = new Response();
 
         Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
-        if (params.get("login").equals("me")&&matching(params.get("password"), "pass"))
+        String login = "";
+        String password = "";
+        try {
+             login = Table.selectOneByTitle("admin","Users").getString("title");
+             password = Table.selectOneByTitle("admin","Users").getString("password");
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        if (params.get("login").equals(login)&&matching(params.get("password"), password))
         {
             response.setStatusCode(200);
             authToken = generateNewToken();
@@ -84,9 +94,11 @@ public class HTTPController implements HttpHandler {
 
             response.setStatusCode(200);
 
+            String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("cType","1");
-            jsonObject.put("type","good");
+            jsonObject.put("type",type);
 
             int id = Integer.parseInt(httpExchange.getRequestURI().getPath().split("/")[3]);
 

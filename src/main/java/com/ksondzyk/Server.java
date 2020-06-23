@@ -20,7 +20,7 @@ public class Server {
     static ExecutorService executorPool;
     public static int processingThreadCount = 10;
     public static Boolean serverIsWorking = true;
-    public static int secondsPerTask = 3;
+    public static int secondsPerTask = 1;
     static ServerSocket s;
 
     public static void main(String[] args) {

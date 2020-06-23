@@ -59,17 +59,24 @@ public class Processor implements Callable{
                     quantity = Table.selectOneById(id, Properties.tableName).getInt("quantity");
                     price = Table.selectOneById(id, Properties.tableName).getInt("price");
                     int categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryID");
-//                    category = Table.selectOneById(categoryId, "Categories").getString("title");
+                    category = Table.selectOneById(categoryId, "Categories").getString("title");
                     answerMessage.put("id", id);
                     answerMessage.put("title", title);
                     answerMessage.put("quantity", quantity);
                     answerMessage.put("price", price);
-            //        answerMessage.put("category", category);
+                    answerMessage.put("category", category);
+                    answerMessage.put("categoryId",categoryId);
                 }
                 else if(type.equals("user")){
                    // String login = Table.selectOneByTitle((String) jsonObject.get("login"),"Users").getString("title");
                     String password = Table.selectOneByTitle("user","Users").getString("password");
                     answerMessage.put("password",password);
+                }
+                else{
+                    id = (int) jsonObject.get("id");
+                    title = Table.selectOneById(id,"Categories").getString("title");
+                    answerMessage.put("id",id);
+                    answerMessage.put("title",title);
                 }
 
                 break;
