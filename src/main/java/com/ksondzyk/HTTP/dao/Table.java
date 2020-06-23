@@ -1,6 +1,5 @@
 package com.ksondzyk.HTTP.dao;
 
-
 import com.ksondzyk.DataBase.DB;
 import com.ksondzyk.storage.Product;
 import com.ksondzyk.utilities.Properties;
@@ -42,6 +41,7 @@ public class Table {
             sqlException.printStackTrace();
         }
     }
+    
     public static void deleteTable() {
 
         try {

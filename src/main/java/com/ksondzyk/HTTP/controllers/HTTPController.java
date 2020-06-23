@@ -12,6 +12,7 @@ import com.ksondzyk.utilities.CipherMy;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +24,7 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+
 
 public class HTTPController implements HttpHandler {
     private static View view;
@@ -84,8 +86,7 @@ public class HTTPController implements HttpHandler {
 
         view.view(response);
     }
-
-    public static void get(HttpExchange httpExchange) {
+       public static void get(HttpExchange httpExchange) {
         Response response = new Response();
 
         String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
@@ -128,6 +129,7 @@ public class HTTPController implements HttpHandler {
 
         view.view(response);
     }
+
     public static void put(HttpExchange httpExchange){
         Response response = new Response();
 
@@ -225,6 +227,7 @@ public class HTTPController implements HttpHandler {
         view.view(response);
 
     }
+
     public static void delete(HttpExchange httpExchange){
         Response response = new Response();
 
