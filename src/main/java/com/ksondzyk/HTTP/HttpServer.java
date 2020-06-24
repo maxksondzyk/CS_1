@@ -29,7 +29,7 @@ public class HttpServer {
 
             Router router = new Router();
             ApiController apiController = new ApiController();
-            server.createContext("/", apiController); // http://localhost:8888/
+            server.createContext("/", router); // http://localhost:8888/
 
             server.start();
         } catch (IOException e) {

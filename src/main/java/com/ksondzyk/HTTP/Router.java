@@ -18,14 +18,11 @@ public class Router implements HttpHandler {
             StaticController staticController = new StaticController();
             staticController.handle(httpExchange);
         }
-        //send html page
-        else if(1==1){
-
-        }
 
         // api json
         else{
-
+            ApiController apiController = new ApiController();
+            apiController.handle(httpExchange);
         }
 //                if (httpExchange.getRequestHeaders().get("Content-Type").contains("application/json")) {
 //                    ApiController apiController = new ApiController();
