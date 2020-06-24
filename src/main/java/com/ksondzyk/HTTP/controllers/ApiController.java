@@ -197,7 +197,8 @@ public class ApiController implements HttpHandler {
             response.setStatusCode(403);
         }
         response.setHttpExchange(httpExchange);
-
+        response.setTemplate("login");
+        view = new JsonView();
         view.view(response);
     }
 
@@ -256,6 +257,7 @@ public class ApiController implements HttpHandler {
         }
         response.setHttpExchange(httpExchange);*/
 
+        view = new JsonView();
         view.view(response);
 
     }
