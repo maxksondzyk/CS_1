@@ -9,20 +9,23 @@ import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.utilities.CipherMy;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import lombok.SneakyThrows;
 import org.json.JSONObject;
 
+import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class HTTPController implements HttpHandler {
@@ -132,6 +135,7 @@ public class HTTPController implements HttpHandler {
 
     public static void put(HttpExchange httpExchange){
         Response response = new Response();
+        //InputStream cleanToken = httpExchange.getRequestBody();
 
         String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
 
@@ -180,12 +184,19 @@ public class HTTPController implements HttpHandler {
         view.view(response);
     }
 
-    public static void post(HttpExchange httpExchange){
+    public static void post(HttpExchange httpExchange) throws IOException {
         Response response = new Response();
-
-        String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
-
+        StringBuilder sb = new StringBuilder();
+        InputStream ios = httpExchange.getRequestBody();
+        int i;
+        while ((i = ios.read()) != -1) {
+            sb.append((char) i);
+        }
+        System.out.println("hm: " + sb.toString());
+        String type = (httpExchange.getRequestURI().getPath().split("/")[1]);
+        System.out.println("Type: " + type);
         String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+        System.out.println(cleanToken);
         if(cleanToken.equals(authToken)){
             InputStream is = httpExchange.getRequestBody();
 
@@ -276,20 +287,29 @@ public class HTTPController implements HttpHandler {
         }
         return result;
     }
-    public static void hello(HttpExchange httpExchange) {
 
+
+    @SneakyThrows
+    public static void hello(HttpExchange httpExchange) throws IOException {
+        ResultSet resultSet = Table.selectAll("Users");
+        ResultSetMetaData rsmd = resultSet.getMetaData();
+        int columnsNumber = rsmd.getColumnCount();
+        while (resultSet.next()) {
+            for (int i = 1; i <= columnsNumber; i++) {
+                if (i > 1) System.out.print(",  ");
+                String columnValue = resultSet.getString(i);
+                System.out.print(columnValue + " " + rsmd.getColumnName(i));
+            }
+            System.out.println("");
+        }
         Response response = new Response();
-
-
         response.setStatusCode(200);
-        response.setData(authToken);
         response.setTemplate("list");
         response.setHttpExchange(httpExchange);
-
         view.view(response);
     }
     @Override
-    public void handle(HttpExchange httpExchange) {
+    public void handle(HttpExchange httpExchange) throws IOException {
         switch (httpExchange.getRequestMethod()) {
             case "GET":
                 if (httpExchange.getRequestURI().getPath().contains("login")) {
@@ -308,14 +328,44 @@ public class HTTPController implements HttpHandler {
             case "POST":
 
                 if((httpExchange.getRequestURI().getPath().contains("hello"))){
-                    helloLogin(httpExchange);
-                }else
+                    //helloLogin(httpExchange);
+                }
+                else if(httpExchange.getRequestURI().getPath().contains("signup")){
+                    signup(httpExchange);
+                }
                 post(httpExchange);
                 break;
             case "DELETE":
                 delete(httpExchange);
                 break;
         }
+    }
+
+    private void signup(HttpExchange httpExchange) throws IOException {
+        Response response = new Response();
+        StringBuilder sb = new StringBuilder();
+        InputStream ios = httpExchange.getRequestBody();
+        int i;
+        while (true) {
+                if (!((i = ios.read()) != -1)) break;
+            sb.append((char) i);
+        }
+        Map<String, String> params = queryToMap(sb.toString());
+        if (params.containsKey("login") && params.containsKey("password")){
+            authToken = generateNewToken();
+            Table.insertUser(params.get("login"), params.get("password"), authToken);
+            System.err.println(params.get("login") + ", " + params.get("password"));
+            httpExchange.getResponseHeaders().add("Set-Cookie", "token="+authToken);
+        }
+        else{
+
+            response.setStatusCode(400);
+            response.setData("Bad Request.");
+        }
+        response.setStatusCode(200);
+        response.setTemplate("mainpage");
+        response.setHttpExchange(httpExchange);
+        view.view(response);
     }
 
     private void helloLogin(HttpExchange httpExchange) {
@@ -348,7 +398,7 @@ public class HTTPController implements HttpHandler {
             response.setStatusCode(401);
             response.setData("Access denied");
         }
-        response.setTemplate("mainpage");
+        response.setTemplate("list");
         response.setHttpExchange(httpExchange);
 
         view.view(response);
