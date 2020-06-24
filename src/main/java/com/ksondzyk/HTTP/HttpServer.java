@@ -1,10 +1,9 @@
 package com.ksondzyk.HTTP;
 
 import com.ksondzyk.DataBase.DB;
-import com.ksondzyk.HTTP.controllers.HTTPController;
+import com.ksondzyk.HTTP.controllers.ApiController;
 import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.HTTP.views.HtmlView;
-import com.ksondzyk.HTTP.views.JsonView;
 import com.ksondzyk.HTTP.views.View;
 
 import java.io.IOException;
@@ -22,14 +21,14 @@ public class HttpServer {
             Table.createTable();
             Table.createUsersTable();
             //Table.insertUser("admin","pass", "123");
-            HTTPController.setView(VIEW);
+            ApiController.setView(VIEW);
 
             com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create();
 
             server.bind(new InetSocketAddress(HTTP_SERVER_PORT), 0);
 
-            HTTPController httpController = new HTTPController();
-            server.createContext("/",httpController); // http://localhost:8888/
+            Router router = new Router();
+            server.createContext("/",router); // http://localhost:8888/
 
             server.start();
         } catch (IOException e) {

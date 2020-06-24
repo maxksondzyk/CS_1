@@ -28,7 +28,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 
-public class HTTPController implements HttpHandler {
+public class ApiController implements HttpHandler {
     private static View view;
     public static void setView(View newView) {
         view = newView;
