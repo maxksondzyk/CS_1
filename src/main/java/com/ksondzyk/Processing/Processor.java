@@ -46,9 +46,25 @@ public class Processor implements Callable{
             int id;
             int quantity;
             int price;
-            String type = (String) jsonObject.get("type");
+            String type;
         switch (cType) {
+            case 0:
+                try {
+                    String login = Table.selectOneByTitle("admin","Users").getString("title");
+                    String password = Table.selectOneByTitle("admin","Users").getString("password");
+                    if(login.equals(jsonObject.getString("login"))&&password.equals(jsonObject.getString("password"))){
+                        answerMessage.put("status","ok");
+                    }
+                    else {
+                        answerMessage.put("status", "not");
+                    }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+                break;
             case 1:
+                type = (String) jsonObject.get("type");
                 if(type.equals("good")) {
                     id = (int) jsonObject.get("id");
                     title = Table.selectOneById(id, Properties.tableName).getString("title");
@@ -78,6 +94,7 @@ public class Processor implements Callable{
                 break;
 
             case 2:
+                type = (String) jsonObject.get("type");
                 if(type.equals("good")) {
                     category = (String) jsonObject.get("category");
                     title = (String) jsonObject.get("title");
@@ -85,14 +102,19 @@ public class Processor implements Callable{
                     quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
 
                     id = Table.insert(category, title, quantity, price);
+                    answerMessage.put("id",id);
                 }
-                else {
+                else if(type.equals("category")){
                     title = (String) jsonObject.get("title");
                     id = Table.insertCategory(title);
+                    answerMessage.put("id",id);
+                }
+                else{
+                    Table.insertUser(jsonObject.getString("login"),jsonObject.getString("password"), jsonObject.getString("token"));
                 }
 
 
-                answerMessage.put("id",id);
+
 
                 break;
 
@@ -128,6 +150,8 @@ public class Processor implements Callable{
 
                 break;
             case 4:
+                type = (String) jsonObject.get("type");
+
                 id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                 if(type.equals("good"))
                 Table.delete(id);

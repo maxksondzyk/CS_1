@@ -1,8 +1,8 @@
 package com.ksondzyk.HTTP.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.HTTP.dto.Response;
+import com.ksondzyk.HTTP.views.JsonView;
 import com.ksondzyk.HTTP.views.View;
 import com.ksondzyk.Processing.Processor;
 import com.ksondzyk.entities.Message;
@@ -67,13 +67,29 @@ public class ApiController implements HttpHandler {
         Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
         String login = "";
         String password = "";
-        try {
-             login = Table.selectOneByTitle("admin","Users").getString("title");
-             password = Table.selectOneByTitle("admin","Users").getString("password");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        if (params.get("login").equals(login)&&matching(params.get("password"), password))
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cType","0");
+        jsonObject.put("login",params.get("login"));
+        jsonObject.put("password",params.get("password"));
+        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+
+        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+
+        Packet answer = tcpClientThread.send();
+
+        String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+        JSONObject responseMessage = new JSONObject(jsonString);
+
+        //response.setData(responseMessage.toMap());
+//        try {
+//             login = Table.selectOneByTitle("admin","Users").getString("title");
+//             password = Table.selectOneByTitle("admin","Users").getString("password");
+//        } catch (SQLException throwables) {
+//            throwables.printStackTrace();
+//        }
+        //if (params.get("login").equals(login)&&matching(params.get("password"), password))
+        if(responseMessage.get("status").equals("ok"))
         {
             response.setStatusCode(200);
 
@@ -86,7 +102,7 @@ public class ApiController implements HttpHandler {
             response.setData("Access denied");
         }
             response.setHttpExchange(httpExchange);
-
+        view = new JsonView();
         view.view(response);
     }
        public static void get(HttpExchange httpExchange) {
@@ -291,17 +307,17 @@ public class ApiController implements HttpHandler {
 
     @SneakyThrows
     public static void hello(HttpExchange httpExchange) throws IOException {
-        ResultSet resultSet = Table.selectAll("Users");
-        ResultSetMetaData rsmd = resultSet.getMetaData();
-        int columnsNumber = rsmd.getColumnCount();
-        while (resultSet.next()) {
-            for (int i = 1; i <= columnsNumber; i++) {
-                if (i > 1) System.out.print(",  ");
-                String columnValue = resultSet.getString(i);
-                System.out.print(columnValue + " " + rsmd.getColumnName(i));
-            }
-            System.out.println("");
-        }
+       // ResultSet resultSet = Table.selectAll("Users");
+     //   ResultSetMetaData rsmd = resultSet.getMetaData();
+//        int columnsNumber = rsmd.getColumnCount();
+//        while (resultSet.next()) {
+//            for (int i = 1; i <= columnsNumber; i++) {
+//                if (i > 1) System.out.print(",  ");
+//                String columnValue = resultSet.getString(i);
+//                System.out.print(columnValue + " " + rsmd.getColumnName(i));
+//            }
+//            System.out.println("");
+//        }
         Response response = new Response();
         response.setStatusCode(200);
         response.setTemplate("list");
@@ -361,8 +377,19 @@ public class ApiController implements HttpHandler {
         }
         Map<String, String> params = queryToMap(sb.toString());
         if (params.containsKey("login") && params.containsKey("password")){
+
+            JSONObject jsonObject = new JSONObject();
             authToken = generateNewToken();
-            Table.insertUser(params.get("login"), params.get("password"), authToken);
+            jsonObject.put("login",params.get("login"));
+            jsonObject.put("password",params.get("password"));
+            jsonObject.put("token",authToken);
+            jsonObject.put("type","user");
+            jsonObject.put("cType",2);
+
+            Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+            TCPClientThread tcpClientThread = new TCPClientThread(packet);
+            tcpClientThread.send();
+
             System.err.println(params.get("login") + ", " + params.get("password"));
             httpExchange.getResponseHeaders().add("Set-Cookie", "token="+authToken);
         }
@@ -385,12 +412,9 @@ public class ApiController implements HttpHandler {
         String login = "";
         String password = "";
 
-        try {
-            login = Table.selectOneByTitle("admin","Users").getString("title");
-            password = Table.selectOneByTitle("admin","Users").getString("password");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+
+        //  login = Table.selectOneByTitle("admin","Users").getString("title");
+        //password = Table.selectOneByTitle("admin","Users").getString("password");
 
         System.err.println(params.get("login"));
        // System.err.println(login.);

@@ -26,10 +26,9 @@ public class Server {
     public static void main(String[] args) {
         try {
             DB.connect();
-            //Table.createTable();
-            //Table.createCategoriesTable();
-            //Table.createUsersTable();
-            //Table.insertUser("user","pass");
+            Table.createTable();
+            Table.createUsersTable();
+            Table.insertUser("admin","pass", "123");
             s = new ServerSocket( Properties.PORT);
 
         executorPool = Executors.newFixedThreadPool(networkThreadCount);
