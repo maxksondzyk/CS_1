@@ -2,6 +2,7 @@ package com.ksondzyk.HTTP.dao;
 
 import com.ksondzyk.DataBase.DB;
 import com.ksondzyk.storage.Product;
+import com.ksondzyk.storage.ProductGroup;
 import com.ksondzyk.utilities.Properties;
 
 import java.sql.PreparedStatement;
@@ -201,6 +202,66 @@ public class Table {
         return null;
     }
 
+    //всі товари
+    public static List<Product> selectAllProducts() {
+        String sqlQuery = "SELECT * FROM " + Properties.tableName;
+
+        try {
+
+            Statement statement  = DB.connection.createStatement();
+            List<Product> res = new ArrayList<>();
+            ResultSet rs=  statement.executeQuery(sqlQuery);
+        while (rs.next() )
+        res.add(extractProduct(rs));
+
+        return res;
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static List<Product> selectAllProducts(int groupID) {
+        String sqlQuery = "SELECT * FROM " + Properties.tableName+ "WHERE categoryID = ";
+
+        try {
+            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
+
+            preparedStatement.setInt(1, groupID);
+
+            Statement statement  = DB.connection.createStatement();
+            List<Product> res = new ArrayList<>();
+            ResultSet rs=  statement.executeQuery(sqlQuery);
+            while (rs.next() )
+                res.add(extractProduct(rs));
+
+            return res;
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+    public static List<ProductGroup> selectAllGroups() {
+        String sqlQuery = "SELECT * FROM " + Properties.tableCategories;
+
+        try {
+
+            Statement statement  = DB.connection.createStatement();
+            List<ProductGroup> res = new ArrayList<>();
+            ResultSet rs=  statement.executeQuery(sqlQuery);
+            while (rs.next() ) {
+                res.add(new ProductGroup(rs.getInt("id"), rs.getString("title")));
+            }
+            return res;
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+
     public static Integer insert(String category, String title, int quantity, int price) {
         String sqlQuery = "INSERT OR IGNORE INTO " + Properties.tableName
                 +  " (categoryID,title,quantity,price) VALUES (?, ?, ?, ?)";
@@ -377,22 +438,6 @@ public class Table {
         return null;
     }
 
-    public static ResultSet selectOneLimitOffset( int limit, int offset) {
-        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " LIMIT ?, ?";
-
-        try {
-            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
-
-            preparedStatement.setInt(1, offset);
-            preparedStatement.setInt(2, limit);
-
-            return preparedStatement.executeQuery();
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-
-        return null;
-    }
     public static List<Product> listProductsBy(String prop, boolean fromLower){
         String order;
         if(fromLower)
@@ -421,26 +466,7 @@ public class Table {
     }
 
 
-    public static ResultSet listBy(String prop, boolean fromLower){
-        String order;
-        if(fromLower)
-            order = "ASC";
-        else
-            order = "DESC";
-        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " ORDER BY "+prop+" "+order;
 
-        try {
-            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
-
-
-            return preparedStatement.executeQuery();
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-
-        return null;
-
-    }
     public static List<Product> listProductsByPrice(boolean fromLowest, String category){
 
         String order = fromLowest? "ASC":"DESC";
@@ -467,24 +493,7 @@ public class Table {
         return null;
     }
 
-    public static ResultSet listByPrice(boolean fromLowest, String category){
 
-        String order = fromLowest? "ASC":"DESC";
-
-        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " WHERE category = ? ORDER BY price "+order;
-
-        try {
-            PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
-            preparedStatement.setString(1, category);
-
-
-            return preparedStatement.executeQuery();
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-
-        return null;
-    }
 
     public static void delete(int id) {
         String sqlQuery = "DELETE FROM " + Properties.tableName + " WHERE id = ?";
