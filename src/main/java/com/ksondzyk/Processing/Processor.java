@@ -29,9 +29,9 @@ public class Processor implements Callable{
     static JSONObject answerMessage;
     static Message answer;
 
-    public static boolean idPresent(int id){
+    public static boolean idPresent(int id, String tableName){
         try {
-            Table.selectOneById(id,Properties.tableName).getInt("id");
+            Table.selectOneById(id,tableName).getInt("id");
             return true;
         } catch (SQLException throwables) {
             return false;
@@ -64,20 +64,26 @@ public class Processor implements Callable{
         }
                 break;
             case 1:
+
                 type = (String) jsonObject.get("type");
                 if(type.equals("good")) {
                     id = (int) jsonObject.get("id");
-                    title = Table.selectOneById(id, Properties.tableName).getString("title");
-                    quantity = Table.selectOneById(id, Properties.tableName).getInt("quantity");
-                    price = Table.selectOneById(id, Properties.tableName).getInt("price");
-                    int categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryID");
-                    category = Table.selectOneById(categoryId, "Categories").getString("title");
-                    answerMessage.put("id", id);
-                    answerMessage.put("title", title);
-                    answerMessage.put("quantity", quantity);
-                    answerMessage.put("price", price);
-                    answerMessage.put("category", category);
-                    answerMessage.put("categoryId",categoryId);
+                    if(!idPresent(id,Properties.tableName)) {
+                        answerMessage.put("status","not");
+                    }else {
+                        title = Table.selectOneById(id, Properties.tableName).getString("title");
+                        quantity = Table.selectOneById(id, Properties.tableName).getInt("quantity");
+                        price = Table.selectOneById(id, Properties.tableName).getInt("price");
+                        int categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryID");
+                        category = Table.selectOneById(categoryId, "Categories").getString("title");
+                        answerMessage.put("id", id);
+                        answerMessage.put("title", title);
+                        answerMessage.put("quantity", quantity);
+                        answerMessage.put("price", price);
+                        answerMessage.put("category", category);
+                        answerMessage.put("categoryId", categoryId);
+                        answerMessage.put("status","ok");
+                    }
                 }
                 else if(type.equals("user")){
                    // String login = Table.selectOneByTitle((String) jsonObject.get("login"),"Users").getString("title");
@@ -86,9 +92,14 @@ public class Processor implements Callable{
                 }
                 else{
                     id = (int) jsonObject.get("id");
-                    title = Table.selectOneById(id,"Categories").getString("title");
-                    answerMessage.put("id",id);
-                    answerMessage.put("title",title);
+                    if(!idPresent(id,"Categories")) {
+                        answerMessage.put("status","not");
+                    }else {
+                        title = Table.selectOneById(id, "Categories").getString("title");
+                        answerMessage.put("id", id);
+                        answerMessage.put("title", title);
+                        answerMessage.put("status","ok");
+                    }
                 }
 
                 break;
@@ -121,6 +132,9 @@ public class Processor implements Callable{
             case 3:
                 id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                 if(jsonObject.get("type").equals("good")) {
+                    if(!idPresent(id,Properties.tableName)) {
+                        answerMessage.put("status","not");
+                    }else {
                     if (jsonObject.has("category")) {
                         category = (String) jsonObject.get("category");
                     } else
@@ -142,10 +156,16 @@ public class Processor implements Callable{
                         quantity = Table.selectOneById(id, Properties.tableName).getInt("quantity");
 
                     Table.update(id, title, category, price, quantity);
-                }
+                    answerMessage.put("status","ok");
+                }}
                 else {
-                    title = (String) jsonObject.get("title");
-                    Table.updateCategory(id,title);
+                    if(!idPresent(id,"Categories")) {
+                        answerMessage.put("status","not");
+                    }else {
+                        title = (String) jsonObject.get("title");
+                        Table.updateCategory(id, title);
+                        answerMessage.put("status","ok");
+                    }
                 }
 
                 break;
@@ -153,10 +173,25 @@ public class Processor implements Callable{
                 type = (String) jsonObject.get("type");
 
                 id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
-                if(type.equals("good"))
-                Table.delete(id);
-                else
-                    Table.deleteCategory(id);
+
+                if(type.equals("good")) {
+                    if(idPresent(id,Properties.tableName)) {
+                        Table.delete(id);
+                        answerMessage.put("status","ok");
+                    }
+                    else{
+                        answerMessage.put("status","not");
+                    }
+                }
+                else {
+                    if(idPresent(id,"Categories")) {
+                        Table.deleteCategory(id);
+                        answerMessage.put("status","ok");
+                    }
+                    else{
+                        answerMessage.put("status","not");
+                    }
+                }
                 break;
 
             default:
