@@ -1,5 +1,6 @@
 package com.ksondzyk.HTTP.controllers;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksondzyk.HTTP.dto.Response;
 import com.ksondzyk.HTTP.views.JsonView;
@@ -202,19 +203,24 @@ public class ApiController implements HttpHandler {
 
     public static void post(HttpExchange httpExchange) throws IOException {
         Response response = new Response();
-
-        String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
-
+        StringBuilder sb = new StringBuilder();
+        InputStream ios = httpExchange.getRequestBody();
+        int i;
+        while ((i = ios.read()) != -1) {
+            sb.append((char) i);
+        }
+        System.out.println("hm: " + sb.toString());
         String type = (httpExchange.getRequestURI().getPath().split("/")[1]);
-
-        if(cleanToken.equals(authToken)){
+        System.out.println("Type: " + type);
+        String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+        System.out.println(cleanToken);
+        //if(cleanToken.equals(authToken)){
             InputStream is = httpExchange.getRequestBody();
 
             ObjectMapper mapper = new ObjectMapper();
-
+            mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
             try {
-
-            Map<String, String> jsonMap = mapper.readValue(is, Map.class);
+                Map<String, String> jsonMap = mapper.readValue(sb.toString(), Map.class);
 
             if(type.equals("good")&&(Integer.parseInt(jsonMap.get("quantity"))<0||Integer.parseInt(jsonMap.get("price"))<0))
                 response.setStatusCode(409);
@@ -222,9 +228,6 @@ public class ApiController implements HttpHandler {
                 JSONObject jsonObject = new JSONObject(jsonMap);
                 jsonObject.put("cType", "3");
                 jsonObject.put("type",type);
-                int id = Integer.parseInt(jsonMap.get("id"));
-                jsonObject.put("id", String.valueOf(id));
-
                 Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
                 TCPClientThread tcpClientThread = new TCPClientThread(packet);
                 Packet answer = tcpClientThread.send();
@@ -246,14 +249,13 @@ public class ApiController implements HttpHandler {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+/*        }
 
         else {
             response.setStatusCode(403);
         }
-        response.setHttpExchange(httpExchange);
+        response.setHttpExchange(httpExchange);*/
 
-        view = new JsonView();
         view.view(response);
 
     }

@@ -1,4 +1,4 @@
-package com.ksondzyk.HTTP;
+package com.ksondzyk.HTTP.controllers;
 
 import com.ksondzyk.HTTP.controllers.ApiController;
 import com.ksondzyk.HTTP.controllers.StaticController;
