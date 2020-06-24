@@ -64,6 +64,7 @@ public class Table {
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + "	title text NOT NULL,\n"
                 + "	password text, \n"
+                + " token text, \n"
                 + " UNIQUE(title)"
                 + ");";
         try {
@@ -76,13 +77,14 @@ public class Table {
             sqlException.printStackTrace();
         }
     }
-    public static Integer insertUser(String login, String password) {
+    public static Integer insertUser(String login, String password, String token) {
         try {
             String sqlQuery = "INSERT OR IGNORE INTO " + "Users"
-                    +  " (title, password) VALUES (?, ?)";
+                    +  " (title, password, token) VALUES (?, ?, ?)";
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
+            preparedStatement.setString(3, token);
             preparedStatement.executeUpdate();
 
             ResultSet resultSet = preparedStatement.getGeneratedKeys();
@@ -170,6 +172,21 @@ public class Table {
     }
     public static ResultSet selectAll() {
         String sqlQuery = "SELECT * FROM " + Properties.tableName;
+
+        try {
+
+            Statement statement  = DB.connection.createStatement();
+
+            return statement.executeQuery(sqlQuery);
+        } catch (SQLException sqlException) {
+            sqlException.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static ResultSet selectAll(String tableName) {
+        String sqlQuery = "SELECT * FROM " + tableName;
 
         try {
 

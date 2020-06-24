@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>List</title>
+    <link rel="shortcut icon" href="#" />
 </head>
 <body>
 <ul>
-   <li>УСПІХ</li>
+   <li>Hello</li>
 
 </ul>
-
 </body>
 </html>
