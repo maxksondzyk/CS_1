@@ -1,5 +1,6 @@
 package com.ksondzyk.HTTP.controllers;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksondzyk.HTTP.dto.Response;
 import com.ksondzyk.HTTP.views.JsonView;
@@ -123,8 +124,6 @@ public class ApiController implements HttpHandler {
 
             int id = Integer.parseInt(httpExchange.getRequestURI().getPath().split("/")[3]);
 
-            if(Processor.idPresent(id)) {
-
                 jsonObject.put("id", id);
 
                 Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
@@ -134,7 +133,7 @@ public class ApiController implements HttpHandler {
                 String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
 
                 JSONObject responseMessage = new JSONObject(jsonString);
-
+            if(responseMessage.get("status").equals("ok")) {
                 response.setData(responseMessage.toMap());
 
             }
@@ -147,6 +146,7 @@ public class ApiController implements HttpHandler {
         }
         response.setHttpExchange(httpExchange);
 
+        view = new JsonView();
         view.view(response);
     }
 
@@ -197,7 +197,8 @@ public class ApiController implements HttpHandler {
             response.setStatusCode(403);
         }
         response.setHttpExchange(httpExchange);
-
+        response.setTemplate("login");
+        view = new JsonView();
         view.view(response);
     }
 
@@ -214,44 +215,49 @@ public class ApiController implements HttpHandler {
         System.out.println("Type: " + type);
         String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
         System.out.println(cleanToken);
-        if(cleanToken.equals(authToken)){
+        //if(cleanToken.equals(authToken)){
             InputStream is = httpExchange.getRequestBody();
 
             ObjectMapper mapper = new ObjectMapper();
-            Map<String, String> jsonMap = null;
-
+            mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
             try {
-                jsonMap = mapper.readValue(is, Map.class);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                Map<String, String> jsonMap = mapper.readValue(sb.toString(), Map.class);
+
             if(type.equals("good")&&(Integer.parseInt(jsonMap.get("quantity"))<0||Integer.parseInt(jsonMap.get("price"))<0))
                 response.setStatusCode(409);
             else {
                 JSONObject jsonObject = new JSONObject(jsonMap);
                 jsonObject.put("cType", "3");
                 jsonObject.put("type",type);
+                Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+                TCPClientThread tcpClientThread = new TCPClientThread(packet);
+                Packet answer = tcpClientThread.send();
 
-                int id = Integer.parseInt(jsonMap.get("id"));
-                if (Processor.idPresent(id)) {
-                    jsonObject.put("id", String.valueOf(id));
-                    Processor.process(jsonObject);
+                String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+                JSONObject responseMessage = new JSONObject(jsonString);
+                if(responseMessage.get("status").equals("ok")) {
                     try {
                         httpExchange.sendResponseHeaders(204,-1);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                     return;
-                } else {
+                }else {
                     response.setStatusCode(404);
                 }
             }
-        }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+/*        }
+
         else {
             response.setStatusCode(403);
         }
-        response.setHttpExchange(httpExchange);
+        response.setHttpExchange(httpExchange);*/
 
+        view = new JsonView();
         view.view(response);
 
     }
@@ -269,11 +275,15 @@ public class ApiController implements HttpHandler {
             String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
             jsonObject.put("id",id);
             jsonObject.put("type",type);
-            if(!Processor.idPresent(id)) {
-                response.setStatusCode(404);
-            }
-            else {
-                Processor.process(jsonObject);
+
+            Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+            TCPClientThread tcpClientThread = new TCPClientThread(packet);
+            Packet answer = tcpClientThread.send();
+
+            String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+            JSONObject responseMessage = new JSONObject(jsonString);
+            if(responseMessage.get("status").equals("ok")) {
                 try {
                     httpExchange.sendResponseHeaders(204,-1);
                 } catch (IOException e) {
@@ -281,6 +291,10 @@ public class ApiController implements HttpHandler {
                 }
                 return;
             }
+            else{
+                response.setStatusCode(404);
+            }
+
         }
         else {
             response.setStatusCode(403);
@@ -321,7 +335,7 @@ public class ApiController implements HttpHandler {
 //        }
         Response response = new Response();
         response.setStatusCode(200);
-        response.setTemplate("list");
+        response.setTemplate("login");
         response.setHttpExchange(httpExchange);
         view.view(response);
     }
@@ -425,7 +439,7 @@ public class ApiController implements HttpHandler {
             response.setStatusCode(401);
             response.setData("Access denied");
         }
-        response.setTemplate("list");
+        response.setTemplate("login");
         response.setHttpExchange(httpExchange);
 
         view.view(response);

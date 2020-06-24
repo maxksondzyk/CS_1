@@ -25,6 +25,7 @@ public class Table {
                 + " UNIQUE(title),\n"
                 + " FOREIGN KEY(categoryID) REFERENCES Categories (id)"
                 + ");";
+
         String sqlQueryCategories = "CREATE TABLE IF NOT EXISTS "+ Properties.tableCategories +" (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
                 + "	title text NOT NULL,\n"
@@ -402,6 +403,7 @@ public class Table {
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
             preparedStatement.setString(1, title);
+            preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
 
