@@ -16,13 +16,13 @@ function render() {
         categoryWrapper.appendChild(title)
 
         let editImg = document.createElement('div');
-        editImg.innerHTML = '<img src="../images/edit.svg" style="max-width: 20px">'
+        editImg.innerHTML = 'Edit'
         editImg.onclick = function () {addEditItemModal(categories[i])}
         categoryWrapper.appendChild(editImg)
 
         let deleteImg = document.createElement('div');
-        deleteImg.innerHTML = '<img src="../images/trash.svg" style="max-width: 20px">'
-        deleteImg.onclick = function () {deleteCategory(categories[i])}
+        deleteImg.innerHTML = 'Delete'
+        deleteImg.onclick = function () {}
         categoryWrapper.appendChild(deleteImg)
 
 
@@ -30,7 +30,7 @@ function render() {
     }
 
     let addImg = document.createElement('div');
-    addImg.innerHTML = '<img src="../images/plus.svg" style="max-width: 20px">'
+    addImg.innerHTML = 'Add'
     addImg.onclick = function () {addNewCategory()}
     document.getElementsByClassName('category_items')[0].appendChild(addImg);
 }
