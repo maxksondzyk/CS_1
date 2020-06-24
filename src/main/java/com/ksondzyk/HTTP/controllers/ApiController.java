@@ -345,6 +345,14 @@ String path = httpExchange.getRequestURI().getPath();
 
                     getAllGoods(httpExchange);
                 }
+                else if(path.contains("api/categories")){
+
+                    getAllCategories(httpExchange);
+                }
+                else if(path.contains("api/categoryProducts")){
+
+                    getAllCategoryProducts(httpExchange);
+                }
 
                 else{
                     get(httpExchange);
@@ -367,6 +375,92 @@ String path = httpExchange.getRequestURI().getPath();
                 delete(httpExchange);
                 break;
         }
+    }
+
+    private void getAllCategoryProducts(HttpExchange httpExchange) {
+        Response response = new Response();
+
+        String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+
+        if(cleanToken.equals(authToken)){
+
+            response.setStatusCode(200);
+
+            String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("cType","1");
+            jsonObject.put("type",type);
+
+            int id = Integer.parseInt(httpExchange.getRequestURI().getPath().split("/")[3]);
+
+            jsonObject.put("id", id);
+
+            Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+            TCPClientThread tcpClientThread = new TCPClientThread(packet);
+            Packet answer = tcpClientThread.send();
+
+            String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+            JSONObject responseMessage = new JSONObject(jsonString);
+            if(responseMessage.get("status").equals("ok")) {
+                response.setData(responseMessage.toMap());
+
+            }
+            else{
+                response.setStatusCode(404);
+            }
+        }
+        else{
+            response.setStatusCode(403);
+        }
+        response.setHttpExchange(httpExchange);
+
+        view = new JsonView();
+        view.view(response);
+    }
+
+
+
+    private void getAllCategories(HttpExchange httpExchange) {
+        Response response = new Response();
+        String cleanToken = httpExchange.getRequestHeaders()
+                .get("token").toString().replaceAll("\"","")
+                .replaceAll("\\[","").replaceAll("]","");
+
+        if(cleanToken.equals(authToken)){
+
+            response.setStatusCode(200);
+
+            String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("cType","1");
+            jsonObject.put("type",type);
+
+
+            Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+            TCPClientThread tcpClientThread = new TCPClientThread(packet);
+            Packet answer = tcpClientThread.send();
+
+            String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+            JSONObject responseMessage = new JSONObject(jsonString);
+            if(responseMessage.get("status").equals("ok")) {
+                response.setData(responseMessage.toMap());
+
+            }
+            else{
+                response.setStatusCode(404);
+            }
+        }
+        else{//not authorized
+            response.setStatusCode(403);
+        }
+        response.setHttpExchange(httpExchange);
+
+        view = new JsonView();
+        view.view(response);
     }
 
     private void getAllGoods(HttpExchange httpExchange) {
@@ -448,36 +542,4 @@ String path = httpExchange.getRequestURI().getPath();
         view.view(response);
     }
 
-    private void helloLogin(HttpExchange httpExchange) {
-
-        Response response = new Response();
-        System.err.println("here");
-        Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
-        String login = "";
-        String password = "";
-
-
-        //  login = Table.selectOneByTitle("admin","Users").getString("title");
-        //password = Table.selectOneByTitle("admin","Users").getString("password");
-
-        System.err.println(params.get("login"));
-       // System.err.println(login.);
-        if (params.get("login").equals(login)&&matching(params.get("password"), password))
-        {
-            response.setStatusCode(200);
-
-
-            authToken = generateNewToken();
-            response.setData(authToken);
-        }
-        else{
-
-            response.setStatusCode(401);
-            response.setData("Access denied");
-        }
-        response.setTemplate("login");
-        response.setHttpExchange(httpExchange);
-
-        view.view(response);
-    }
 }

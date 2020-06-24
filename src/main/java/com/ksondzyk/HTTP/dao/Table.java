@@ -223,7 +223,7 @@ public class Table {
     }
 
     public static List<Product> selectAllProducts(int groupID) {
-        String sqlQuery = "SELECT * FROM " + Properties.tableName+ "WHERE categoryID = ";
+        String sqlQuery = "SELECT * FROM " + Properties.tableName+ " WHERE categoryID = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);

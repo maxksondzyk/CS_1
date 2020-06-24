@@ -7,9 +7,11 @@ import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
 import com.ksondzyk.storage.Product;
+import com.ksondzyk.storage.ProductGroup;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.OutputStream;
@@ -96,16 +98,28 @@ public class Processor implements Callable{
                 }
                 else if(type.equals("allGoods")){
                     ArrayList<Product> goods = (ArrayList<Product>) Table.selectAllProducts();
-                   String array  =  new Gson().toJson(goods);
-                   array="{"+array+"}";
-                   System.out.println(array);
-                   answerMessage = new JSONObject(array);
-
-                   // answerMessage.
+                   JSONArray array =new JSONArray (new Gson().toJson(goods));
+                   answerMessage.put("goods",(Object)array);
                     answerMessage.put("status","ok");
 
+                }
+                else if(type.equals("categories")){
+                    ArrayList<ProductGroup> groups = (ArrayList<ProductGroup>) Table.selectAllGroups();
+                    JSONArray array =new JSONArray (new Gson().toJson(groups));
+                    answerMessage.put("groups",(Object)array);
+                    answerMessage.put("status","ok");
 
-
+                }
+                else if(type.equals("categoryProducts")){
+                    id = (int) jsonObject.get("id");
+                    if(!idPresent(id,Properties.tableCategories)) {
+                        answerMessage.put("status","not");
+                    }else {
+                        ArrayList<Product> groups = (ArrayList<Product>) Table.selectAllProducts(id);
+                        JSONArray array = new JSONArray(new Gson().toJson(groups));
+                        answerMessage.put("products", (Object) array);
+                        answerMessage.put("status", "ok");
+                    }
                 }
 
                 else {
