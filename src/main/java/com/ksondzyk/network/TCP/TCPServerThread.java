@@ -33,7 +33,7 @@ public class TCPServerThread implements Runnable {
 
         try {
             synchronized (socket) {
-                while (true) {
+               // while (true) {
                     TCPPacketReceiver pr = new TCPPacketReceiver();
 
                     Packet packet = pr.receive(is);
@@ -42,8 +42,6 @@ public class TCPServerThread implements Runnable {
 
                     while (!response.isDone()) {
                         Thread.sleep(10);
-                       // System.out.println("Waiting for client");
-                        //System.out.println("wait");
                     }
                     Packet answerPacket = new Packet((byte) 1,packet.getBPktId(), response.get());
                     PacketSender sender = new PacketSender();
@@ -53,17 +51,6 @@ public class TCPServerThread implements Runnable {
 
                     System.out.println("Server received packet " + Thread.currentThread().getName());
 
-                    if (CipherMy.decode(packet.getMessage()).equals("END")) {
-                        synchronized (serverIsWorking) {
-                            if (serverIsWorking) {
-                                serverIsWorking = false;
-                                socket.close();
-                            }
-                        }
-                        break;
-                    }
-//            }
-                }
             }
         } catch (IOException e) {
             System.err.println("Поток завершив роботу");
