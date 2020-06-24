@@ -12,11 +12,12 @@
     <section class="category">
         <h1 class="category_title">Categories</h1>
         <div class="category_items"></div>
-        <img src="./assets/images/edit.svg" style="max-width: 20px">
+
     </section>
 </body>
 
 <script src="./assets/javascript/plugin/base.js"></script>
 <script src="./assets/javascript/plugin/modal.js"></script>
 <script src="./assets/javascript/categories.js"></script>
+<script src="./assets/javascript/simple.js"></script>
 </html>
