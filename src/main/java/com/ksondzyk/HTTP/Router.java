@@ -20,7 +20,12 @@ public class Router implements HttpHandler {
         }
 
         // api json
+        else if(path.startsWith("api/")){
+            ApiController apiController = new ApiController();
+            apiController.handle(httpExchange);
+        }
         else{
+            //має бути пейдж контролер
             ApiController apiController = new ApiController();
             apiController.handle(httpExchange);
         }

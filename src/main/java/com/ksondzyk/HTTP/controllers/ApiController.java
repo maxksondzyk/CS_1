@@ -8,6 +8,7 @@ import com.ksondzyk.Processing.Processor;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.network.TCP.TCPClientThread;
+import com.ksondzyk.storage.Product;
 import com.ksondzyk.utilities.CipherMy;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -310,14 +311,7 @@ public class ApiController implements HttpHandler {
     }
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-        String path = httpExchange.getRequestURI().getPath();
 
-        if(path.endsWith(".js") || path.endsWith(".css") || path.endsWith(".png")){
-            StaticController controller = new StaticController();
-            controller.handle(httpExchange);
-
-            return;
-        }
         switch (httpExchange.getRequestMethod()) {
 
             case "GET":
