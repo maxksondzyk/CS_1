@@ -29,6 +29,7 @@ import java.util.*;
 
 
 public class HTTPController implements HttpHandler {
+
     private static View view;
     public static void setView(View newView) {
         view = newView;
@@ -310,6 +311,16 @@ public class HTTPController implements HttpHandler {
     }
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+
+        String path = httpExchange.getRequestURI().getPath();
+
+        if(path.endsWith(".js") || path.endsWith(".css") || path.endsWith(".png")){
+                StaticController controller = new StaticController();
+                controller.handle(httpExchange);
+
+            return;
+        }
+
         switch (httpExchange.getRequestMethod()) {
             case "GET":
                 if (httpExchange.getRequestURI().getPath().contains("login")) {
@@ -327,10 +338,8 @@ public class HTTPController implements HttpHandler {
                 break;
             case "POST":
 
-                if((httpExchange.getRequestURI().getPath().contains("hello"))){
-                    //helloLogin(httpExchange);
-                }
-                else if(httpExchange.getRequestURI().getPath().contains("signup")){
+
+               if(httpExchange.getRequestURI().getPath().contains("signup")){
                     signup(httpExchange);
                 }
                 post(httpExchange);
@@ -368,39 +377,5 @@ public class HTTPController implements HttpHandler {
         view.view(response);
     }
 
-    private void helloLogin(HttpExchange httpExchange) {
 
-        Response response = new Response();
-        System.err.println("here");
-        Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
-        String login = "";
-        String password = "";
-
-        try {
-            login = Table.selectOneByTitle("admin","Users").getString("title");
-            password = Table.selectOneByTitle("admin","Users").getString("password");
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-
-        System.err.println(params.get("login"));
-       // System.err.println(login.);
-        if (params.get("login").equals(login)&&matching(params.get("password"), password))
-        {
-            response.setStatusCode(200);
-
-
-            authToken = generateNewToken();
-            response.setData(authToken);
-        }
-        else{
-
-            response.setStatusCode(401);
-            response.setData("Access denied");
-        }
-        response.setTemplate("list");
-        response.setHttpExchange(httpExchange);
-
-        view.view(response);
-    }
 }
