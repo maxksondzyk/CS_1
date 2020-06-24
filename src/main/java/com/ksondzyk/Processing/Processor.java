@@ -98,8 +98,8 @@ public class Processor implements Callable{
                 }
                 else if(type.equals("allGoods")){
                     ArrayList<Product> goods = (ArrayList<Product>) Table.selectAllProducts();
-                   JSONArray array =new JSONArray (new Gson().toJson(goods));
-                   answerMessage.put("goods",(Object)array);
+                   JSONArray array =new JSONArray (goods);
+                   answerMessage.put("goods",array);
                     answerMessage.put("status","ok");
 
                 }

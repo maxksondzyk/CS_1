@@ -17,7 +17,7 @@ public class Message {
     private  String message;
 
     public static final int BYTES_WITHOUT_MESSAGE = Integer.BYTES + Integer.BYTES;
-    public static final int MAX_MESSAGE_SIZE = 255;
+    public static final int MAX_MESSAGE_SIZE = 32768;
     public static final int BYTES_MAX_SIZE = BYTES_WITHOUT_MESSAGE + MAX_MESSAGE_SIZE;
 
     public Message(int cType, int bUserId, String message, boolean encoded)

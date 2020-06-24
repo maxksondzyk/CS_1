@@ -31,11 +31,13 @@ public class JsonView implements View {
             Headers responseHeaders = httpExchange.getResponseHeaders();
             responseHeaders.set("Content-Type", "application/json");
 
-            httpExchange.sendResponseHeaders(statusCode, responseBody.length());
+           // httpExchange.sendResponseHeaders(statusCode, responseBody.length());
 
+            byte[] bs = responseBody.getBytes("UTF-8");
+            httpExchange.sendResponseHeaders(statusCode, bs.length);
             OutputStream outputStream = httpExchange.getResponseBody();
 
-            outputStream.write(responseBody.getBytes());
+            outputStream.write(bs);
             outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();

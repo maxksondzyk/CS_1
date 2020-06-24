@@ -230,9 +230,8 @@ public class Table {
 
             preparedStatement.setInt(1, groupID);
 
-            Statement statement  = DB.connection.createStatement();
+            ResultSet rs=  preparedStatement.executeQuery();
             List<Product> res = new ArrayList<>();
-            ResultSet rs=  statement.executeQuery(sqlQuery);
             while (rs.next() )
                 res.add(extractProduct(rs));
 
