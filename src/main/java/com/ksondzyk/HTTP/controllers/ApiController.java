@@ -102,7 +102,6 @@ public class ApiController implements HttpHandler {
             response.setData("Access denied");
         }
             response.setHttpExchange(httpExchange);
-        view = new JsonView();
         view.view(response);
     }
        public static void get(HttpExchange httpExchange) {
@@ -320,7 +319,7 @@ public class ApiController implements HttpHandler {
 //        }
         Response response = new Response();
         response.setStatusCode(200);
-        response.setTemplate("list");
+        response.setTemplate("login");
         response.setHttpExchange(httpExchange);
         view.view(response);
     }
@@ -431,7 +430,7 @@ public class ApiController implements HttpHandler {
             response.setStatusCode(401);
             response.setData("Access denied");
         }
-        response.setTemplate("list");
+        response.setTemplate("login");
         response.setHttpExchange(httpExchange);
 
         view.view(response);
