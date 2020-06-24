@@ -28,7 +28,8 @@ public class HttpServer {
             server.bind(new InetSocketAddress(HTTP_SERVER_PORT), 0);
 
             Router router = new Router();
-            server.createContext("/",router); // http://localhost:8888/
+            ApiController apiController = new ApiController();
+            server.createContext("/", apiController); // http://localhost:8888/
 
             server.start();
         } catch (IOException e) {

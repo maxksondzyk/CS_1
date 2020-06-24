@@ -13,16 +13,14 @@ public class Router implements HttpHandler {
 
     //send static file binary
     if(path.endsWith(".js") || path.endsWith(".css") || path.endsWith(".png")){
-
+        StaticController controller = new StaticController();
+            controller.handle(httpExchange);
         }
-    //send html page
-    else if(1==1){
-
-    }
 
     // api json
     else{
-
+        ApiController apiController = new ApiController();
+        apiController.handle(httpExchange);
     }
 
     }

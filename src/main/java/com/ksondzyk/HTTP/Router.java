@@ -1,6 +1,7 @@
 package com.ksondzyk.HTTP;
 
 import com.ksondzyk.HTTP.controllers.ApiController;
+import com.ksondzyk.HTTP.controllers.StaticController;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -10,15 +11,33 @@ public class Router implements HttpHandler {
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-                if (httpExchange.getRequestHeaders().get("Content-Type").contains("api")) {
-                    ApiController apiController = new ApiController();
-                    apiController.handle(httpExchange);
-                }
+        String path = httpExchange.getRequestURI().getPath();
 
-                if (httpExchange.getRequestHeaders().get("Content-Type").contains("mime")) {
-                    ApiController apiController = new ApiController();
-                    apiController.handle(httpExchange);
-                }
+        //send static file binary
+        if(path.endsWith(".js") || path.endsWith(".css") || path.endsWith(".png")){
+            StaticController staticController = new StaticController();
+            staticController.handle(httpExchange);
+        }
+        //send html page
+        else if(1==1){
+
+        }
+
+        // api json
+        else{
+
+        }
+//                if (httpExchange.getRequestHeaders().get("Content-Type").contains("application/json")) {
+//                    ApiController apiController = new ApiController();
+//                    apiController.handle(httpExchange);
+//                }else
+//                if (httpExchange.getRequestHeaders().get("Content-Type").contains("mime")) {
+//                    StaticController staticController = new StaticController();
+//                    staticController.handle(httpExchange);
+//                }
+//                else{
+//                    ApiController apiController = new ApiController();
+//                    apiController.handle(httpExchange);
+//                }
         }
     }
-}

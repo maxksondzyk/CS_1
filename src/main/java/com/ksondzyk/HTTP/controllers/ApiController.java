@@ -310,7 +310,16 @@ public class ApiController implements HttpHandler {
     }
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
+        String path = httpExchange.getRequestURI().getPath();
+
+        if(path.endsWith(".js") || path.endsWith(".css") || path.endsWith(".png")){
+            StaticController controller = new StaticController();
+            controller.handle(httpExchange);
+
+            return;
+        }
         switch (httpExchange.getRequestMethod()) {
+
             case "GET":
                 if (httpExchange.getRequestURI().getPath().contains("login")) {
                     login(httpExchange);
