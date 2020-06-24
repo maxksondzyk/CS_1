@@ -202,22 +202,18 @@ public class ApiController implements HttpHandler {
 
     public static void post(HttpExchange httpExchange) throws IOException {
         Response response = new Response();
-        StringBuilder sb = new StringBuilder();
-        InputStream ios = httpExchange.getRequestBody();
-        int i;
-        while ((i = ios.read()) != -1) {
-            sb.append((char) i);
-        }
-        System.out.println("hm: " + sb.toString());
-        String type = (httpExchange.getRequestURI().getPath().split("/")[1]);
-        System.out.println("Type: " + type);
+
         String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
-        System.out.println(cleanToken);
+
+        String type = (httpExchange.getRequestURI().getPath().split("/")[1]);
+
         if(cleanToken.equals(authToken)){
             InputStream is = httpExchange.getRequestBody();
 
             ObjectMapper mapper = new ObjectMapper();
+
             try {
+
             Map<String, String> jsonMap = mapper.readValue(is, Map.class);
 
             if(type.equals("good")&&(Integer.parseInt(jsonMap.get("quantity"))<0||Integer.parseInt(jsonMap.get("price"))<0))
@@ -257,6 +253,7 @@ public class ApiController implements HttpHandler {
         }
         response.setHttpExchange(httpExchange);
 
+        view = new JsonView();
         view.view(response);
 
     }
