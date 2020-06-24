@@ -341,6 +341,7 @@ public class Table {
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
             preparedStatement.setString(1, title);
+            preparedStatement.setInt(2, id);
 
             preparedStatement.executeUpdate();
 
