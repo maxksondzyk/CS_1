@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class Table {
 
@@ -22,7 +21,7 @@ public class Table {
                 + "	quantity INTEGER, \n"
                 + " price INTEGER,\n"
                 + " UNIQUE(title),\n"
-                + " FOREIGN KEY(categoryID) REFERENCES Categories (id)"
+                + " FOREIGN KEY(categoryID) REFERENCES Categories (id) ON DELETE CASCADE"
                 + ");";
 
         String sqlQueryCategories = "CREATE TABLE IF NOT EXISTS "+ Properties.tableCategories +" (\n"
