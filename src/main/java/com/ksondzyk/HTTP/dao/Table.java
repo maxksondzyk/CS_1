@@ -21,7 +21,8 @@ public class Table {
                 + "	title text NOT NULL,\n"
                 + "	quantity INTEGER, \n"
                 + " price INTEGER,\n"
-                + " UNIQUE(title)"
+                + " UNIQUE(title),\n"
+                + " FOREIGN KEY(categoryID) REFERENCES Categories (id)"
                 + ");";
         String sqlQueryCategories = "CREATE TABLE IF NOT EXISTS "+ Properties.tableCategories +" (\n"
                 + "	id integer PRIMARY KEY AUTOINCREMENT,\n"

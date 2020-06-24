@@ -17,10 +17,10 @@ public class HttpServer {
 
     public static void main(String[] args) {
         try {
-            DB.connect();
-            Table.createTable();
-            Table.createUsersTable();
-            //Table.insertUser("admin","pass", "123");
+           // DB.connect();
+//            Table.createTable();
+//            Table.createUsersTable();
+//            Table.insertUser("admin","pass", "123");
             ApiController.setView(VIEW);
 
             com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create();
