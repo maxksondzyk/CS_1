@@ -564,7 +564,7 @@ public class Table {
         Product product = new Product();
 
         product.setName(rs.getString("title"));
-        product.setGroup(rs.getString("category"));
+        product.setGroup(rs.getString("categoryID"));
         product.setPrice(rs.getInt("price"));
         product.setAmount(rs.getInt("quantity"));
         product.setId(rs.getInt("id"));

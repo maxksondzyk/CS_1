@@ -322,17 +322,7 @@ public class ApiController implements HttpHandler {
 
     @SneakyThrows
     public static void hello(HttpExchange httpExchange) throws IOException {
-       // ResultSet resultSet = Table.selectAll("Users");
-     //   ResultSetMetaData rsmd = resultSet.getMetaData();
-//        int columnsNumber = rsmd.getColumnCount();
-//        while (resultSet.next()) {
-//            for (int i = 1; i <= columnsNumber; i++) {
-//                if (i > 1) System.out.print(",  ");
-//                String columnValue = resultSet.getString(i);
-//                System.out.print(columnValue + " " + rsmd.getColumnName(i));
-//            }
-//            System.out.println("");
-//        }
+
         Response response = new Response();
         response.setStatusCode(200);
         response.setTemplate("login");
@@ -341,7 +331,7 @@ public class ApiController implements HttpHandler {
     }
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-
+String path = httpExchange.getRequestURI().getPath();
         switch (httpExchange.getRequestMethod()) {
 
             case "GET":
@@ -351,7 +341,12 @@ public class ApiController implements HttpHandler {
                 else if((httpExchange.getRequestURI().getPath().contains("hello"))){
                     hello(httpExchange);
                 }
-                else {
+                else if(path.contains("api/allGoods")){
+
+                    getAllGoods(httpExchange);
+                }
+
+                else{
                     get(httpExchange);
                 }
                 break;
@@ -372,6 +367,47 @@ public class ApiController implements HttpHandler {
                 delete(httpExchange);
                 break;
         }
+    }
+
+    private void getAllGoods(HttpExchange httpExchange) {
+        Response response = new Response();
+        String cleanToken = httpExchange.getRequestHeaders()
+                .get("token").toString().replaceAll("\"","")
+                .replaceAll("\\[","").replaceAll("]","");
+
+        if(cleanToken.equals(authToken)){
+
+            response.setStatusCode(200);
+
+            String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("cType","1");
+            jsonObject.put("type",type);
+
+
+            Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+            TCPClientThread tcpClientThread = new TCPClientThread(packet);
+            Packet answer = tcpClientThread.send();
+
+            String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+            JSONObject responseMessage = new JSONObject(jsonString);
+            if(responseMessage.get("status").equals("ok")) {
+                response.setData(responseMessage.toMap());
+
+            }
+            else{
+                response.setStatusCode(404);
+            }
+        }
+        else{//not authorized
+            response.setStatusCode(403);
+        }
+        response.setHttpExchange(httpExchange);
+
+        view = new JsonView();
+        view.view(response);
     }
 
     private void signup(HttpExchange httpExchange) throws IOException {

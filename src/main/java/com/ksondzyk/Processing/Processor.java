@@ -1,10 +1,12 @@
 package com.ksondzyk.Processing;
 
+import com.google.gson.Gson;
 import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.exceptions.PacketDamagedException;
+import com.ksondzyk.storage.Product;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
 
@@ -12,6 +14,8 @@ import org.json.JSONObject;
 
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -90,7 +94,21 @@ public class Processor implements Callable{
                     String password = Table.selectOneByTitle("user","Users").getString("password");
                     answerMessage.put("password",password);
                 }
-                else{
+                else if(type.equals("allGoods")){
+                    ArrayList<Product> goods = (ArrayList<Product>) Table.selectAllProducts();
+                   String array  =  new Gson().toJson(goods);
+                   array="{"+array+"}";
+                   System.out.println(array);
+                   answerMessage = new JSONObject(array);
+
+                   // answerMessage.
+                    answerMessage.put("status","ok");
+
+
+
+                }
+
+                else {
                     id = (int) jsonObject.get("id");
                     if(!idPresent(id,"Categories")) {
                         answerMessage.put("status","not");
