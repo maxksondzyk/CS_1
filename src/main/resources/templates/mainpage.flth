@@ -5,19 +5,31 @@
     <title>List</title>
     <link rel="shortcut icon" href="#" />
     <link rel="stylesheet" href="./assets/style/modal.css">
+    <link rel="stylesheet" href="./assets/style/style.css">
 </head>
 <body>
-    <header class="header"> </header>
+  <header class="header"> </header>
 
-    <section class="category">
-        <h1 class="category_title">Categories</h1>
-        <div class="category_items"></div>
+  <section class="main">
+    <h1 class="main_title">Storehouse</h1>
+    <div class="main-wrapper">
 
-    </section>
+
+      <div class="category_items">
+        <h2>Categories</h2>
+        <div class="category_items-wrapper"></div>
+      </div>
+
+      <div class="goods_items">
+      </div>
+    </div>
+  </section>
+
 </body>
 
 <script src="./assets/javascript/plugin/base.js"></script>
 <script src="./assets/javascript/plugin/modal.js"></script>
 <script src="./assets/javascript/categories.js"></script>
+<script src="./assets/javascript/goods.js"></script>
 <script src="./assets/javascript/simple.js"></script>
 </html>

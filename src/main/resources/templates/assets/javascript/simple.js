@@ -11,13 +11,13 @@ function getCookie(name) {
 /*PUT*/
 
 
-let obj = {
-    "title": "tomatoes1",
-    "category": "vegetables1",
-    "quantity": "1021",
-    "price": "951"
-}
-
+// let obj = {
+//     "title": "tomatoes1",
+//     "category": "vegetables1",
+//     "quantity": "1021",
+//     "price": "951"
+// }
+//
 // fetch("/api/good", {
 //         method: "PUT",
 //         headers: {
@@ -34,16 +34,16 @@ let obj = {
 
 /*GET*/
 
-// fetch("/api/good/1", {
-//         method: "GET",
-//         headers: {
-//             'Content-Type': 'application/json',
-//             'token': tokenCookie
-//         }
-//     }
-// ).then(function(response) {
-//     response.json().then(function (data) {
-//         console.log(data)
-//     })
-// })
+fetch("/api/allGoods", {
+        method: "GET",
+        headers: {
+            'Content-Type': 'application/json',
+            'token': tokenCookie
+        }
+    }
+).then(function(response) {
+    response.json().then(function (data) {
+        console.log(data)
+    })
+})
 

@@ -10,33 +10,45 @@ function render() {
         let categoryWrapper = document.createElement('div');
         categoryWrapper.classList.add('category_item');
 
-        let title = document.createElement('h2');
+        let title = document.createElement('h3');
         title.innerHTML = `${categories[i].name}`
-        title.onclick = function () { console.log('ff')}
         categoryWrapper.appendChild(title)
+
+        let imgWrapper = document.createElement('div');
+        imgWrapper.classList.add('category_item_img-wrapper')
+        categoryWrapper.appendChild(imgWrapper)
 
         let editImg = document.createElement('div');
         editImg.innerHTML = 'Edit'
         editImg.onclick = function () {addEditItemModal(categories[i])}
-        categoryWrapper.appendChild(editImg)
+        editImg.classList.add('category_item_img')
+        imgWrapper.appendChild(editImg)
 
         let deleteImg = document.createElement('div');
         deleteImg.innerHTML = 'Delete'
         deleteImg.onclick = function () {}
-        categoryWrapper.appendChild(deleteImg)
+        deleteImg.classList.add('category_item_img')
+        imgWrapper.appendChild(deleteImg)
 
-
-        document.getElementsByClassName('category_items')[0].appendChild(categoryWrapper);
+        categoryWrapper.addEventListener('click', function(e) {
+            if (!e.target.classList.contains('category_item_img') && !e.target.classList.contains('category_add_item')) {
+                showAllGoodsByCategory(categories[i].name);
+            }
+        });
+        document.getElementsByClassName('category_items-wrapper')[0].appendChild(categoryWrapper);
     }
 
     let addImg = document.createElement('div');
-    addImg.innerHTML = 'Add'
+    addImg.innerHTML = 'Add new category'
     addImg.onclick = function () {addNewCategory()}
+    addImg.classList.add('category_add_item');
     document.getElementsByClassName('category_items')[0].appendChild(addImg);
 }
 
 function clearDom() {
-    document.getElementsByClassName('category_items')[0].innerHTML = ''
+    document.getElementsByClassName('category_items-wrapper')[0].innerHTML = ''
+    if(document.getElementsByClassName('goods_items-wrapper')[0])
+        document.getElementsByClassName('goods_items-wrapper')[0].innerHTML = ''
 }
 
 function addEditItemModal(category) {
@@ -98,8 +110,3 @@ function createAddItemModal(){
     })
     return modal
 }
-
-
-
-
-
