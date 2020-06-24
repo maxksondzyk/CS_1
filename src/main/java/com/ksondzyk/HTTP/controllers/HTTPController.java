@@ -321,11 +321,11 @@ public class HTTPController implements HttpHandler {
     private void helloLogin(HttpExchange httpExchange) {
 
         Response response = new Response();
-
+        System.err.println("here");
         Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
         String login = "";
         String password = "";
-        System.err.println("here");
+
         try {
             login = Table.selectOneByTitle("admin","Users").getString("title");
             password = Table.selectOneByTitle("admin","Users").getString("password");

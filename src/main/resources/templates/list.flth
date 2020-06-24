@@ -5,15 +5,11 @@
     <title>List</title>
 </head>
 <body>
-<ul>
-   <li>Hello</li>
 
-</ul>
-<form th:action="@{/login}" method="post">
-<div><label> User Name : <input type="text" name="username"/> </label></div>
-            <div><label> Password: <input type="password" name="password"/> </label></div>
-            <div><input type="submit" value="Sign In"/></div>
-
+<form name="loginForm" method="post" action="hello">
+    Username: <input type="text" name="username"/> <br/>
+    Password: <input type="password" name="password"/> <br/>
+    <input type="submit" value="Login" />
 </form>
 
 
