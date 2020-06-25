@@ -341,7 +341,9 @@ public class ApiController implements HttpHandler {
                 else if(path.contains("api/info")){
                     getInfo(httpExchange);
                 }
-
+                else if(path.contains("signup")){
+                    register(httpExchange);
+                }
                 else{
                     get(httpExchange);
                 }
@@ -366,6 +368,14 @@ public class ApiController implements HttpHandler {
                 delete(httpExchange);
                 break;
         }
+    }
+
+    public static void register(HttpExchange httpExchange) {
+        Response response = new Response();
+        response.setStatusCode(200);
+        response.setTemplate("register");
+        response.setHttpExchange(httpExchange);
+        view.view(response);
     }
 
     public static void getInfo(HttpExchange httpExchange) {
