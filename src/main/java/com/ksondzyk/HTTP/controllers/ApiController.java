@@ -63,7 +63,6 @@ public class ApiController implements HttpHandler {
 
         Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("cType","0");
         jsonObject.put("login",params.get("login"));
         jsonObject.put("password",params.get("password"));
         Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
