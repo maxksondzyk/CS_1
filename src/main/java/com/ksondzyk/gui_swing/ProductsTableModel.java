@@ -77,17 +77,13 @@ public class ProductsTableModel extends AbstractTableModel {
             case 0:
                 return products.get(r).getId();
             case 1:
-                return products.get(r).getAmount();
+                return products.get(r).getName();
             case 2:
                 return products.get(r).getGroupID();
             case 3:
-                return products.get(r);
+                return products.get(r).getAmount();
             case 4:
                 return products.get(r).getPrice();
-            case 5:
-                return products.get(r);
-            case 6:
-                return products.get(r);
             default:
                 return "";
         }
@@ -110,32 +106,29 @@ public class ProductsTableModel extends AbstractTableModel {
      * @param rowIndex
      * @param columnIndex
      */
-    @Override
-    public void setValueAt(Object value, int rowIndex, int columnIndex) {
-       /* try {
+    //@Override
+/*    public void setValueAt(Object value, int rowIndex, int columnIndex) {
+        try {
             switch (columnIndex) {
                 case 0:
-                    if (Storage.checkForUniqueProduct(value.toString())) products.get(rowIndex).setTitle( value.toString() );
+                    if (Storage.checkForUniqueProduct(value.toString())) products.get(rowIndex).setId( (int) value);
                     else showMessageDialog(null, "The product name must be unique!");
                     break;
                 case 1:
                     if (Integer.valueOf(value.toString()) < 0) showMessageDialog(null, "The quantity must be positive!");
-                    else products.get(rowIndex).setQuantity( Integer.valueOf( value.toString() ) );
+                    else products.get(rowIndex).setName( value.toString() );
                     fireTableCellUpdated(rowIndex, 6);
                     break;
                 case 2:
-                    products.get(rowIndex).setGroup( new ProductsGroup( value.toString() , "") );
+                    products.get(rowIndex).setGroupID(Integer.valueOf( value.toString() ) );
                     break;
                 case 3:
-                    products.get(rowIndex).setDescription( value.toString() );
+                    products.get(rowIndex).setAmount( Integer.valueOf( value.toString() ) );
                     break;
                 case 4:
                     if (Double.valueOf(value.toString()) < 0) showMessageDialog(null, "The price must be positive!");
-                    else products.get(rowIndex).setPrice( Double.valueOf( value.toString() ) );
+                    else products.get(rowIndex).setPrice( Integer.valueOf( value.toString() ) );
                     fireTableCellUpdated(rowIndex, 6);
-                    break;
-                case 5:
-                    products.get(rowIndex).setProducer( value.toString() );
                     break;
             }
 
@@ -144,5 +137,5 @@ public class ProductsTableModel extends AbstractTableModel {
 
         }
         fireTableCellUpdated(rowIndex, columnIndex);
-    */}
+    }*/
 }
