@@ -38,7 +38,7 @@ String.prototype.capitalizeFirst = function() {
 
 
 function render(categories) {
-    clearDom();
+    clearDomCategory();
 
     for(let i=0;i<categories.length;i++) {
         let categoryWrapper = document.createElement('div');
@@ -54,13 +54,13 @@ function render(categories) {
 
         let editImg = document.createElement('div');
         editImg.innerHTML = 'Edit'
-        editImg.onclick = function () {addEditItemModal(categories[i])}
+        editImg.onclick = function () {addEditCategoryModal(categories[i])}
         editImg.classList.add('category_item_img')
         imgWrapper.appendChild(editImg)
 
         let deleteImg = document.createElement('div');
         deleteImg.innerHTML = 'Delete'
-        deleteImg.onclick = function () {}
+        deleteImg.onclick = function () {addDeleteCategoryModal(categories[i])}
         deleteImg.classList.add('category_item_img')
         imgWrapper.appendChild(deleteImg)
 
@@ -74,23 +74,28 @@ function render(categories) {
 
     let addImg = document.createElement('div');
     addImg.innerHTML = 'Add new category'
-    addImg.onclick = function () {addNewCategory()}
+    addImg.onclick = function () {addNewCategoryModal()}
     addImg.classList.add('category_add_item');
     document.getElementsByClassName('category_items')[0].appendChild(addImg);
 }
 
-function clearDom() {
+function clearDomCategory() {
     document.getElementsByClassName('category_items-wrapper')[0].innerHTML = ''
+    if(document.getElementsByClassName('category_add_item')[0])
+        document.getElementsByClassName('category_items')[0].removeChild(document.getElementsByClassName('category_add_item')[0])
+
     if(document.getElementsByClassName('goods_items-wrapper')[0])
         document.getElementsByClassName('goods_items-wrapper')[0].innerHTML = ''
 }
 
-function addEditItemModal(category) {
-    const modal = createEditItemModal(category)
+/**EDIT CATEGORY*/
+
+function addEditCategoryModal(category) {
+    const modal = createEditCategoryModal(category)
     modal.open()
 }
 
-function createEditItemModal(category){
+function createEditCategoryModal(category){
     const modal = $.modal({
         title: `Edit ${category.name}`,
         closeable: true,
@@ -99,48 +104,139 @@ function createEditItemModal(category){
          <input type="text" id="category_change-name" placeholder=${category.name}></p>
 `,
         footerButtons: [
-            {
-                text: 'Add', type: 'primary', handler() {
-                    editItem(category)
-                }
-            },
-            {
-                text: 'Cancel', type: 'danger', handler() {
-                    modal.close()
+            {text: 'Edit', type: 'primary', handler() {
+                    editCategory(category,modal)}},
+            {text: 'Cancel', type: 'danger', handler() {
+                    modal.close();
                     modal.destroy()
-                    render()
-                }
-            },
+                }},
         ]
     })
     return modal
 }
 
-function editItem(category) {
-    if(!document.getElementById('category_change-name').value) console.log('k');
-    else category.name = document.getElementById('category_change-name').value;
+function editCategory(category,modal) {
+    let item={"id":`${category.id}`};
 
-    document.getElementById("category_edit-form").reset();
-    render()
+    if(document.getElementById('category_change-name').value)
+        item.title = `${document.getElementById('category_change-name').value}`
+
+    fetch(`api/category`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            },
+            body: JSON.stringify(item)
+        }
+    ).then(function(response) {
+        alert('Changed')
+        modal.close()
+        modal.destroy()
+        getCategoriesArray()
+    }).catch(function (error) {
+        alert(error)
+    })
 }
 
 
-function addNewCategory() {
-    const modal = createAddItemModal()
+/**DELETE CATEGORY*/
+function addDeleteCategoryModal(category) {
+    const modal = createDeleteCategoryModal(category)
     modal.open()
 }
 
-function createAddItemModal(){
+function createDeleteCategoryModal(category){
     const modal = $.modal({
         title: 'Add new category',
         closeable: true,
         content: `<form name="form_add_item">
-        <p><p>Enter category title:</p> <input type="text"></p>
+                <div>
+                  <p>Are you sure you want to delete ${category.name}?</p>
+                </div>
+                </form>
 `,
         footerButtons: [
-            {text: 'Add', type: 'primary'},
-            {text: 'Cancel', type: 'danger', handler() {modal.close()}},
+            {text: 'Delete', type: 'primary', handler() {
+                    addDeleteCategory(category,modal)}},
+            {text: 'Cancel', type: 'danger', handler() {
+                    modal.close();
+                    modal.destroy()
+                }},
         ]
     })
     return modal
+}
+
+function addDeleteCategory(category,modal) {
+
+    fetch(`api/category/${category.id}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            }
+        }
+    ).then(function(response) {
+        alert('Deleted')
+        modal.close()
+        modal.destroy()
+        getCategoriesArray()
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+
+/**ADD NEW CATEGORY*/
+
+function addNewCategoryModal() {
+    const modal = createNewCategoryModal()
+    modal.open()
+}
+
+function createNewCategoryModal(){
+    const modal = $.modal({
+        title: 'Add new category',
+        closeable: true,
+        content: `<form name="form_add_item">
+                <div>   
+                <p>Enter new category title:</p>
+                <input type="text" id="category_new-title">
+                </div>
+                </form>
+`,
+        footerButtons: [
+            {text: 'Add', type: 'primary', handler() {
+                    addNewCategory(modal)}},
+            {text: 'Cancel', type: 'danger', handler() {
+                    modal.close();
+                    modal.destroy()
+                }},
+        ]
+    })
+    return modal
+}
+
+function addNewCategory(modal) {
+    let item = {
+        "title": document.getElementById('category_new-title').value
+    }
+
+    fetch("api/category", {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            },
+            body: JSON.stringify(item)
+        }
+    ).then(function(response) {
+        alert('Added')
+        modal.close()
+        modal.destroy()
+        getCategoriesArray()
+    }).catch(function (error) {
+        alert(error)
+    })
 }

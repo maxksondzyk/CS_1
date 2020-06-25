@@ -2,12 +2,12 @@ package com.ksondzyk.gui_swing;
 
 
 import com.ksondzyk.storage.Product;
+import com.ksondzyk.storage.ProductGroup;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.*;
 import javax.swing.table.TableRowSorter;
 import javax.swing.RowFilter;
 
@@ -66,18 +66,12 @@ public class StorageFrame extends javax.swing.JFrame {
         productsTable.repaint();
     }
 
-    /**
-     * Loads data from file using method @AddToList
-     */
+
     private void loadData()
     {
-        try {
+
             Storage.download();
-        }catch (Exception exc)
-        {
-            System.out.println("File:"+exc.getMessage());
-            System.out.println("File:"+exc.toString());
-        }
+
     }
 
     /**
@@ -86,8 +80,8 @@ public class StorageFrame extends javax.swing.JFrame {
     private static void setComboBoxProductsGroup()
     {
         comboBoxProductGroups.removeAllItems();
-        for(String temp : Storage.productsGroups) {
-            comboBoxProductGroups.addItem(temp);
+        for(ProductGroup g : Storage.productsGroups) {
+            comboBoxProductGroups.addItem(g.getName());
         }
 
     }
@@ -98,7 +92,7 @@ public class StorageFrame extends javax.swing.JFrame {
      */
     public static void addProductGroup(String productsGroup)
     {
-        Storage.productsGroups.add(productsGroup );
+       // Storage.productsGroups.add(productsGroup );
         setComboBoxProductsGroup();
     }
 
