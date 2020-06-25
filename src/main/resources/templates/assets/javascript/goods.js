@@ -147,7 +147,7 @@ function createAddItemModal(good,categoryName,categoryId){
         closeable: true,
         content: `<form name="good_add-form">
                 <div>
-                  <p>How many new items arrived?</p>
+                  <p>How many new items to add?</p>
                   <input type="number" id="good_add-quantity">
                 </div>
                 </form>
@@ -169,9 +169,10 @@ function addAmountItem(good,categoryName,categoryId,modal) {
     let amount = oldAmount + newAmount
     let item = {
         "quantity": `${amount}`,
+        "id":`${good.id}`
     }
 
-    fetch(`api/good/${good.id}`, {
+    fetch(`api/good`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -190,14 +191,71 @@ function addAmountItem(good,categoryName,categoryId,modal) {
     })
 }
 
-/**EDIT GOOD*/
+/**REMOVE AMOUNT TO GOOD*/
 
-function addEditItemModal(good) {
-    const modal = createEditItemModal(good)
+function addRemoveAmountItemModal(good,categoryName,categoryId) {
+    const modal = createRemoveItemModal(good,categoryName,categoryId)
     modal.open()
 }
 
-function createEditItemModal(good){
+function createRemoveItemModal(good,categoryName,categoryId){
+    const modal = $.modal({
+        title: 'Remove amount',
+        closeable: true,
+        content: `<form name="good_add-form">
+                <div>
+                  <p>How many new items to remove?</p>
+                  <input type="number" id="good_remove-quantity">
+                </div>
+                </form>
+              `,
+        footerButtons: [
+            {text: 'Remove', type: 'primary', handler() {
+                    removeAmountItem(good,categoryName,categoryId,modal)}},
+            {text: 'Cancel', type: 'danger', handler() {
+                    modal.close();
+                    modal.destroy()
+                }},
+        ]})
+    return modal
+}
+
+function removeAmountItem(good,categoryName,categoryId,modal) {
+    let oldAmount = parseFloat(good.amount);
+    let newAmount = parseFloat(document.getElementById('good_remove-quantity').value);
+    let amount = oldAmount - newAmount
+    let item = {
+        "quantity": `${amount}`,
+        "id":`${good.id}`
+    }
+
+    fetch(`api/good`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            },
+            body: JSON.stringify(item)
+        }
+    ).then(function(response) {
+        alert('Removed')
+        let category = {'name':`${categoryName}`,id:categoryId}
+        getGoodsArray(category);
+        modal.close()
+        modal.destroy()
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+/**EDIT GOOD*/
+
+function addEditItemModal(good,categoryName,categoryId) {
+    const modal = createEditItemModal(good,categoryName,categoryId)
+    modal.open()
+}
+
+function createEditItemModal(good,categoryName,categoryId){
     const modal = $.modal({
         title: `Edit ${good.name}`,
         closeable: true,
@@ -215,8 +273,8 @@ function createEditItemModal(good){
 
             `,
         footerButtons: [
-            {text: 'Add', type: 'primary', handler() {
-                    editItem(good)}},
+            {text: 'Edit', type: 'primary', handler() {
+                    editItem(good,modal,categoryName,categoryId)}},
             {text: 'Cancel', type: 'danger', handler() {
                     modal.close();
                     modal.destroy()
@@ -225,19 +283,35 @@ function createEditItemModal(good){
     return modal
 }
 
-function editItem(good) {
-    if(!document.getElementById('good_change-name').value) console.log('k');
-    else good.name = document.getElementById('good_change-name').value;
+function editItem(good,modal,categoryName,categoryId) {
+    let item={"id":`${good.id}`};
 
-    if(!document.getElementById('good_change-price').value) console.log('k');
-    else good.price = document.getElementById('good_change-price').value;
+    if(document.getElementById('good_change-name').value)
+        item.title = `${document.getElementById('good_change-name').value}`
 
+    if(document.getElementById('good_change-price').value)
+        item.price = `${document.getElementById('good_change-price').value}`
 
-    if(!document.getElementById('good_change-quantity').value) console.log('k');
-    else good.quantity = document.getElementById('good_change-quantity').value;
+    console.log(item)
+    console.log(document.getElementById('good_change-name').value)
 
-    document.getElementById("good_edit-form").reset();
-    render()
+    fetch(`api/good`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            },
+            body: JSON.stringify(item)
+        }
+    ).then(function(response) {
+        alert('Changed')
+        let category = {'name':`${categoryName}`,id:categoryId}
+        getGoodsArray(category);
+        modal.close()
+        modal.destroy()
+    }).catch(function (error) {
+        alert(error)
+    })
 }
 
 
