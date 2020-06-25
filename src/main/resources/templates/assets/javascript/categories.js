@@ -40,6 +40,8 @@ String.prototype.capitalizeFirst = function() {
 function render(categories) {
     clearDomCategory();
 
+    getAllCategoryPrice()
+
     for(let i=0;i<categories.length;i++) {
         let categoryWrapper = document.createElement('div');
         categoryWrapper.classList.add('category_item');
@@ -47,6 +49,12 @@ function render(categories) {
         let title = document.createElement('h3');
         title.innerHTML = `${categories[i].name.capitalizeFirst()}`
         categoryWrapper.appendChild(title)
+
+        let price = document.createElement('div');
+        price.classList.add('category_price');
+        categoryWrapper.appendChild(price);
+
+        getCategoryPrice(categories[i],i)
 
         let imgWrapper = document.createElement('div');
         imgWrapper.classList.add('category_item_img-wrapper')
@@ -77,16 +85,52 @@ function render(categories) {
     addImg.onclick = function () {addNewCategoryModal()}
     addImg.classList.add('category_add_item');
     document.getElementsByClassName('category_items')[0].appendChild(addImg);
+
+    let showAllGoods = document.createElement('div');
+    showAllGoods.innerHTML = 'Show all goods'
+    showAllGoods.onclick = function () {getAllGoods()}
+    showAllGoods.classList.add('category_show_all');
+    document.getElementsByClassName('category_items')[0].appendChild(showAllGoods);
 }
 
 function clearDomCategory() {
     document.getElementsByClassName('category_items-wrapper')[0].innerHTML = ''
-    if(document.getElementsByClassName('category_add_item')[0])
-        document.getElementsByClassName('category_items')[0].removeChild(document.getElementsByClassName('category_add_item')[0])
 
+    if(document.getElementsByClassName('category_add_item')[0]) {
+        document.getElementsByClassName('category_items')[0].removeChild(document.getElementsByClassName('category_add_item')[0])
+        document.getElementsByClassName('category_items')[0].removeChild(document.getElementsByClassName('category_show_all')[0])
+    }
     if(document.getElementsByClassName('goods_items-wrapper')[0])
         document.getElementsByClassName('goods_items-wrapper')[0].innerHTML = ''
 }
+
+function getAllGoods() {
+    fetch("api/allGoods", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            }
+        }
+    ).then(function(response) {
+        response.json().then(function (data) {
+            console.log(data)
+            const goods = []
+            for(let i=0;i<data.goods.length;i++) {
+                goods.push(data.goods[i])
+            }
+            console.log(goods)
+            renderAllGoods(goods)
+
+        })
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+
+
+
 
 /**EDIT CATEGORY*/
 
@@ -119,7 +163,7 @@ function editCategory(category,modal) {
     let item={"id":`${category.id}`};
 
     if(document.getElementById('category_change-name').value)
-        item.title = `${document.getElementById('category_change-name').value}`
+        item.title = `${document.getElementById('category_change-name').value.toLowerCase()}`
 
     fetch(`api/category`, {
             method: "POST",
@@ -220,7 +264,7 @@ function createNewCategoryModal(){
 
 function addNewCategory(modal) {
     let item = {
-        "title": document.getElementById('category_new-title').value
+        "title": document.getElementById('category_new-title').value.toLowerCase()
     }
 
     fetch("api/category", {
@@ -239,4 +283,51 @@ function addNewCategory(modal) {
     }).catch(function (error) {
         alert(error)
     })
+}
+
+
+
+function getCategoryPrice(category,i) {
+    fetch(`api/info/${category.id}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            }
+        }
+    ).then(function(response) {
+        response.json().then(function (data) {
+            console.log(data)
+            addCategoryPriceToDom(data.value,i)
+        })
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+function addCategoryPriceToDom(price,i) {
+    document.getElementsByClassName('category_price')[i].innerHTML = `Price: ${price} uah`
+}
+
+
+function getAllCategoryPrice() {
+    fetch(`api/info/all`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            }
+        }
+    ).then(function(response) {
+        response.json().then(function (data) {
+            console.log(data)
+            addTotalPriceToDom(data.value)
+        })
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+function addTotalPriceToDom(price){
+    document.getElementsByClassName('category_title-price')[0].innerHTML = `Total price: ${price} uah`
 }

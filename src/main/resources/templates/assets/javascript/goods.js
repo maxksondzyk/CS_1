@@ -40,92 +40,90 @@ function renderGoods(goods,categoryName,categoryId) {
 
     clearDom();
 
+    let titleWrapper = document.createElement('div');
+    titleWrapper.classList.add('goods_title-wrapper');
+    document.getElementsByClassName('goods_items-wrapper')[0].appendChild(titleWrapper);
+
     let title = document.createElement('div');
     title.classList.add('goods_title');
     title.innerHTML = `${categoryName.capitalizeFirst()} goods`;
-    document.getElementsByClassName('goods_items-wrapper')[0].appendChild(title);
+    titleWrapper.appendChild(title);
 
-    for(let i=0;i<goods.length+1;i++) {
+    let addNew = document.createElement('div');
+    addNew.classList.add('goods_add_item');
+    addNew.innerHTML = 'Add new';
+    addNew.onclick = function () {
+        addNewItemModal(categoryName,categoryId)
+    }
+    titleWrapper.appendChild(addNew)
+
+
+    for(let i=0;i<goods.length;i++) {
 
         let bigWRapper = document.createElement('div');
         bigWRapper.classList.add('goods_item-wrapper');
         document.getElementsByClassName('goods_items-wrapper')[0].appendChild(bigWRapper);
 
-        if(i===goods.length) {
-            /**ADD NEW GOOD*/
+        let goodWrapper = document.createElement('div');
+        goodWrapper.classList.add('goods_item');
+        bigWRapper.appendChild(goodWrapper);
 
-            let addNew = document.createElement('div');
-            addNew.classList.add('goods_add_item');
-            addNew.innerHTML = 'Add new';
-            addNew.onclick = function () {
-                addNewItemModal(categoryName,categoryId)
-            }
-            bigWRapper.appendChild(addNew)
+        let goodTitle = document.createElement('h3');
+        goodTitle.innerHTML = `${goods[i].name.capitalizeFirst()}`;
+        goodTitle.classList.add('goods_item-title')
+        goodWrapper.appendChild(goodTitle)
+
+        let contentWrapper = document.createElement('div');
+        contentWrapper.classList.add('goods_item_content')
+        contentWrapper.innerHTML =
+            `<div class="goods_item_content-price">Price : ${goods[i].price} uah</div>
+             <div class="goods_item_content-quantity">Amount : ${goods[i].amount} item(s) </div>
+             `
+        goodWrapper.appendChild(contentWrapper)
+
+        let funcWrapper = document.createElement('div');
+        funcWrapper.classList.add('goods_item-func-wrapper')
+        goodWrapper.appendChild(funcWrapper)
+
+        /**ADD AMOUNT*/
+        let addImg = document.createElement('div');
+        addImg.innerHTML = 'Add'
+        addImg.onclick = function () {
+            addAddAmountItemModal(goods[i],categoryName,categoryId)
         }
+        addImg.classList.add('goods_item-func')
+        funcWrapper.appendChild(addImg);
 
-        else {
+        /**REMOVE AMOUNT*/
 
-            let goodWrapper = document.createElement('div');
-            goodWrapper.classList.add('goods_item');
-            bigWRapper.appendChild(goodWrapper);
-
-            let goodTitle = document.createElement('h3');
-            goodTitle.innerHTML = `${goods[i].name.capitalizeFirst()}`;
-            goodTitle.classList.add('goods_item-title')
-            goodWrapper.appendChild(goodTitle)
-
-            let contentWrapper = document.createElement('div');
-            contentWrapper.classList.add('goods_item_content')
-            contentWrapper.innerHTML =
-                `<div class="goods_item_content-price">Price : ${goods[i].price} uah</div>
-       <div class="goods_item_content-quantity">Amount : ${goods[i].amount} item(s) </div>
-      `
-            goodWrapper.appendChild(contentWrapper)
-
-            let funcWrapper = document.createElement('div');
-            funcWrapper.classList.add('goods_item-func-wrapper')
-            goodWrapper.appendChild(funcWrapper)
-
-            /**ADD AMOUNT*/
-            let addImg = document.createElement('div');
-            addImg.innerHTML = 'Add'
-            addImg.onclick = function () {
-                addAddAmountItemModal(goods[i],categoryName,categoryId)
-            }
-            addImg.classList.add('goods_item-func')
-            funcWrapper.appendChild(addImg);
-
-            /**REMOVE AMOUNT*/
-
-            let removeImg = document.createElement('div');
-            removeImg.innerHTML = 'Remove'
-            removeImg.onclick = function () {
-                addRemoveAmountItemModal(goods[i],categoryName,categoryId)
-            }
-            removeImg.classList.add('goods_item-func-2')
-            funcWrapper.appendChild(removeImg);
-
-            /**EDIT GOOD*/
-
-            let editImg = document.createElement('div');
-            editImg.innerHTML = 'Edit'
-            editImg.onclick = function () {
-                addEditItemModal(goods[i],categoryName,categoryId)
-            }
-            editImg.classList.add('goods_item-func')
-            funcWrapper.appendChild(editImg)
-
-            /**DELETE GOOD*/
-
-            let deleteImg = document.createElement('div');
-            deleteImg.innerHTML = 'Delete'
-            deleteImg.onclick = function () {
-                addDeleteItemModal(goods[i],categoryName,categoryId)
-            }
-            deleteImg.classList.add('goods_item-func-2')
-            funcWrapper.appendChild(deleteImg)
-
+        let removeImg = document.createElement('div');
+        removeImg.innerHTML = 'Remove'
+        removeImg.onclick = function () {
+            addRemoveAmountItemModal(goods[i],categoryName,categoryId)
         }
+        removeImg.classList.add('goods_item-func-2')
+        funcWrapper.appendChild(removeImg);
+
+        /**EDIT GOOD*/
+
+        let editImg = document.createElement('div');
+        editImg.innerHTML = 'Edit'
+        editImg.onclick = function () {
+            addEditItemModal(goods[i],categoryName,categoryId)
+        }
+        editImg.classList.add('goods_item-func')
+        funcWrapper.appendChild(editImg)
+
+        /**DELETE GOOD*/
+
+        let deleteImg = document.createElement('div');
+        deleteImg.innerHTML = 'Delete'
+        deleteImg.onclick = function () {
+            addDeleteItemModal(goods[i],categoryName,categoryId)
+        }
+        deleteImg.classList.add('goods_item-func-2')
+        funcWrapper.appendChild(deleteImg)
+
     }
 }
 
@@ -148,7 +146,7 @@ function createAddItemModal(good,categoryName,categoryId){
         content: `<form name="good_add-form">
                 <div>
                   <p>How many new items to add?</p>
-                  <input type="number" id="good_add-quantity">
+                  <input type="number" min="0" id="good_add-quantity">
                 </div>
                 </form>
               `,
@@ -183,7 +181,9 @@ function addAmountItem(good,categoryName,categoryId,modal) {
     ).then(function(response) {
         alert('Added')
         let category = {'name':`${categoryName}`,id:categoryId}
+        getCategoriesArray();
         getGoodsArray(category);
+
         modal.close()
         modal.destroy()
     }).catch(function (error) {
@@ -205,7 +205,7 @@ function createRemoveItemModal(good,categoryName,categoryId){
         content: `<form name="good_add-form">
                 <div>
                   <p>How many new items to remove?</p>
-                  <input type="number" id="good_remove-quantity">
+                  <input type="number" min="0" id="good_remove-quantity">
                 </div>
                 </form>
               `,
@@ -224,6 +224,7 @@ function removeAmountItem(good,categoryName,categoryId,modal) {
     let oldAmount = parseFloat(good.amount);
     let newAmount = parseFloat(document.getElementById('good_remove-quantity').value);
     let amount = oldAmount - newAmount
+    if(amount<0) amount=0;
     let item = {
         "quantity": `${amount}`,
         "id":`${good.id}`
@@ -240,7 +241,9 @@ function removeAmountItem(good,categoryName,categoryId,modal) {
     ).then(function(response) {
         alert('Removed')
         let category = {'name':`${categoryName}`,id:categoryId}
+        getCategoriesArray();
         getGoodsArray(category);
+
         modal.close()
         modal.destroy()
     }).catch(function (error) {
@@ -267,7 +270,7 @@ function createEditItemModal(good,categoryName,categoryId){
             </div>
             <div>
               <p>Change good price:</p>
-              <input type="number" id="good_change-price" placeholder=${good.price}>
+              <input type="number" min="0" id="good_change-price" placeholder=${good.price}>
             </div>
             </form>
 
@@ -287,7 +290,7 @@ function editItem(good,modal,categoryName,categoryId) {
     let item={"id":`${good.id}`};
 
     if(document.getElementById('good_change-name').value)
-        item.title = `${document.getElementById('good_change-name').value}`
+        item.title = `${document.getElementById('good_change-name').value.toLowerCase()}`
 
     if(document.getElementById('good_change-price').value)
         item.price = `${document.getElementById('good_change-price').value}`
@@ -306,6 +309,7 @@ function editItem(good,modal,categoryName,categoryId) {
     ).then(function(response) {
         alert('Changed')
         let category = {'name':`${categoryName}`,id:categoryId}
+        getCategoriesArray();
         getGoodsArray(category);
         modal.close()
         modal.destroy()
@@ -355,6 +359,7 @@ function deleteItem(good,modal,categoryName,categoryId) {
     ).then(function(response) {
         alert('Deleted')
         let category = {'name':`${categoryName}`,id:categoryId}
+        getCategoriesArray();
         getGoodsArray(category)
         modal.close()
         modal.destroy()
@@ -397,10 +402,10 @@ function createNewItemModal(categoryName,categoryId){
 
 function addNewItem(categoryName,categoryId,modal) {
     let item = {
-        "title": document.getElementById('good_new-title').value,
+        "title": document.getElementById('good_new-title').value.toLowerCase(),
         "category": categoryName,
-        "quantity": document.getElementById('good_new-quantity').value,
-        "price": document.getElementById('good_new-price').value
+        "quantity": document.getElementById('good_new-quantity').value.toLowerCase(),
+        "price": document.getElementById('good_new-price').value.toLowerCase()
     }
 
     fetch("api/good", {
@@ -414,6 +419,8 @@ function addNewItem(categoryName,categoryId,modal) {
     ).then(function(response) {
         alert('Added')
         let category = {'name':`${categoryName}`,id:categoryId}
+
+        getCategoriesArray();
         getGoodsArray(category);
         modal.close()
         modal.destroy()

@@ -148,11 +148,16 @@ h2 {
     text-decoration: underline;
 }
 
+.goods_title-wrapper {
+    display: flex;
+    align-items: center;
+    width:100%;
+    justify-content: center;
+}
 
 .goods_title {
-    width:100%;
-    text-align: center;
-    margin: 20px auto;
+    /*text-align: center;*/
+    /*margin: 20px auto;*/
     font-size: 25px;
     font-weight: bold;
 }
@@ -163,4 +168,9 @@ h2 {
     border: 2px solid black;
 }
 
+
+goods_items-search {
+    display:flex;
+
+}
 

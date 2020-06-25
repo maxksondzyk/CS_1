@@ -16,7 +16,10 @@
 
 
       <div class="category_items">
-        <h2>Categories</h2>
+        <div class="category_title-wrapper">
+            <h2>Categories</h2>
+            <div class="category_title-price"></div>
+        </div>
         <div class="category_items-wrapper"></div>
       </div>
 
@@ -31,5 +34,5 @@
 <script src="./assets/javascript/plugin/modal.js"></script>
 <script src="./assets/javascript/categories.js"></script>
 <script src="./assets/javascript/goods.js"></script>
-<script src="./assets/javascript/simple.js"></script>
+<script src="./assets/javascript/allgoods.js"></script>
 </html>
