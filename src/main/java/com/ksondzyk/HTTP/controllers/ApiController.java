@@ -63,7 +63,6 @@ public class ApiController implements HttpHandler {
 
         Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("cType","0");
         jsonObject.put("login",params.get("login"));
         jsonObject.put("password",params.get("password"));
         Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
@@ -358,6 +357,9 @@ String path = httpExchange.getRequestURI().getPath();
                 else if(httpExchange.getRequestURI().getPath().contains("signup")){
                     signup(httpExchange);
                 }
+                else if(httpExchange.getRequestURI().getPath().contains("signin")){
+                    signin(httpExchange);
+                }
                 post(httpExchange);
                 break;
             case "DELETE":
@@ -564,6 +566,52 @@ String path = httpExchange.getRequestURI().getPath();
         }
         response.setStatusCode(200);
         response.setTemplate("mainpage");
+        response.setHttpExchange(httpExchange);
+        view.view(response);
+    }
+    private void signin(HttpExchange httpExchange) throws IOException {
+        Response response = new Response();
+        StringBuilder sb = new StringBuilder();
+        InputStream ios = httpExchange.getRequestBody();
+        int i;
+        while (true) {
+            if (!((i = ios.read()) != -1)) break;
+            sb.append((char) i);
+        }
+        Map<String, String> params = queryToMap(sb.toString());
+        if (params.containsKey("login") && params.containsKey("password")){
+
+            JSONObject jsonObject = new JSONObject();
+
+            jsonObject.put("login",params.get("login"));
+            jsonObject.put("password",params.get("password"));
+            jsonObject.put("type","user");
+            jsonObject.put("cType",1);
+
+            Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+
+            TCPClientThread tcpClientThread = new TCPClientThread(packet);
+            Packet packetResponse = tcpClientThread.send();
+
+            String jsonString = CipherMy.decode(packetResponse.getBMsq().getMessage());
+
+            JSONObject responseMessage = new JSONObject(jsonString);
+
+            if(responseMessage.get("status").equals("ok")) {
+                httpExchange.getResponseHeaders().add("Set-Cookie", "token=" + authToken);
+                response.setStatusCode(200);
+                response.setTemplate("mainpage");
+            }
+            else {
+                response.setStatusCode(403);
+                response.setTemplate("login");
+            }
+        }
+        else{
+
+            response.setStatusCode(400);
+            response.setData("Bad Request.");
+        }
         response.setHttpExchange(httpExchange);
         view.view(response);
     }
