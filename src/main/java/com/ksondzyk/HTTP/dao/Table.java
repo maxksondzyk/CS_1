@@ -501,7 +501,7 @@ public class Table {
         }
     }
     public static void deleteCategory(int id) {
-        String sqlQuery = "DELETE * FROM " + "Categories" + " WHERE id = ?";
+        String sqlQuery = "DELETE FROM " + "Categories" + " WHERE id = ?";
         try {
             deleteCategoryGoods(id);
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -516,8 +516,9 @@ public class Table {
             System.out.println(e.getMessage());
         }
     }
+
     public static void deleteCategoryGoods(int id) {
-        String sqlQuery = "DELETE * FROM " + Properties.tableName + " WHERE categoryID = ?";
+        String sqlQuery = "DELETE FROM " + Properties.tableName + " WHERE categoryID = ?";
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 

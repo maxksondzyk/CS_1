@@ -283,8 +283,11 @@ public class Processor implements Callable{
         synchronized (packet) {
         String jsonString = CipherMy.decode(packet.getBMsq().getMessage());
 
-           JSONObject jsonObject = new JSONObject(jsonString);
-            int cType = Integer.parseInt(String.valueOf(jsonObject.get("cType")));
+            JSONObject jsonObject = new JSONObject(jsonString);
+            int cType = 0;
+            if(jsonObject.has("cType"))
+             cType = Integer.parseInt(String.valueOf(jsonObject.get("cType")));
+
             try {
             answer = answer(cType,jsonObject);
 
