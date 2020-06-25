@@ -207,7 +207,8 @@ public class ApiController implements HttpHandler {
             try {
                 Map<String, String> jsonMap = mapper.readValue(sb.toString(), Map.class);
 
-            if(type.equals("good")&&(Integer.parseInt(jsonMap.get("quantity"))<0||Integer.parseInt(jsonMap.get("price"))<0))
+
+            if(type.equals("good")&&((jsonMap.containsKey("quantity")&&Integer.parseInt(jsonMap.get("quantity"))<0)||(jsonMap.containsKey("price")&&Integer.parseInt(jsonMap.get("price"))<0)))
                 response.setStatusCode(409);
             else {
                 JSONObject jsonObject = new JSONObject(jsonMap);
