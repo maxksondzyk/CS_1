@@ -10,14 +10,12 @@ import com.ksondzyk.storage.Product;
 import com.ksondzyk.storage.ProductGroup;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -145,6 +143,16 @@ public class Processor implements Callable{
                         answerMessage.put("status","ok");
                     }
 
+                }
+                else if(type.equals("info")){
+                    int value;
+                    String id1 = String.valueOf(jsonObject.get("id"));
+                    if(id1.equals("all")) {
+                       value = Table.getValue();
+                    } else{
+                        value = Table.getValue(Integer.parseInt(id1));
+                    }
+                    answerMessage.put("value",value);
                 }
 
                 else {

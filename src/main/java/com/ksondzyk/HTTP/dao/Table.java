@@ -570,4 +570,24 @@ public class Table {
         return product;
 
     }
+    public static int getValue(){
+        List<Product> list = selectAllProducts();
+        int sum = 0;
+        int temp;
+        for(Product product : list){
+            temp = product.getAmount()*product.getPrice();
+            sum+=temp;
+        }
+        return sum;
+    }
+    public static int getValue(int groupId){
+        List<Product> list = selectAllProducts(groupId);
+        int sum = 0;
+        int temp;
+        for(Product product : list){
+            temp = product.getAmount()*product.getPrice();
+            sum+=temp;
+        }
+        return sum;
+    }
 }

@@ -313,6 +313,7 @@ public class ApiController implements HttpHandler {
     }
 
 
+
     @SneakyThrows
     public static void hello(HttpExchange httpExchange) throws IOException {
 
@@ -346,6 +347,9 @@ String path = httpExchange.getRequestURI().getPath();
 
                     getAllCategoryProducts(httpExchange);
                 }
+                else if(path.contains("api/info")){
+                    getInfo(httpExchange);
+                }
 
                 else{
                     get(httpExchange);
@@ -368,6 +372,43 @@ String path = httpExchange.getRequestURI().getPath();
                 delete(httpExchange);
                 break;
         }
+    }
+
+    public static void getInfo(HttpExchange httpExchange) {
+        Response response = new Response();
+
+        String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+
+        if(cleanToken.equals(authToken)){
+
+            response.setStatusCode(200);
+
+            String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
+
+            String id = (httpExchange.getRequestURI().getPath().split("/")[3]);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("cType","1");
+            jsonObject.put("type",type);
+            jsonObject.put("id", id);
+
+            Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+            TCPClientThread tcpClientThread = new TCPClientThread(packet);
+            Packet answer = tcpClientThread.send();
+
+            String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+            JSONObject responseMessage = new JSONObject(jsonString);
+
+            response.setData(responseMessage.toMap());
+        }
+        else{
+            response.setStatusCode(403);
+        }
+        response.setHttpExchange(httpExchange);
+
+        view = new JsonView();
+        view.view(response);
     }
 
     private void getAllCategoryProducts(HttpExchange httpExchange) {
