@@ -168,6 +168,7 @@ public class Processor implements Callable{
                 break;
 
             case 3:
+                int categoryId = 0;
                 id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                 if(jsonObject.get("type").equals("good")) {
                     if(!idPresent(id,Properties.tableName)) {
@@ -176,7 +177,8 @@ public class Processor implements Callable{
                     if (jsonObject.has("category")) {
                         category = (String) jsonObject.get("category");
                     } else
-                        category = Table.selectOneById(id, Properties.tableName).getString("category");
+                         categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryId");
+                        category = Table.selectOneById(categoryId,"Categories").getString("title");
 
                     if (jsonObject.has("title")) {
                         title = (String) jsonObject.get("title");

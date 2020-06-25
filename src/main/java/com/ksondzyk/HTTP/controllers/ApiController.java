@@ -195,13 +195,12 @@ public class ApiController implements HttpHandler {
         while ((i = ios.read()) != -1) {
             sb.append((char) i);
         }
-        System.out.println("hm: " + sb.toString());
-        String type = (httpExchange.getRequestURI().getPath().split("/")[1]);
+        String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
         System.out.println("Type: " + type);
         String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
         System.out.println(cleanToken);
         //if(cleanToken.equals(authToken)){
-            InputStream is = httpExchange.getRequestBody();
+            //InputStream is = httpExchange.getRequestBody();
 
             ObjectMapper mapper = new ObjectMapper();
             mapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);

@@ -301,19 +301,19 @@ public class Table {
 
 
 
-    public static void update( int id, String title,String category , int price, int quantity ) {
+    public static void update( int id, String title, String category , int price, int quantity ) {
         String sqlQuery = "UPDATE " + Properties.tableName
-                + " SET title =?, categoryID = ?, price =?, quantity = ? WHERE id = ? ";
+                + " SET title = ?, categoryID = ?, price =?, quantity = ? WHERE id = ? ";
 
         try {
             int categoryID = Table.selectOneByTitle(category,"Categories").getInt(1);
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
-            preparedStatement.setInt(1, categoryID);
-            preparedStatement.setString(2, title);
-            preparedStatement.setInt(3, quantity);
-            preparedStatement.setInt(4, price);
-
+            preparedStatement.setString(1, title);
+            preparedStatement.setInt(2, categoryID);
+            preparedStatement.setInt(3, price);
+            preparedStatement.setInt(4, quantity);
+            preparedStatement.setInt(5, id);
 
             preparedStatement.executeUpdate();
 
@@ -326,14 +326,14 @@ public class Table {
 
 
     public static void update(String title,  int quantity,  int price ) {
-        String sqlQuery = "UPDATE " + Properties.tableName + " SET quantity = ?, price =? WHERE title = ? ";
+        String sqlQuery = "UPDATE " + Properties.tableName + " SET quantity = ?, price = ? WHERE title = ? ";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
-            preparedStatement.setString(3, title);
             preparedStatement.setInt(1, quantity);
             preparedStatement.setInt(2, price);
+            preparedStatement.setString(3, title);
 
 
 
@@ -357,8 +357,8 @@ public class Table {
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 
-            preparedStatement.setString(2, title);
             preparedStatement.setInt(1, value);
+            preparedStatement.setString(2, title);
 
             preparedStatement.executeUpdate();
 
