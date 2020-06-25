@@ -1,8 +1,9 @@
 package com.ksondzyk.storage;
 
-import lombok.*;
-
-@Data @AllArgsConstructor @NoArgsConstructor
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+@Data
 public class Product {
 
     @Getter @Setter

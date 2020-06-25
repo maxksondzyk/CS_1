@@ -9,6 +9,7 @@ import com.ksondzyk.storage.Product;
 import com.ksondzyk.storage.ProductGroup;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,14 +36,6 @@ public class Processor implements Callable{
     public static boolean idPresent(int id, String tableName){
         try {
             Table.selectOneById(id,tableName).getInt("id");
-            return true;
-        } catch (SQLException throwables) {
-            return false;
-        }
-    }
-    public static boolean titlePresent(String title, String tableName){
-        try {
-            Table.selectOneByTitle(title,tableName).getString("title");
             return true;
         } catch (SQLException throwables) {
             return false;
@@ -95,22 +88,17 @@ public class Processor implements Callable{
                        }
                        break;
                    case (("user")) :
-                       String password = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("password");
-                       String token = Table.selectOneByTitle(jsonObject.getString("login"),"Users").getString("token");
-                       if(password.equals(jsonObject.getString("password"))) {
-                           answerMessage.put("token", token);
-                           answerMessage.put("status","ok");
-                       }
-                       else{
-                           answerMessage.put("status","not");
-                       }
+                       String password = Table.selectOneByTitle("user", "Users").getString("password");
+                       answerMessage.put("password", password);
 
                        break;
-                   case("allGoods"):
+
+                       case("allGoods"):
                        ArrayList<Product> goods = (ArrayList<Product>) Table.selectAllProducts();
                        JSONArray array = new JSONArray(goods);
                        answerMessage.put("goods", array);
                        answerMessage.put("status", "ok");
+
                        break;
                    case("categories"):
                        ArrayList<ProductGroup> groups = (ArrayList<ProductGroup>) Table.selectAllGroups();
@@ -138,21 +126,7 @@ public class Processor implements Callable{
                            value = Table.getValue(Integer.parseInt(id1));
                        }
                        answerMessage.put("value",value);
-                   case("goodTitle"):
-                       title = String.valueOf(jsonObject.get("id"));
-                       if (!titlePresent(title, Properties.tableName)) {
-                           answerMessage.put("status", "not");
-                       } else {
-                           Product product = Table.selectProductByTitle(title);
-                           answerMessage.put("id", product.getId());
-                           answerMessage.put("title", product.getName());
-                           answerMessage.put("quantity", product.getAmount());
-                           answerMessage.put("price", product.getPrice());
-                           answerMessage.put("categoryId", product.getGroupID());
-                           answerMessage.put("status", "ok");
-
-                       }
-                       break;
+                   break;
                        default:
                        id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                        if (!idPresent(id, "Categories")) {
