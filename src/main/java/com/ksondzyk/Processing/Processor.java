@@ -298,7 +298,7 @@ public class Processor implements Callable{
     @Override
     public Message call() throws Exception {
         try {
-            Thread.sleep(1000 * Server.secondsPerTask);
+            Thread.sleep(50 * Server.secondsPerTask);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
