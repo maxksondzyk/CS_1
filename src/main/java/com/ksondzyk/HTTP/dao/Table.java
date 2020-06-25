@@ -503,7 +503,6 @@ public class Table {
     public static void deleteCategory(int id) {
         String sqlQuery = "DELETE FROM " + "Categories" + " WHERE id = ?";
 
-
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
 

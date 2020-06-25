@@ -6,7 +6,8 @@ import com.ksondzyk.storage.ProductGroup;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
-
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.table.TableRowSorter;
 import javax.swing.RowFilter;
 
@@ -33,7 +34,14 @@ public class StorageFrame extends javax.swing.JFrame {
     public static void deleteGroup(String groupToRemove) {
 
 
-
+//        Storage.productsGroups.remove(groupToRemove);
+//        setComboBoxProductsGroup();
+//        ArrayList<Product> temp = new ArrayList<>();
+//        for (Product p:Storage.products) {
+//            if (!p.getGroup().getTitle().equals(groupToRemove)) temp.add(p);
+//        }
+//        Storage.products.clear();
+//        Storage.products.addAll(temp);
         productsTable.revalidate();
         productsTable.repaint();
     }
@@ -63,8 +71,7 @@ public class StorageFrame extends javax.swing.JFrame {
     {
 
             Storage.download();
-        productsTable.revalidate();
-        productsTable.repaint();
+
     }
 
     /**
@@ -96,7 +103,7 @@ public class StorageFrame extends javax.swing.JFrame {
     private static void addProductToList(Product product)
 
     {
-        //Storage.products.add( product );
+    //    Storage.products.add( product );
     }
 
     /**
@@ -129,7 +136,13 @@ public class StorageFrame extends javax.swing.JFrame {
          * Closing window and saving file with storage info
          */
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                Storage.upload();
+                mainPanel.setVisible(false);
+                dispose();
+            }
+        });
 
         searchButton.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         searchButton.setText("Знайти");
@@ -162,14 +175,23 @@ public class StorageFrame extends javax.swing.JFrame {
          */
 
         tableScrollPane.setViewportView(productsTable);
-        productsTable.getColumnModel().getColumn(0).setMinWidth(40);
+        //Column "Назва"
+        productsTable.getColumnModel().getColumn(0).setMinWidth(120);
+        //Column "К-сть"
         productsTable.getColumnModel().getColumn(1).setMinWidth(40);
-        productsTable.getColumnModel().getColumn(1).setMaxWidth(120);
+        productsTable.getColumnModel().getColumn(1).setMaxWidth(50);
+        //Column "Група товарів"
         productsTable.getColumnModel().getColumn(2).setMinWidth(210);
+        //Column "Опис"
         productsTable.getColumnModel().getColumn(3).setMinWidth(100);
+        //Column "Ціна"
         productsTable.getColumnModel().getColumn(4).setMinWidth(60);
         productsTable.getColumnModel().getColumn(4).setMaxWidth(70);
-
+        //Column "Виробник"
+//        productsTable.getColumnModel().getColumn(5).setMinWidth(110);
+        //Column "Загальна ціна"
+  //      productsTable.getColumnModel().getColumn(6).setMinWidth(90);
+   //     productsTable.getColumnModel().getColumn(6).setMaxWidth(100);
         productsTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(comboBoxProductGroups));
 
         javax.swing.GroupLayout tablePanelLayout = new javax.swing.GroupLayout(tablePanel);
@@ -321,7 +343,7 @@ public class StorageFrame extends javax.swing.JFrame {
      */
     private void importProductButtonActionPerformed() {
 
-        new importProductFrame();
+        //new importProductFrame();
     }
 
     /**
@@ -336,7 +358,7 @@ public class StorageFrame extends javax.swing.JFrame {
      * proceeds to adding the product
      */
     private void addProductButtonActionPerformed() {
-        addProductToList( new Product());
+      //  addProductToList( new Product( "Назва продукту", 0 , new ProductsGroup( "Не визначено", " "), "Опис товару", 0, "Виробник" ) );
         Storage.model.fireTableDataChanged();
         setComboBoxProductsGroup();
     }
@@ -346,14 +368,14 @@ public class StorageFrame extends javax.swing.JFrame {
      */
     private void showInfoButtonActionPerformed() {
 
-     //   new showInfoFrame();
+        //new showInfoFrame();
     }
 
     /**
      * proceeds to adding the group
      */
     private void addGroupButtonActionPerformed() {
-        new addGroupFrame();
+     //   new addGroupFrame();
         Storage.model.fireTableDataChanged();
         productsTable.revalidate();
         productsTable.repaint();
@@ -364,7 +386,7 @@ public class StorageFrame extends javax.swing.JFrame {
      */
     private void removeGroupButtonActionPerformed() {
 
-        new removeGroupFrame();
+        //new removeGroupFrame();
     }
 
     /**
@@ -372,7 +394,7 @@ public class StorageFrame extends javax.swing.JFrame {
      */
     private void editGroupButtonActionPerformed() {
 
-        new editGroupFrame();
+        //new editGroupFrame();
     }
 
     // Variables declaration - do not modify
