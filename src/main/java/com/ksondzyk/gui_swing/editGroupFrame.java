@@ -77,7 +77,7 @@ public class editGroupFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         String groupToEdit = String.valueOf(editGroupChooser.getSelectedItem());
         String newName = editGroupTextField.getText();
-        StorageFrame.editGroup(groupToEdit, newName);
+        //StorageFrame.editGroup(groupToEdit, newName);
         dispose();
     }
 
