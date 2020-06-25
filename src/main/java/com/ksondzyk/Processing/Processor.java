@@ -75,7 +75,7 @@ public class Processor implements Callable{
                 String type = (String) jsonObject.get("type");
                switch (type) {
                    case("good"):
-                       id = (int) jsonObject.get("id");
+                       id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                        if (!idPresent(id, Properties.tableName)) {
                            answerMessage.put("status", "not");
                        } else {
@@ -109,7 +109,7 @@ public class Processor implements Callable{
                        answerMessage.put("status", "ok");
                        break;
                    case("categoryProducts"):
-                       id = (int) jsonObject.get("id");
+                       id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                        if (!idPresent(id, Properties.tableCategories)) {
                            answerMessage.put("status", "not");
                        } else {
@@ -130,7 +130,7 @@ public class Processor implements Callable{
                        answerMessage.put("value",value);
                    break;
                        default:
-                       id = (int) jsonObject.get("id");
+                       id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                        if (!idPresent(id, "Categories")) {
                            answerMessage.put("status", "not");
                        } else {
