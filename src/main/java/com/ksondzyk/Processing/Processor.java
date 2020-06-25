@@ -119,7 +119,16 @@ public class Processor implements Callable{
                            answerMessage.put("status", "ok");
                        }
                        break;
-
+                   case("info"):
+                       int value;
+                       String id1 = String.valueOf(jsonObject.get("id"));
+                       if(id1.equals("all")) {
+                           value = Table.getValue();
+                       } else{
+                           value = Table.getValue(Integer.parseInt(id1));
+                       }
+                       answerMessage.put("value",value);
+                   break;
                        default:
                        id = (int) jsonObject.get("id");
                        if (!idPresent(id, "Categories")) {
