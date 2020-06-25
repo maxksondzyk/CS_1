@@ -22,38 +22,6 @@ public class TableTest {
 
     }
 
-    @Test
-    public void create() throws SQLException {
-        Table.createTable();
-        ResultSet results = Table.selectAll();
-        ResultSetMetaData md = results.getMetaData();
-        int columnCount = md.getColumnCount();
-
-
-
-        for (int i = 1; i <= columnCount; i++) {
-
-            String columnName = md.getColumnName(i);
-            if (i == 1)
-                assertEquals("id", columnName);
-
-            else if (i == 2)
-                assertEquals("category", columnName);
-
-            else if (i == 3)
-            assertEquals("title", columnName);
-
-            else if (i == 4)
-                assertEquals("quantity", columnName);
-
-            else
-                assertEquals("price", columnName);
-
-
-        }
-
-
-    }
 
     @Test
     public void insert() throws SQLException {
@@ -106,18 +74,7 @@ public class TableTest {
 
     }
 
-    @Test
-    public void truncate() throws SQLException {
-        Table.insert("fruits", "cherry", 1, 25);
-        Table.insert("fruits", "strawberry", 1, 9);
-        Table.insert("fruits", "pear", 1, 9);
 
-        Table.truncate();
-        assert(Table.selectOneByTitle("cherry", Properties.tableName).isClosed());
-        assert(Table.selectOneByTitle("pear", Properties.tableName).isClosed());
-        assert (Table.selectOneById(1,Properties.tableName).isClosed());
-
-    }
 
     @After
     public void close() {

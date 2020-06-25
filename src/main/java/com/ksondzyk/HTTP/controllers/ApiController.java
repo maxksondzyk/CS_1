@@ -76,14 +76,6 @@ public class ApiController implements HttpHandler {
 
         JSONObject responseMessage = new JSONObject(jsonString);
 
-        //response.setData(responseMessage.toMap());
-//        try {
-//             login = Table.selectOneByTitle("admin","Users").getString("title");
-//             password = Table.selectOneByTitle("admin","Users").getString("password");
-//        } catch (SQLException throwables) {
-//            throwables.printStackTrace();
-//        }
-        //if (params.get("login").equals(login)&&matching(params.get("password"), password))
         if(responseMessage.get("status").equals("ok"))
         {
             response.setStatusCode(200);

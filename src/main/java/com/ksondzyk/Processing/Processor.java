@@ -1,6 +1,5 @@
 package com.ksondzyk.Processing;
 
-import com.google.gson.Gson;
 import com.ksondzyk.HTTP.dao.Table;
 import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
@@ -104,8 +103,8 @@ public class Processor implements Callable{
                        break;
                    case("categories"):
                        ArrayList<ProductGroup> groups = (ArrayList<ProductGroup>) Table.selectAllGroups();
-                       JSONArray array1 = new JSONArray(new Gson().toJson(groups));
-                       answerMessage.put("groups", (Object) array1);
+                       array = new JSONArray((groups));
+                       answerMessage.put("groups", array);
                        answerMessage.put("status", "ok");
                        break;
                    case("categoryProducts"):
@@ -113,9 +112,9 @@ public class Processor implements Callable{
                        if (!idPresent(id, Properties.tableCategories)) {
                            answerMessage.put("status", "not");
                        } else {
-                           ArrayList<Product> groups2 = (ArrayList<Product>) Table.selectAllProducts(id);
-                           JSONArray array2 = new JSONArray(new Gson().toJson(groups2));
-                           answerMessage.put("products", (Object) array2);
+                           ArrayList<Product> products = (ArrayList<Product>) Table.selectAllProducts(id);
+                           array = new JSONArray((products));
+                           answerMessage.put("products", array);
                            answerMessage.put("status", "ok");
                        }
                        break;
