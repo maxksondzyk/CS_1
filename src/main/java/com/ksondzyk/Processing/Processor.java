@@ -43,6 +43,14 @@ public class Processor implements Callable{
             return false;
         }
     }
+    public static boolean titlePresent(String title, String tableName){
+        try {
+            Table.selectOneByTitle(title,tableName).getString("title");
+            return true;
+        } catch (SQLException throwables) {
+            return false;
+        }
+    }
 
     private static Message answer(int cType,JSONObject jsonObject) throws PacketDamagedException {
         answerMessage = new JSONObject();
@@ -73,7 +81,7 @@ public class Processor implements Callable{
 
                 type = (String) jsonObject.get("type");
                 if(type.equals("good")) {
-                    id = (int) jsonObject.get("id");
+                    id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                     if(!idPresent(id,Properties.tableName)) {
                         answerMessage.put("status","not");
                     }else {
@@ -111,7 +119,7 @@ public class Processor implements Callable{
 
                 }
                 else if(type.equals("categoryProducts")){
-                    id = (int) jsonObject.get("id");
+                    id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                     if(!idPresent(id,Properties.tableCategories)) {
                         answerMessage.put("status","not");
                     }else {
@@ -121,9 +129,26 @@ public class Processor implements Callable{
                         answerMessage.put("status", "ok");
                     }
                 }
+                else if (type.equals("goodTitle")){
+                    title = String.valueOf(jsonObject.get("id"));
+                    if(!titlePresent(title,Properties.tableName)){
+                        answerMessage.put("status","not");
+                    }else {
+                        Product product = Table.selectProductByTitle(title);
+                        int categoryId = Table.selectOneByTitle(title, Properties.tableName).getInt("categoryID");
+                        answerMessage.put("id", product.getId());
+                        answerMessage.put("title", title);
+                        answerMessage.put("quantity", product.getAmount());
+                        answerMessage.put("price", product.getPrice());
+                        answerMessage.put("category", product.getGroup());
+                        answerMessage.put("categoryId", categoryId);
+                        answerMessage.put("status","ok");
+                    }
+
+                }
 
                 else {
-                    id = (int) jsonObject.get("id");
+                    id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                     if(!idPresent(id,"Categories")) {
                         answerMessage.put("status","not");
                     }else {
@@ -155,9 +180,6 @@ public class Processor implements Callable{
                 else{
                     Table.insertUser(jsonObject.getString("login"),jsonObject.getString("password"), jsonObject.getString("token"));
                 }
-
-
-
 
                 break;
 
