@@ -104,12 +104,12 @@ public class Storage {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-//        collectionType = new TypeToken<HashMap<String, ProductGroup>>(){}.getType();
-//        gr = gson.fromJson(si, collectionType);
-//        for (Map.Entry<String, ProductGroup> g: gr.entrySet()){
-//            productsGroups.add(g.getKey());
-//        }
-//        Storage.model.fireTableDataChanged();
+        collectionType = new TypeToken<HashMap<String, ProductGroup>>(){}.getType();
+        gr = gson.fromJson(responseMessage.toString(), collectionType);
+       for (Map.Entry<String, ProductGroup> g: gr.entrySet()){
+           productsGroups.add(g.getKey());
+        }
+        Storage.model.fireTableDataChanged();
 //        try {
 //            fr.close();
 //        } catch (IOException e) {
