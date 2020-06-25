@@ -176,10 +176,10 @@ public class Processor implements Callable{
                     }else {
                     if (jsonObject.has("category")) {
                         category = (String) jsonObject.get("category");
-                    } else
-                         categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryId");
-                        category = Table.selectOneById(categoryId,"Categories").getString("title");
-
+                    } else {
+                        categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryId");
+                        category = Table.selectOneById(categoryId, "Categories").getString("title");
+                    }
                     if (jsonObject.has("title")) {
                         title = (String) jsonObject.get("title");
                     } else
