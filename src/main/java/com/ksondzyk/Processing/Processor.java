@@ -10,12 +10,14 @@ import com.ksondzyk.storage.Product;
 import com.ksondzyk.storage.ProductGroup;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -41,14 +43,6 @@ public class Processor implements Callable{
             return false;
         }
     }
-    public static boolean titlePresent(String title, String tableName){
-        try {
-            Table.selectOneByTitle(title,tableName).getString("title");
-            return true;
-        } catch (SQLException throwables) {
-            return false;
-        }
-    }
 
     private static Message answer(int cType,JSONObject jsonObject) throws PacketDamagedException {
         answerMessage = new JSONObject();
@@ -58,7 +52,7 @@ public class Processor implements Callable{
             int id;
             int quantity;
             int price;
-            String type;
+
         switch (cType) {
             case 0:
                 try {
@@ -75,97 +69,77 @@ public class Processor implements Callable{
             throwables.printStackTrace();
         }
                 break;
-            case 1:
 
-                type = (String) jsonObject.get("type");
-                if(type.equals("good")) {
-                    id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
-                    if(!idPresent(id,Properties.tableName)) {
-                        answerMessage.put("status","not");
-                    }else {
-                        title = Table.selectOneById(id, Properties.tableName).getString("title");
-                        quantity = Table.selectOneById(id, Properties.tableName).getInt("quantity");
-                        price = Table.selectOneById(id, Properties.tableName).getInt("price");
-                        int categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryID");
-                        category = Table.selectOneById(categoryId, "Categories").getString("title");
-                        answerMessage.put("id", id);
-                        answerMessage.put("title", title);
-                        answerMessage.put("quantity", quantity);
-                        answerMessage.put("price", price);
-                        answerMessage.put("category", category);
-                        answerMessage.put("categoryId", categoryId);
-                        answerMessage.put("status","ok");
-                    }
-                }
-                else if(type.equals("user")){
-                   // String login = Table.selectOneByTitle((String) jsonObject.get("login"),"Users").getString("title");
-                    String password = Table.selectOneByTitle("user","Users").getString("password");
-                    answerMessage.put("password",password);
-                }
-                else if(type.equals("allGoods")){
-                    ArrayList<Product> goods = (ArrayList<Product>) Table.selectAllProducts();
-                   JSONArray array =new JSONArray (goods);
-                   answerMessage.put("goods",array);
-                    answerMessage.put("status","ok");
+                case 1:
 
-                }
-                else if(type.equals("categories")){
-                    ArrayList<ProductGroup> groups = (ArrayList<ProductGroup>) Table.selectAllGroups();
-                    JSONArray array =new JSONArray (new Gson().toJson(groups));
-                    answerMessage.put("groups",(Object)array);
-                    answerMessage.put("status","ok");
+                String type = (String) jsonObject.get("type");
+               switch (type) {
+                   case("good"):
+                       id = (int) jsonObject.get("id");
+                       if (!idPresent(id, Properties.tableName)) {
+                           answerMessage.put("status", "not");
+                       } else {
+                           Product product = Table.selectProductById(id);
+                           answerMessage.put("id", product.getId());
+                           answerMessage.put("title", product.getName());
+                           answerMessage.put("quantity", product.getAmount());
+                           answerMessage.put("price", product.getPrice());
+                           answerMessage.put("categoryId", product.getGroupID());
+                           answerMessage.put("status", "ok");
 
-                }
-                else if(type.equals("categoryProducts")){
-                    id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
-                    if(!idPresent(id,Properties.tableCategories)) {
-                        answerMessage.put("status","not");
-                    }else {
-                        ArrayList<Product> groups = (ArrayList<Product>) Table.selectAllProducts(id);
-                        JSONArray array = new JSONArray(new Gson().toJson(groups));
-                        answerMessage.put("products", (Object) array);
-                        answerMessage.put("status", "ok");
-                    }
-                }
-                else if (type.equals("goodTitle")){
-                    title = String.valueOf(jsonObject.get("id"));
-                    if(!titlePresent(title,Properties.tableName)){
-                        answerMessage.put("status","not");
-                    }else {
-                        Product product = Table.selectProductByTitle(title);
-                        int categoryId = Table.selectOneByTitle(title, Properties.tableName).getInt("categoryID");
-                        answerMessage.put("id", product.getId());
-                        answerMessage.put("title", title);
-                        answerMessage.put("quantity", product.getAmount());
-                        answerMessage.put("price", product.getPrice());
-                        answerMessage.put("category", product.getGroup());
-                        answerMessage.put("categoryId", categoryId);
-                        answerMessage.put("status","ok");
-                    }
+                       }
+                       break;
+                   case (("user")) :
+                       String password = Table.selectOneByTitle("user", "Users").getString("password");
+                       answerMessage.put("password", password);
 
-                }
-                else if(type.equals("info")){
-                    int value;
-                    String id1 = String.valueOf(jsonObject.get("id"));
-                    if(id1.equals("all")) {
-                       value = Table.getValue();
-                    } else{
-                        value = Table.getValue(Integer.parseInt(id1));
-                    }
-                    answerMessage.put("value",value);
-                }
+                       break;
 
-                else {
-                    id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
-                    if(!idPresent(id,"Categories")) {
-                        answerMessage.put("status","not");
-                    }else {
-                        title = Table.selectOneById(id, "Categories").getString("title");
-                        answerMessage.put("id", id);
-                        answerMessage.put("title", title);
-                        answerMessage.put("status","ok");
-                    }
-                }
+                       case("allGoods"):
+                       ArrayList<Product> goods = (ArrayList<Product>) Table.selectAllProducts();
+                       JSONArray array = new JSONArray(goods);
+                       answerMessage.put("goods", array);
+                       answerMessage.put("status", "ok");
+
+                       break;
+                   case("categories"):
+                       ArrayList<ProductGroup> groups = (ArrayList<ProductGroup>) Table.selectAllGroups();
+                       JSONArray array1 = new JSONArray(new Gson().toJson(groups));
+                       answerMessage.put("groups", (Object) array1);
+                       answerMessage.put("status", "ok");
+                       break;
+                   case("categoryProducts"):
+                       id = (int) jsonObject.get("id");
+                       if (!idPresent(id, Properties.tableCategories)) {
+                           answerMessage.put("status", "not");
+                       } else {
+                           ArrayList<Product> groups2 = (ArrayList<Product>) Table.selectAllProducts(id);
+                           JSONArray array2 = new JSONArray(new Gson().toJson(groups2));
+                           answerMessage.put("products", (Object) array2);
+                           answerMessage.put("status", "ok");
+                       }
+                       break;
+                   case("info"):
+                       int value;
+                       String id1 = String.valueOf(jsonObject.get("id"));
+                       if(id1.equals("all")) {
+                           value = Table.getValue();
+                       } else{
+                           value = Table.getValue(Integer.parseInt(id1));
+                       }
+                       answerMessage.put("value",value);
+                   break;
+                       default:
+                       id = (int) jsonObject.get("id");
+                       if (!idPresent(id, "Categories")) {
+                           answerMessage.put("status", "not");
+                       } else {
+                           title = Table.selectOneById(id, "Categories").getString("title");
+                           answerMessage.put("id", id);
+                           answerMessage.put("title", title);
+                           answerMessage.put("status", "ok");
+                       }
+                   }
 
                 break;
 
@@ -188,6 +162,9 @@ public class Processor implements Callable{
                 else{
                     Table.insertUser(jsonObject.getString("login"),jsonObject.getString("password"), jsonObject.getString("token"));
                 }
+
+
+
 
                 break;
 
@@ -295,7 +272,7 @@ public class Processor implements Callable{
 
 
     @Override
-    public Message call() throws Exception {
+    public Message call()  {
         try {
             Thread.sleep(50 * Server.secondsPerTask);
         } catch (InterruptedException e) {
