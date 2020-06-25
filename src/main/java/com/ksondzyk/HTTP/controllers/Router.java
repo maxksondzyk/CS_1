@@ -29,17 +29,5 @@ public class Router implements HttpHandler {
             ApiController apiController = new ApiController();
             apiController.handle(httpExchange);
         }
-//                if (httpExchange.getRequestHeaders().get("Content-Type").contains("application/json")) {
-//                    ApiController apiController = new ApiController();
-//                    apiController.handle(httpExchange);
-//                }else
-//                if (httpExchange.getRequestHeaders().get("Content-Type").contains("mime")) {
-//                    StaticController staticController = new StaticController();
-//                    staticController.handle(httpExchange);
-//                }
-//                else{
-//                    ApiController apiController = new ApiController();
-//                    apiController.handle(httpExchange);
-//                }
         }
     }

@@ -75,7 +75,7 @@ public class addGroupFrame extends javax.swing.JFrame {
         if(createGroupField.getText()!=null) {
             String groupName = createGroupField.getText();
             StorageFrame.addProductGroup(groupName);
-            StorageFrame.addComboBoxProductsGroup(groupName);
+           // StorageFrame.addComboBoxProductsGroup(groupName);
             dispose();
         }
     }//GEN-LAST:event_createGroupButtonActionPerformed

@@ -274,11 +274,6 @@ public class Processor implements Callable{
         Callable<Message> processingAsync = new Processor(packet);
         return executorPool.submit(processingAsync);
     }
-    public static Future<Message> process(JSONObject jsonObject) {
-        Packet packet = new Packet(jsonObject);
-        Callable<Message> processingAsync = new Processor(packet);
-        return executorPool.submit(processingAsync);
-    }
     public void run(){
         synchronized (packet) {
         String jsonString = CipherMy.decode(packet.getBMsq().getMessage());

@@ -316,7 +316,7 @@ public class ApiController implements HttpHandler {
     }
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-String path = httpExchange.getRequestURI().getPath();
+        String path = httpExchange.getRequestURI().getPath();
         switch (httpExchange.getRequestMethod()) {
 
             case "GET":
@@ -560,7 +560,6 @@ String path = httpExchange.getRequestURI().getPath();
             httpExchange.getResponseHeaders().add("Set-Cookie", "token="+authToken);
         }
         else{
-
             response.setStatusCode(400);
             response.setData("Bad Request.");
         }
@@ -604,7 +603,7 @@ String path = httpExchange.getRequestURI().getPath();
             }
             else {
                 response.setStatusCode(403);
-                response.setTemplate("login");
+                response.setTemplate("register");
             }
         }
         else{
