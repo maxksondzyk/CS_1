@@ -172,35 +172,8 @@ public class Table {
 
         return null;
     }
-    public static ResultSet selectAll() {
-        String sqlQuery = "SELECT * FROM " + Properties.tableName;
 
-        try {
 
-            Statement statement  = DB.connection.createStatement();
-
-            return statement.executeQuery(sqlQuery);
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static ResultSet selectAll(String tableName) {
-        String sqlQuery = "SELECT * FROM " + tableName;
-
-        try {
-
-            Statement statement  = DB.connection.createStatement();
-
-            return statement.executeQuery(sqlQuery);
-        } catch (SQLException sqlException) {
-            sqlException.printStackTrace();
-        }
-
-        return null;
-    }
 
     //всі товари
     public static List<Product> selectAllProducts() {
