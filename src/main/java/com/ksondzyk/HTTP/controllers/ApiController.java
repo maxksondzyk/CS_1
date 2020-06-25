@@ -5,29 +5,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ksondzyk.HTTP.dto.Response;
 import com.ksondzyk.HTTP.views.JsonView;
 import com.ksondzyk.HTTP.views.View;
-import com.ksondzyk.Processing.Processor;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.network.TCP.TCPClientThread;
-import com.ksondzyk.storage.Product;
 import com.ksondzyk.utilities.CipherMy;
-import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 
-import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ApiController implements HttpHandler {
@@ -67,8 +62,6 @@ public class ApiController implements HttpHandler {
         Response response = new Response();
 
         Map<String, String> params = queryToMap(httpExchange.getRequestURI().getQuery());
-        String login = "";
-        String password = "";
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("cType","0");
         jsonObject.put("login",params.get("login"));
@@ -122,7 +115,7 @@ public class ApiController implements HttpHandler {
             jsonObject.put("cType","1");
             jsonObject.put("type",type);
 
-            int id = Integer.parseInt(httpExchange.getRequestURI().getPath().split("/")[3]);
+            String id = (httpExchange.getRequestURI().getPath().split("/")[3]);
 
                 jsonObject.put("id", id);
 
@@ -320,6 +313,7 @@ public class ApiController implements HttpHandler {
     }
 
 
+
     @SneakyThrows
     public static void hello(HttpExchange httpExchange) throws IOException {
 
@@ -353,6 +347,9 @@ String path = httpExchange.getRequestURI().getPath();
 
                     getAllCategoryProducts(httpExchange);
                 }
+                else if(path.contains("api/info")){
+                    getInfo(httpExchange);
+                }
 
                 else{
                     get(httpExchange);
@@ -375,6 +372,43 @@ String path = httpExchange.getRequestURI().getPath();
                 delete(httpExchange);
                 break;
         }
+    }
+
+    public static void getInfo(HttpExchange httpExchange) {
+        Response response = new Response();
+
+        String cleanToken = httpExchange.getRequestHeaders().get("token").toString().replaceAll("\"","").replaceAll("\\[","").replaceAll("]","");
+
+        if(cleanToken.equals(authToken)){
+
+            response.setStatusCode(200);
+
+            String type = (httpExchange.getRequestURI().getPath().split("/")[2]);
+
+            String id = (httpExchange.getRequestURI().getPath().split("/")[3]);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("cType","1");
+            jsonObject.put("type",type);
+            jsonObject.put("id", id);
+
+            Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+            TCPClientThread tcpClientThread = new TCPClientThread(packet);
+            Packet answer = tcpClientThread.send();
+
+            String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+            JSONObject responseMessage = new JSONObject(jsonString);
+
+            response.setData(responseMessage.toMap());
+        }
+        else{
+            response.setStatusCode(403);
+        }
+        response.setHttpExchange(httpExchange);
+
+        view = new JsonView();
+        view.view(response);
     }
 
     private void getAllCategoryProducts(HttpExchange httpExchange) {

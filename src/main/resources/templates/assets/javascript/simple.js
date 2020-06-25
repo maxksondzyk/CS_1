@@ -1,12 +1,12 @@
-console.log("success");
-let tokenCookie = getCookie('token');
-console.log(tokenCookie)
-
-function getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-}
+//console.log("success");
+// let tokenCookie = getCookie('token');
+// console.log(tokenCookie)
+//
+// function getCookie(name) {
+//     const value = `; ${document.cookie}`;
+//     const parts = value.split(`; ${name}=`);
+//     if (parts.length === 2) return parts.pop().split(';').shift();
+// }
 
 /*PUT*/
 
@@ -34,16 +34,5 @@ function getCookie(name) {
 
 /*GET*/
 
-fetch("/api/allGoods", {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json',
-            'token': tokenCookie
-        }
-    }
-).then(function(response) {
-    response.json().then(function (data) {
-        console.log(data)
-    })
-})
+
 

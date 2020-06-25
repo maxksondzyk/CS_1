@@ -1,13 +1,6 @@
-const goods = [
-    {id:1, name:'Banana', quantity:10, price:16},
-    {id:1, name:'Apple', quantity:12, price:26},
-    {id:1, name:'Straw', quantity:7, price:10},
-    {id:1, name:'Apple', quantity:12, price:26},
-    {id:1, name:'Straw', quantity:7, price:10},
-    {id:1, name:'Orange', quantity:2, price:40}];
 
-function showAllGoodsByCategory(categoryName) {
 
+function showAllGoodsByCategory(category) {
     if(document.getElementsByClassName('goods_items-wrapper')[0]) {
         document.getElementsByClassName('goods_items')[0].removeChild(document.getElementsByClassName('goods_items-wrapper')[0]);
     }
@@ -16,52 +9,123 @@ function showAllGoodsByCategory(categoryName) {
     goodsWrapper.classList.add('goods_items-wrapper');
     document.getElementsByClassName('goods_items')[0].appendChild(goodsWrapper);
 
-    renderGoods(categoryName);
+    getGoodsArray(category)
 }
 
-function renderGoods(categoryName) {
+
+function getGoodsArray(category) {
+    fetch(`api/categoryProducts/${category.id}`, {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            }
+        }
+    ).then(function(response) {
+        response.json().then(function (data) {
+            console.log(data)
+            const goods = []
+            for(let i=0;i<data.products.length;i++) {
+                goods.push(data.products[i])
+            }
+            // console.log(categories)
+            renderGoods(goods,category.name, category.id)
+        })
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+function renderGoods(goods,categoryName,categoryId) {
 
     clearDom();
 
     let title = document.createElement('div');
     title.classList.add('goods_title');
-    title.innerHTML = `${categoryName} goods`;
+    title.innerHTML = `${categoryName.capitalizeFirst()} goods`;
     document.getElementsByClassName('goods_items-wrapper')[0].appendChild(title);
 
-    for(let i=0;i<goods.length;i++) {
-        let goodWrapper = document.createElement('div');
-        goodWrapper.classList.add('goods_item');
+    for(let i=0;i<goods.length+1;i++) {
 
-        let title = document.createElement('h3');
-        title.innerHTML = `${goods[i].name}`
-        goodWrapper.appendChild(title)
+        let bigWRapper = document.createElement('div');
+        bigWRapper.classList.add('goods_item-wrapper');
+        document.getElementsByClassName('goods_items-wrapper')[0].appendChild(bigWRapper);
 
-        let contentWrapper = document.createElement('div');
-        contentWrapper.innerHTML =
-            `<div>Price : ${goods[i].price}</div>
-       <div>Quantity : ${goods[i].quantity} </div>
+        if(i===goods.length) {
+            /**ADD NEW GOOD*/
+
+            let addNew = document.createElement('div');
+            addNew.classList.add('goods_add_item');
+            addNew.innerHTML = 'Add new';
+            addNew.onclick = function () {
+                addNewItemModal(categoryName,categoryId)
+            }
+            bigWRapper.appendChild(addNew)
+        }
+
+        else {
+
+            let goodWrapper = document.createElement('div');
+            goodWrapper.classList.add('goods_item');
+            bigWRapper.appendChild(goodWrapper);
+
+            let goodTitle = document.createElement('h3');
+            goodTitle.innerHTML = `${goods[i].name.capitalizeFirst()}`;
+            goodTitle.classList.add('goods_item-title')
+            goodWrapper.appendChild(goodTitle)
+
+            let contentWrapper = document.createElement('div');
+            contentWrapper.classList.add('goods_item_content')
+            contentWrapper.innerHTML =
+                `<div class="goods_item_content-price">Price : ${goods[i].price} uah</div>
+       <div class="goods_item_content-quantity">Amount : ${goods[i].amount} item(s) </div>
       `
-        goodWrapper.appendChild(contentWrapper)
+            goodWrapper.appendChild(contentWrapper)
 
-        let funcWrapper = document.createElement('div');
-        goodWrapper.appendChild(funcWrapper)
+            let funcWrapper = document.createElement('div');
+            funcWrapper.classList.add('goods_item-func-wrapper')
+            goodWrapper.appendChild(funcWrapper)
 
-        let editImg = document.createElement('div');
-        editImg.innerHTML = 'Edit'
-        editImg.onclick = function () { addEditItemModal(goods[i]) }
-        funcWrapper.appendChild(editImg)
+            /**ADD AMOUNT*/
+            let addImg = document.createElement('div');
+            addImg.innerHTML = 'Add'
+            addImg.onclick = function () {
+                addAddItemModal(goods[i])
+            }
+            addImg.classList.add('goods_item-func')
+            funcWrapper.appendChild(addImg);
 
-        let deleteImg = document.createElement('div');
-        deleteImg.innerHTML = 'Delete'
-        deleteImg.onclick = function () {deleteCategory(goods[i])}
-        funcWrapper.appendChild(deleteImg)
+            /**REMOVE AMOUNT*/
 
-        let addImg = document.createElement('div');
-        addImg.innerHTML = 'Add'
-        addImg.onclick = function () {addAddItemModal(goods[i])}
-        funcWrapper.appendChild(addImg);
+            let removeImg = document.createElement('div');
+            removeImg.innerHTML = 'Remove'
+            removeImg.onclick = function () {
+                addAddItemModal(goods[i])
+            }
+            removeImg.classList.add('goods_item-func-2')
+            funcWrapper.appendChild(removeImg);
 
-        document.getElementsByClassName('goods_items-wrapper')[0].appendChild(goodWrapper);
+            /**EDIT GOOD*/
+
+            let editImg = document.createElement('div');
+            editImg.innerHTML = 'Edit'
+            editImg.onclick = function () {
+                addEditItemModal(goods[i])
+            }
+            editImg.classList.add('goods_item-func')
+            funcWrapper.appendChild(editImg)
+
+            /**DELETE GOOD*/
+
+            let deleteImg = document.createElement('div');
+            deleteImg.innerHTML = 'Delete'
+            deleteImg.onclick = function () {
+                addDeleteItemModal(goods[i],categoryName,categoryId)
+            }
+            deleteImg.classList.add('goods_item-func-2')
+            funcWrapper.appendChild(deleteImg)
+
+        }
     }
 }
 
@@ -122,9 +186,8 @@ function editItem(good) {
     render()
 }
 
-function deleteCategory(category) {
-    console.log(category.name)
-}
+
+/**ADD AMOUNT TO GOOD*/
 
 function addAddItemModal(good) {
     const modal = createAddItemModal(good)
@@ -150,10 +213,125 @@ function createAddItemModal(good){
             {text: 'Cancel', type: 'danger', handler() {
                     modal.close()
                     modal.destroy()
-                    render()
+
                 }},
         ]
     })
     return modal
 }
+
+
+/**DELETE GOOD*/
+
+function addDeleteItemModal(good,categoryName,categoryId) {
+    const modal = createDeleteItemModal(good,categoryName,categoryId)
+    modal.open()
+}
+
+function createDeleteItemModal(good,categoryName,categoryId) {
+    const modal = $.modal({
+        title: 'Delete good',
+        closeable: true,
+        content: `<form name="good_new-form">
+                <div>
+                  <p>Are you sure you want to delete ${good.name}?</p>
+                </div>
+              `,
+        footerButtons: [
+            {
+                text: 'Delete', type: 'primary', handler() {
+                    deleteItem(good,modal,categoryName,categoryId)
+                }
+            },
+            {text: 'Cancel', type: 'danger', handler() {
+                    modal.close()
+                    modal.destroy()
+                }},
+        ]
+    })
+    return modal
+}
+
+function deleteItem(good,modal,categoryName,categoryId) {
+    fetch(`api/good/${good.id}`, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            }
+        }
+    ).then(function(response) {
+        alert('Deleted')
+        let category = {'name':`${categoryName}`,id:categoryId}
+        getGoodsArray(category)
+        modal.close()
+        modal.destroy()
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+/**ADD NEW ITEM*/
+
+function addNewItemModal(categoryName,categoryId) {
+    const modal = createNewItemModal(categoryName,categoryId)
+    modal.open()
+}
+function createNewItemModal(categoryName,categoryId){
+    const modal = $.modal({
+        title: 'Add new good',
+        closeable: true,
+        content: `<form name="good_new-form">
+                <div>
+                  <p>Title:</p>
+                  <input type="text" id="good_new-title">
+                  <p>Price:</p>
+                  <input type="text" id="good_new-price">
+                  <p>Amount:</p>
+                  <input type="text" id="good_new-quantity">
+                </div>
+              `,
+        footerButtons: [
+            {
+                text: 'Add', type: 'primary', handler() {
+                    addNewItem(categoryName,categoryId,modal)
+                }
+            },
+            {text: 'Cancel', type: 'danger', handler() {
+                    modal.close()
+                    modal.destroy()
+                }},
+        ]
+    })
+    return modal
+}
+
+function addNewItem(categoryName,categoryId,modal) {
+    let item = {
+        "title": document.getElementById('good_new-title').value,
+        "category": categoryName,
+        "quantity": document.getElementById('good_new-quantity').value,
+        "price": document.getElementById('good_new-price').value
+    }
+
+    fetch("api/good", {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            },
+            body: JSON.stringify(item)
+        }
+    ).then(function(response) {
+        alert('Added')
+        let category = {'name':`${categoryName}`,id:categoryId}
+        getGoodsArray(category);
+        modal.close()
+        modal.destroy()
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+
 
