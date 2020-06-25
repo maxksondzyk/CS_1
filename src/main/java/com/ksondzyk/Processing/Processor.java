@@ -9,14 +9,12 @@ import com.ksondzyk.storage.Product;
 import com.ksondzyk.storage.ProductGroup;
 import com.ksondzyk.utilities.CipherMy;
 import com.ksondzyk.utilities.Properties;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
 
 
