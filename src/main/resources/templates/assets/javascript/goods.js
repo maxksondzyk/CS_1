@@ -90,7 +90,7 @@ function renderGoods(goods,categoryName,categoryId) {
             let addImg = document.createElement('div');
             addImg.innerHTML = 'Add'
             addImg.onclick = function () {
-                addAddItemModal(goods[i])
+                addAddAmountItemModal(goods[i],categoryName,categoryId)
             }
             addImg.classList.add('goods_item-func')
             funcWrapper.appendChild(addImg);
@@ -100,7 +100,7 @@ function renderGoods(goods,categoryName,categoryId) {
             let removeImg = document.createElement('div');
             removeImg.innerHTML = 'Remove'
             removeImg.onclick = function () {
-                addAddItemModal(goods[i])
+                addRemoveAmountItemModal(goods[i],categoryName,categoryId)
             }
             removeImg.classList.add('goods_item-func-2')
             funcWrapper.appendChild(removeImg);
@@ -110,7 +110,7 @@ function renderGoods(goods,categoryName,categoryId) {
             let editImg = document.createElement('div');
             editImg.innerHTML = 'Edit'
             editImg.onclick = function () {
-                addEditItemModal(goods[i])
+                addEditItemModal(goods[i],categoryName,categoryId)
             }
             editImg.classList.add('goods_item-func')
             funcWrapper.appendChild(editImg)
@@ -134,6 +134,64 @@ function clearDom() {
         document.getElementsByClassName('goods_items-wrapper')[0].innerHTML = ''
 }
 
+/**ADD AMOUNT TO GOOD*/
+
+function addAddAmountItemModal(good,categoryName,categoryId) {
+    const modal = createAddItemModal(good,categoryName,categoryId)
+    modal.open()
+}
+
+function createAddItemModal(good,categoryName,categoryId){
+    const modal = $.modal({
+        title: 'Add amount',
+        closeable: true,
+        content: `<form name="good_add-form">
+                <div>
+                  <p>How many new items arrived?</p>
+                  <input type="number" id="good_add-quantity">
+                </div>
+                </form>
+              `,
+        footerButtons: [
+            {text: 'Add', type: 'primary', handler() {
+                    addAmountItem(good,categoryName,categoryId,modal)}},
+            {text: 'Cancel', type: 'danger', handler() {
+                modal.close();
+                modal.destroy()
+                }},
+        ]})
+    return modal
+}
+
+function addAmountItem(good,categoryName,categoryId,modal) {
+    let oldAmount = parseFloat(good.amount);
+    let newAmount = parseFloat(document.getElementById('good_add-quantity').value);
+    let amount = oldAmount + newAmount
+    let item = {
+        "quantity": `${amount}`,
+    }
+
+    fetch(`api/good/${good.id}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            },
+            body: JSON.stringify(item)
+        }
+    ).then(function(response) {
+        alert('Added')
+        let category = {'name':`${categoryName}`,id:categoryId}
+        getGoodsArray(category);
+        modal.close()
+        modal.destroy()
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+/**EDIT GOOD*/
+
 function addEditItemModal(good) {
     const modal = createEditItemModal(good)
     modal.open()
@@ -153,21 +211,17 @@ function createEditItemModal(good){
               <p>Change good price:</p>
               <input type="number" id="good_change-price" placeholder=${good.price}>
             </div>
+            </form>
 
-`,
+            `,
         footerButtons: [
-            {
-                text: 'Add', type: 'primary', handler() {
-                    editItem(good)
-                }
-            },
+            {text: 'Add', type: 'primary', handler() {
+                    editItem(good)}},
             {text: 'Cancel', type: 'danger', handler() {
-                    modal.close()
+                    modal.close();
                     modal.destroy()
-                    render()
                 }},
-        ]
-    })
+        ]})
     return modal
 }
 
@@ -187,39 +241,6 @@ function editItem(good) {
 }
 
 
-/**ADD AMOUNT TO GOOD*/
-
-function addAddItemModal(good) {
-    const modal = createAddItemModal(good)
-    modal.open()
-}
-
-function createAddItemModal(good){
-    const modal = $.modal({
-        title: 'Add new category',
-        closeable: true,
-        content: `<form name="good_add-form">
-                <div>
-                  <p>Change good quantity:</p>
-                  <input type="number" id="good_change-quantity" placeholder=${good.quantity}>
-                </div>
-              `,
-        footerButtons: [
-            {
-                text: 'Add', type: 'primary', handler() {
-                    addItem(good)
-                }
-            },
-            {text: 'Cancel', type: 'danger', handler() {
-                    modal.close()
-                    modal.destroy()
-
-                }},
-        ]
-    })
-    return modal
-}
-
 
 /**DELETE GOOD*/
 
@@ -236,19 +257,16 @@ function createDeleteItemModal(good,categoryName,categoryId) {
                 <div>
                   <p>Are you sure you want to delete ${good.name}?</p>
                 </div>
+                </form>
               `,
         footerButtons: [
-            {
-                text: 'Delete', type: 'primary', handler() {
-                    deleteItem(good,modal,categoryName,categoryId)
-                }
-            },
+            {text: 'Delete', type: 'primary', handler() {
+                    deleteItem(good,modal,categoryName,categoryId)}},
             {text: 'Cancel', type: 'danger', handler() {
-                    modal.close()
+                    modal.close();
                     modal.destroy()
                 }},
-        ]
-    })
+        ]})
     return modal
 }
 
@@ -290,19 +308,16 @@ function createNewItemModal(categoryName,categoryId){
                   <p>Amount:</p>
                   <input type="text" id="good_new-quantity">
                 </div>
+                </form>
               `,
         footerButtons: [
-            {
-                text: 'Add', type: 'primary', handler() {
-                    addNewItem(categoryName,categoryId,modal)
-                }
-            },
+            {text: 'Add', type: 'primary', handler() {
+                    addNewItem(categoryName,categoryId,modal)}},
             {text: 'Cancel', type: 'danger', handler() {
-                    modal.close()
+                    modal.close();
                     modal.destroy()
                 }},
-        ]
-    })
+        ]})
     return modal
 }
 
