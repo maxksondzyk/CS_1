@@ -9,7 +9,7 @@ public class Product {
     @Getter @Setter
     private int amount;
     private String name;
-    private String group;
+    private int groupID;
     private int price;
     private int id;
 

@@ -141,8 +141,8 @@ public class Table {
 
         return null;
     }
-    public static Product selectProductById(int id, String table) {
-        String sqlQuery = "SELECT * FROM " + table +  " WHERE id = ?";
+    public static Product selectProductById(int id) {
+        String sqlQuery = "SELECT * FROM " + Properties.tableName +  " WHERE id = ?";
 
         try {
             PreparedStatement preparedStatement = DB.connection.prepareStatement(sqlQuery);
@@ -562,7 +562,7 @@ public class Table {
         Product product = new Product();
 
         product.setName(rs.getString("title"));
-        product.setGroup(rs.getString("categoryID"));
+        product.setGroupID(rs.getInt("categoryID"));
         product.setPrice(rs.getInt("price"));
         product.setAmount(rs.getInt("quantity"));
         product.setId(rs.getInt("id"));
