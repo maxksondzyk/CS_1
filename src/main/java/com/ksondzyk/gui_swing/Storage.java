@@ -1,8 +1,7 @@
 
 package com.ksondzyk.gui_swing;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.network.TCP.TCPClientThread;
@@ -12,15 +11,13 @@ import com.ksondzyk.utilities.CipherMy;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
+
 import java.util.*;
 
 public class Storage {
     public static ArrayList<Product> products = new ArrayList<>();
     public static List<ProductGroup> productsGroups = new ArrayList<>();
-    public static HashMap<String, ProductGroup> gr = new HashMap<>();
     public static ProductsTableModel model = new ProductsTableModel(products);
-    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     /**
      * checks if the product is unique
@@ -34,30 +31,6 @@ public class Storage {
         return true;
     }
 
-    /**
-     * uploads everything to the file
-     */
-    static void upload(){
-        String si = gson.toJson(products);
-        File output = new File("Data.json");
-        FileWriter fw;
-        try {
-            fw = new FileWriter(output);
-            fw.write(si);
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        si = gson.toJson(gr);
-        output = new File("Groups.json");
-        try {
-            fw = new FileWriter(output);
-            fw.write(si);
-            fw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 
@@ -88,13 +61,13 @@ public class Storage {
 
         JSONObject responseMessage = new JSONObject(jsonString);
         if(responseMessage.get("status").equals("ok")) {
-           productsFromJson(responseMessage);
-
+           products = productsFromJson(responseMessage);
         }
         JSONObject responseMessage2 = new JSONObject(jsonString2);
         if(responseMessage2.get("status").equals("ok")) {
-            //frame.productsGroups = groupsFromJson(responseMessage2);
+            productsGroups = groupsFromJson(responseMessage2);
         }
+        model= new ProductsTableModel(products);
 
         Storage.model.fireTableDataChanged();
 
@@ -117,8 +90,7 @@ public class Storage {
         JSONArray jArray = jsn.getJSONArray("goods");
         if (jArray != null) {
             for (int i=0;i<jArray.length();i++){
-                Product p = getProductFromJson(jArray.getJSONObject(i));
-                StorageFrame.products.add(p);
+                listdata.add(getProductFromJson(jArray.getJSONObject(i)));
             }
         }
         return (ArrayList<Product>) listdata;

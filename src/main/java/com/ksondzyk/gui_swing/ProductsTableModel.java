@@ -14,13 +14,14 @@ import static javax.swing.JOptionPane.showMessageDialog;
 public class ProductsTableModel extends AbstractTableModel {
     private List<Product> products;
 
-    public ProductsTableModel(List<Product> products)
-    {
+    public ProductsTableModel(List<Product> products) {
         this.products = products;
+
     }
 
     /**
      * counts the rows
+     *
      * @return
      */
     @Override
@@ -30,6 +31,7 @@ public class ProductsTableModel extends AbstractTableModel {
 
     /**
      * counts the cilumns
+     *
      * @return
      */
     @Override
@@ -39,6 +41,7 @@ public class ProductsTableModel extends AbstractTableModel {
 
     /**
      * gets the column name
+     *
      * @param c
      * @return
      */
@@ -59,7 +62,7 @@ public class ProductsTableModel extends AbstractTableModel {
                 result = "Quantity";
                 break;
             case 4:
-                result= "Price";
+                result = "Price";
                 break;
         }
         return result;
@@ -67,6 +70,7 @@ public class ProductsTableModel extends AbstractTableModel {
 
     /**
      * gets the value of a particular tile
+     *
      * @param r
      * @param c
      * @return
@@ -84,6 +88,7 @@ public class ProductsTableModel extends AbstractTableModel {
                 return products.get(r).getAmount();
             case 4:
                 return products.get(r).getPrice();
+
             default:
                 return "";
         }
@@ -91,51 +96,13 @@ public class ProductsTableModel extends AbstractTableModel {
 
     /**
      * checks if the cell is editable
+     *
      * @param row
      * @param column
      * @return
      */
     @Override
     public boolean isCellEditable(int row, int column) {
-        return column != 6;
+        return column != 3;
     }
-
-    /**
-     * sets the value of a particular tile
-     * @param value
-     * @param rowIndex
-     * @param columnIndex
-     */
-    //@Override
-/*    public void setValueAt(Object value, int rowIndex, int columnIndex) {
-        try {
-            switch (columnIndex) {
-                case 0:
-                    if (Storage.checkForUniqueProduct(value.toString())) products.get(rowIndex).setId( (int) value);
-                    else showMessageDialog(null, "The product name must be unique!");
-                    break;
-                case 1:
-                    if (Integer.valueOf(value.toString()) < 0) showMessageDialog(null, "The quantity must be positive!");
-                    else products.get(rowIndex).setName( value.toString() );
-                    fireTableCellUpdated(rowIndex, 6);
-                    break;
-                case 2:
-                    products.get(rowIndex).setGroupID(Integer.valueOf( value.toString() ) );
-                    break;
-                case 3:
-                    products.get(rowIndex).setAmount( Integer.valueOf( value.toString() ) );
-                    break;
-                case 4:
-                    if (Double.valueOf(value.toString()) < 0) showMessageDialog(null, "The price must be positive!");
-                    else products.get(rowIndex).setPrice( Integer.valueOf( value.toString() ) );
-                    fireTableCellUpdated(rowIndex, 6);
-                    break;
-            }
-
-        }
-        catch( Exception exc ){
-
-        }
-        fireTableCellUpdated(rowIndex, columnIndex);
-    }*/
 }

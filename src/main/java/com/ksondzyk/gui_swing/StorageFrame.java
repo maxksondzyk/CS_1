@@ -1,54 +1,28 @@
-package com.ksondzyk.gui_swing;/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package com.ksondzyk.gui_swing;
 
-import com.ksondzyk.gui_swing.frames.addGroupFrame;
-import com.ksondzyk.gui_swing.frames.removeGroupFrame;
+
 import com.ksondzyk.storage.Product;
+import com.ksondzyk.storage.ProductGroup;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.*;
+
 import javax.swing.table.TableRowSorter;
 import javax.swing.RowFilter;
+
 /**
  * @author Danil
  */
 public class StorageFrame extends javax.swing.JFrame {
-
-    public static ArrayList<Product> products = new ArrayList<>();
-    public static HashSet<String> productsGroups = new HashSet<>();
-    private static ProductsTableModel model = new ProductsTableModel( products );
-
-    /**
-     * Внизу рядом с методами, которые нужно написать - такие же TODO
-     *
-     */
-    // TODO Нужно сдеать так, чтобы нельзя было создавать группы с одинаковым названием +
-    //  куда-то сохранять созданные группы для следующих сеансов(в файлик)
-    // TODO Нужно сделать так, чтобы нельзя было ввести продукт с двумя названиями
-    // TODO Нужно сделать так, чтобы удалением группы удалялись все товары этой группы
-    // TODO Нужно сделать, чтобы название группы менялось всюду
-    // TODO Нужно сделать вывод в новое окно информации о товарах по группам
     /**
      * Creates new form StorageFrame
      */
-    public StorageFrame() {
+    StorageFrame() {
         super("Керування складом");
         initComponents();
-        //loadData();
+        loadData();
         setComboBoxProductsGroup();
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                setVisible(true);
-            }
-        });
-        Storage.download();
-        products.add(new Product(1, "name", 3, 3, 3));
+        java.awt.EventQueue.invokeLater(() -> setVisible(true));
 
     }
 
@@ -57,36 +31,40 @@ public class StorageFrame extends javax.swing.JFrame {
      * @param groupToRemove
      */
     public static void deleteGroup(String groupToRemove) {
-        productsGroups.remove(groupToRemove);
-        setComboBoxProductsGroup();
-        for (Product p:products) {
-            //p.getGroup().getTitle().equals(groupToRemove);
-            products.remove(p);
-        }
+
+
+
         productsTable.revalidate();
         productsTable.repaint();
     }
 
     /**
-     * Loads data from file using method @AddToList
+     * Edits the group
+     * @param groupToEdit
+     * @param newName
      */
-/*    private void loadData()
-    {
-        try {
-            Files.read();
-        }catch (Exception exc)
-        {
-            System.out.println("File:"+exc.getMessage());
-            System.out.println("File:"+exc.toString());
-        }
-    }*/
+    public static void editGroup(String groupToEdit, String newName){
+        Storage.productsGroups.remove(groupToEdit);
+//        String desc = Storage.gr.get(groupToEdit).getDescription();
+//        Storage.gr.remove(groupToEdit);
+//        Storage.productsGroups.add(newName);
+//        setComboBoxProductsGroup();
+//        Storage.gr.put(newName, new ProductsGroup(newName, desc));
+//        for (Product p:Storage.products) {
+//            if (p.getGroup().getTitle().equals(groupToEdit)) p.getGroup().setTitle(newName);
+//        }
+        Storage.model.fireTableDataChanged();
+        productsTable.revalidate();
+        productsTable.repaint();
+    }
 
-    /**
-     * Adds group name to combo box chooser in table
-     * @param groupName
-     */
-    public static void addComboBoxProductsGroup(String groupName) {
-        comboBoxProductGroups.addItem(groupName);
+
+    private void loadData()
+    {
+
+            Storage.download();
+        productsTable.revalidate();
+        productsTable.repaint();
     }
 
     /**
@@ -95,18 +73,10 @@ public class StorageFrame extends javax.swing.JFrame {
     private static void setComboBoxProductsGroup()
     {
         comboBoxProductGroups.removeAllItems();
-        for(String temp : productsGroups) {
-            comboBoxProductGroups.addItem(temp);
+        for(ProductGroup g : Storage.productsGroups) {
+            comboBoxProductGroups.addItem(g.getName());
         }
 
-    }
-
-    /**
-     * Fills product @productGroups with names of group from file
-     * @param productGroupNames
-     */
-    public static void fillProductsGroupsHashSet(HashSet<String> productGroupNames) {
-        productsGroups=productGroupNames;
     }
 
     /**
@@ -115,16 +85,18 @@ public class StorageFrame extends javax.swing.JFrame {
      */
     public static void addProductGroup(String productsGroup)
     {
-        productsGroups.add( productsGroup );
+       // Storage.productsGroups.add(productsGroup );
+        setComboBoxProductsGroup();
     }
 
     /**
      * Adds product to list
      * @param product
      */
-    public static void addProductToList(Product product )
+    private static void addProductToList(Product product)
+
     {
-        products.add( product );
+        //Storage.products.add( product );
     }
 
     /**
@@ -133,9 +105,7 @@ public class StorageFrame extends javax.swing.JFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         mainPanel = new javax.swing.JPanel();
         searchPanel = new javax.swing.JPanel();
         searchField = new javax.swing.JTextField();
@@ -143,7 +113,7 @@ public class StorageFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         tablePanel = new javax.swing.JPanel();
         tableScrollPane = new javax.swing.JScrollPane();
-        productsTable = new javax.swing.JTable(model);
+        productsTable = new javax.swing.JTable(Storage.model);
         productManagePanel = new javax.swing.JPanel();
         addProductButton = new javax.swing.JButton();
         removeProductButton = new javax.swing.JButton();
@@ -159,21 +129,11 @@ public class StorageFrame extends javax.swing.JFrame {
          * Closing window and saving file with storage info
          */
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                //Files.write( products );
-                mainPanel.setVisible(false);
-                dispose();
-            }
-        });
+
 
         searchButton.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
         searchButton.setText("Знайти");
-        searchButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchButtonActionPerformed(evt);
-            }
-        });
+        searchButton.addActionListener(evt -> searchButtonActionPerformed());
 
         javax.swing.GroupLayout searchPanelLayout = new javax.swing.GroupLayout(searchPanel);
         searchPanel.setLayout(searchPanelLayout);
@@ -202,21 +162,15 @@ public class StorageFrame extends javax.swing.JFrame {
          */
 
         tableScrollPane.setViewportView(productsTable);
-        //Column "Назва"
-        productsTable.getColumnModel().getColumn(0).setMinWidth(120);
-        //Column "К-сть"
+        productsTable.getColumnModel().getColumn(0).setMinWidth(40);
         productsTable.getColumnModel().getColumn(1).setMinWidth(40);
-        productsTable.getColumnModel().getColumn(1).setMaxWidth(50);
-        //Column "Група товарів"
+        productsTable.getColumnModel().getColumn(1).setMaxWidth(120);
         productsTable.getColumnModel().getColumn(2).setMinWidth(210);
-        //Column "Опис"
         productsTable.getColumnModel().getColumn(3).setMinWidth(100);
-        //Column "Ціна"
         productsTable.getColumnModel().getColumn(4).setMinWidth(60);
         productsTable.getColumnModel().getColumn(4).setMaxWidth(70);
 
-
-
+        productsTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(comboBoxProductGroups));
 
         javax.swing.GroupLayout tablePanelLayout = new javax.swing.GroupLayout(tablePanel);
         tablePanel.setLayout(tablePanelLayout);
@@ -233,25 +187,13 @@ public class StorageFrame extends javax.swing.JFrame {
         );
 
         addProductButton.setText("Додати товар");
-        addProductButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addProductButtonActionPerformed(evt);
-            }
-        });
+        addProductButton.addActionListener(evt -> addProductButtonActionPerformed());
 
         removeProductButton.setText("Видалити товар");
-        removeProductButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeProductButtonActionPerformed(evt);
-            }
-        });
+        removeProductButton.addActionListener(evt -> removeProductButtonActionPerformed());
 
         importProductButton.setText("Прибуття/списання товару");
-        importProductButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                importProductButtonActionPerformed(evt);
-            }
-        });
+        importProductButton.addActionListener(evt -> importProductButtonActionPerformed());
 
         javax.swing.GroupLayout productManagePanelLayout = new javax.swing.GroupLayout(productManagePanel);
         productManagePanel.setLayout(productManagePanelLayout);
@@ -280,25 +222,13 @@ public class StorageFrame extends javax.swing.JFrame {
         );
 
         addGroupButton.setText("Додати группу");
-        addGroupButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addGroupButtonActionPerformed(evt);
-            }
-        });
+        addGroupButton.addActionListener(evt -> addGroupButtonActionPerformed());
 
         removeGroupButton.setText("Видалити группу");
-        removeGroupButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeGroupButtonActionPerformed(evt);
-            }
-        });
+        removeGroupButton.addActionListener(evt -> removeGroupButtonActionPerformed());
 
         editGroupButton.setText("Редагувати группу");
-        editGroupButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                editGroupButtonActionPerformed(evt);
-            }
-        });
+        editGroupButton.addActionListener(evt -> editGroupButtonActionPerformed());
 
 
         javax.swing.GroupLayout groupManagePanelLayout = new javax.swing.GroupLayout(groupManagePanel);
@@ -325,11 +255,7 @@ public class StorageFrame extends javax.swing.JFrame {
         );
 
         showInfoButton.setText("Показати інформацію");
-        showInfoButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                showInfoButtonActionPerformed(evt);
-            }
-        });
+        showInfoButton.addActionListener(evt -> showInfoButtonActionPerformed());
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
@@ -372,13 +298,12 @@ public class StorageFrame extends javax.swing.JFrame {
                         .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         this.setSize(790,500);
-    }// </editor-fold>//GEN-END:initComponents
+    }
 
     /**
      * Makes search in table
-     * @param evt
      */
-    private void searchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchButtonActionPerformed
+    private void searchButtonActionPerformed() {
         TableModel model = productsTable.getModel();
         final TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
         productsTable.setRowSorter(sorter);
@@ -389,46 +314,68 @@ public class StorageFrame extends javax.swing.JFrame {
             sorter.setRowFilter(RowFilter.regexFilter(text));
         }
 
-    }//GEN-LAST:event_searchButtonActionPerformed
-
-    private void importProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importProductButtonActionPerformed
-        // TODO add your handling code here:
-        new com.company.frames.importProductFrame();
-
-    }//GEN-LAST:event_importProductButtonActionPerformed
-
-    private void removeProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeProductButtonActionPerformed
-        if (productsTable.getSelectedRows().length > 0) products.remove(productsTable.getSelectedRows()[0]);
-        model.fireTableDataChanged();
-    }//GEN-LAST:event_removeProductButtonActionPerformed
-
-    private void addProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProductButtonActionPerformed
-        // TODO Нужно сделать так, чтобы нельзя было ввести продукт с двумя названиями
-        //addProductToList( new Product( "Назва продукту", 0 , new ProductsGroup( "Не визначено"), "Опис товару", 0, "Виробник" ) );
-        model.fireTableDataChanged();
-    }//GEN-LAST:event_addProductButtonActionPerformed
-
-    private void showInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showInfoButtonActionPerformed
-        // TODO Нужно сделать вывод в новое окно информации о товарах по группам
-        new com.company.frames.showInfoFrame();
-    }//GEN-LAST:event_showInfoButtonActionPerformed
-
-    private void addGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO Нужно сдеать так, чтобы нельзя было создавать группы с одинаковым названием + куда-то сохранять созданные группы для следующих сеансов(в файлик)
-        new addGroupFrame();
     }
 
-    private void removeGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO Нужно сделать так, чтобы удалением группы удалялись все товары этой группы
+    /**
+     * proceeds to importing the product
+     */
+    private void importProductButtonActionPerformed() {
+
+        new importProductFrame();
+    }
+
+    /**
+     * proceeds to removing the product
+     */
+    private void removeProductButtonActionPerformed() {
+        if (productsTable.getSelectedRows().length > 0) Storage.products.remove(productsTable.getSelectedRows()[0]);
+        Storage.model.fireTableDataChanged();
+    }
+
+    /**
+     * proceeds to adding the product
+     */
+    private void addProductButtonActionPerformed() {
+        addProductToList( new Product());
+        Storage.model.fireTableDataChanged();
+        setComboBoxProductsGroup();
+    }
+
+    /**
+     * proceeds to showing the information
+     */
+    private void showInfoButtonActionPerformed() {
+
+     //   new showInfoFrame();
+    }
+
+    /**
+     * proceeds to adding the group
+     */
+    private void addGroupButtonActionPerformed() {
+        new addGroupFrame();
+        Storage.model.fireTableDataChanged();
+        productsTable.revalidate();
+        productsTable.repaint();
+    }
+
+    /**
+     * proceeds to removing the group
+     */
+    private void removeGroupButtonActionPerformed() {
+
         new removeGroupFrame();
     }
 
-    private void editGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO Нужно сделать, чтобы название группы менялось всюду
-        new com.company.frames.editGroupFrame();
+    /**
+     * proceeds to editing the group
+     */
+    private void editGroupButtonActionPerformed() {
+
+        new editGroupFrame();
     }
 
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify
     private static JComboBox comboBoxProductGroups = new JComboBox();
     private javax.swing.JButton addGroupButton;
     private javax.swing.JButton addProductButton;
@@ -448,5 +395,5 @@ public class StorageFrame extends javax.swing.JFrame {
     private javax.swing.JButton showInfoButton;
     private javax.swing.JPanel tablePanel;
     private javax.swing.JScrollPane tableScrollPane;
-    // End of variables declaration//GEN-END:variables
+    // End of variables declaration
 }
