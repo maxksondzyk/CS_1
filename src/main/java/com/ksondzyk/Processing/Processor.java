@@ -95,11 +95,16 @@ public class Processor implements Callable{
                        }
                        break;
                    case (("user")) :
-                       String password = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("password");
-                       String token = Table.selectOneByTitle(jsonObject.getString("login"),"Users").getString("token");
-                       if(password.equals(jsonObject.getString("password"))) {
-                           answerMessage.put("token", token);
-                           answerMessage.put("status","ok");
+                       if(titlePresent(String.valueOf(jsonObject.get("login")),"Users")) {
+                           String password = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("password");
+                           String token = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("token");
+                           if (password.equals(jsonObject.getString("password"))) {
+                               answerMessage.put("token", token);
+                               answerMessage.put("status", "ok");
+                           }
+                           else{
+                               answerMessage.put("status", "wrong");
+                           }
                        }
                        else{
                            answerMessage.put("status","not");

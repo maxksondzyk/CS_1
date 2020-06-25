@@ -341,6 +341,9 @@ public class ApiController implements HttpHandler {
                 else if(path.contains("api/info")){
                     getInfo(httpExchange);
                 }
+                else if(path.contains("signin")){
+                    signin(httpExchange);
+                }
                 else if(path.contains("signup")){
                     register(httpExchange);
                 }
@@ -608,19 +611,24 @@ public class ApiController implements HttpHandler {
 
             if(responseMessage.get("status").equals("ok")) {
                 httpExchange.getResponseHeaders().add("Set-Cookie", "token=" + authToken);
-                response.setStatusCode(200);
                 response.setTemplate("mainpage");
             }
-            else {
-                response.setStatusCode(403);
+            else if(responseMessage.get("status").equals("not")){
+                //response.setStatusCode(403);
                 response.setTemplate("register");
+               // register(httpExchange);return;
             }
+            else{
+                return;
+            }
+
         }
         else{
 
             response.setStatusCode(400);
             response.setData("Bad Request.");
         }
+        response.setStatusCode(200);
         response.setHttpExchange(httpExchange);
         view.view(response);
     }
