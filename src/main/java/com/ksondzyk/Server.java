@@ -24,7 +24,9 @@ public class Server {
     static ServerSocket s;
 
     public static void main(String[] args) {
+
         try {
+
             DB.connect();
             Table.createTable();
             Table.createUsersTable();
@@ -32,7 +34,9 @@ public class Server {
             s = new ServerSocket( Properties.PORT);
 
         executorPool = Executors.newFixedThreadPool(networkThreadCount);
+
         if(Properties.MODE.equals("TCP")) {
+
             while (true)
                 try {
                     executorPool.execute(new TCPServerThread(s.accept()));
@@ -40,6 +44,7 @@ public class Server {
 
                 }
         }
+
         else{
             executorPool.execute(new UDPServerThread());
         }
