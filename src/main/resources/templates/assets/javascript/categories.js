@@ -1,9 +1,43 @@
-const categories = [{id:1, name:'Fruits'}, {id:2, name:'Books'},
-    {id:3, name:'Phones'}, {id:4, name:'Films'}];
 
-render();
+let tokenCookie = getCookie('token');
 
-function render() {
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+}
+
+getCategoriesArray();
+
+function getCategoriesArray() {
+    fetch("api/categories", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': tokenCookie
+            }
+        }
+    ).then(function(response) {
+        response.json().then(function (data) {
+            console.log(data)
+            const categories = []
+            for(let i=0;i<data.groups.length;i++) {
+                categories.push(data.groups[i])
+            }
+            console.log(categories)
+            render(categories)
+        })
+    }).catch(function (error) {
+        alert(error)
+    })
+}
+
+String.prototype.capitalizeFirst = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
+
+
+function render(categories) {
     clearDom();
 
     for(let i=0;i<categories.length;i++) {
@@ -11,7 +45,7 @@ function render() {
         categoryWrapper.classList.add('category_item');
 
         let title = document.createElement('h3');
-        title.innerHTML = `${categories[i].name}`
+        title.innerHTML = `${categories[i].name.capitalizeFirst()}`
         categoryWrapper.appendChild(title)
 
         let imgWrapper = document.createElement('div');
@@ -32,7 +66,7 @@ function render() {
 
         categoryWrapper.addEventListener('click', function(e) {
             if (!e.target.classList.contains('category_item_img') && !e.target.classList.contains('category_add_item')) {
-                showAllGoodsByCategory(categories[i].name);
+                showAllGoodsByCategory(categories[i]);
             }
         });
         document.getElementsByClassName('category_items-wrapper')[0].appendChild(categoryWrapper);

@@ -41,8 +41,8 @@ h2 {
     display:flex;
     max-width: 1200px;
     margin: 0 auto;
-    border-radius: 5px;
-    border: 2px solid black;
+    /*border-radius: 5px;*/
+    /*border: 2px solid black;*/
 }
 
 
@@ -87,27 +87,80 @@ h2 {
     width:90%;
     margin: 0 auto;
     background-color: azure;
-    padding: 20px;
+    padding: 0 20px;
     flex-wrap: wrap;
     display: flex;
+    justify-content: flex-start;
 }
 
 .goods_item {
-    flex-basis:33%;
-    width: 30%;
     padding: 20px;
-    margin: 0 auto;
-    margin-bottom: 30px;
     background-color: white;
+    border-radius: 5px;
     border: 2px solid black;
-
 }
+
+.goods_item-wrapper {
+    flex-basis:33%;
+    padding-right: 20px;
+    margin-bottom: 20px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.goods_item-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.goods_item_content {
+    text-align: center;
+}
+.goods_item_content-price {
+    margin-bottom: 4px;
+}
+
+.goods_item_content-quantity {
+    margin-bottom: 4px;
+}
+
+.goods_item-func-wrapper {
+    margin-top: 10px;
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+
+.goods_item-func {
+    max-width:50%;
+    text-align: center;
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-bottom: 4px;
+    text-decoration: underline;
+}
+.goods_item-func-2 {
+    max-width:50%;
+    text-align: right;
+    margin-right: 20px;
+    text-decoration: underline;
+}
+
 
 .goods_title {
     width:100%;
     text-align: center;
-    margin: 15px auto;
+    margin: 20px auto;
     font-size: 25px;
+    font-weight: bold;
+}
+
+.goods_add_item {
+    padding: 10px;
+    border-radius: 5px ;
+    border: 2px solid black;
 }
 
 
