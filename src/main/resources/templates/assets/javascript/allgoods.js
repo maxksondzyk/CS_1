@@ -1,5 +1,5 @@
 function renderAllGoods(goods) {
-
+    console.log('goods',goods)
     clearDom();
 
     if(!document.getElementsByClassName('goods_items-wrapper')[0]) {
@@ -117,10 +117,24 @@ function getGoodByTitle(goodTitle) {
     ).then(function(response) {
         response.json().then(function (data) {
             console.log(data)
+            let newData = {
+                'amount':data.quantity,
+                'name':data.title,
+                'price':data.price,
+                'id':data.id,
+                'groupID':data.categoryId}
+            let goodArray = []
+            goodArray.push(newData)
+            addFoundGoodsToDom(goodArray)
         })
     }).catch(function (error) {
         alert(error)
     })
+}
+
+function addFoundGoodsToDom(goods) {
+
+    renderAllGoods(goods)
 }
 
 

@@ -21,8 +21,10 @@ function getCategoriesArray() {
         response.json().then(function (data) {
             console.log(data)
             const categories = []
-            for(let i=0;i<data.groups.length;i++) {
-                categories.push(data.groups[i])
+            if(data) {
+                for(let i=0;i<data.groups.length;i++) {
+                    categories.push(data.groups[i])
+                }
             }
             console.log(categories)
             render(categories)
@@ -302,7 +304,7 @@ function getCategoryPrice(category,i) {
         }
     ).then(function(response) {
         response.json().then(function (data) {
-            console.log(data)
+            //console.log(data)
             addCategoryPriceToDom(data.value,i)
         })
     }).catch(function (error) {
@@ -326,7 +328,7 @@ function getAllCategoryPrice() {
     ).then(function(response) {
         response.json().then(function (data) {
             console.log(data)
-            addTotalPriceToDom(data.value)
+            if(data) addTotalPriceToDom(data.value)
         })
     }).catch(function (error) {
         alert(error)
