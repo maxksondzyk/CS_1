@@ -187,6 +187,7 @@ function addAmountItem2(good,modal) {
             }
         ).then(function(response) {
             alert('The operation was successful')
+            getCategoriesArray();
             getAllGoods()
 
             modal.close()

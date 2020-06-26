@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <title>List</title>
     <link rel="shortcut icon" href="#" />
+    <link rel="stylesheet" href="./assets/style/style.css">
+    <link rel="stylesheet" href="./assets/style/login.css">
 </head>
-<body>
-<ul>
-   <li>Hello</li>
+<section class="login">
+    <div class="login-wrapper">
+    <h1 class="login_title">Sign in before you get started</h1>
 
-</ul>
-<form name = "loginForm" action="/signup" method="post">
-<div><label> Login : <input type="text" name="login"/> </label></div>
-            <div><label> Password: <input type="password" name="password"/> </label></div>
-            <div><input type="submit" value="Sign In"/></div>
 
-</form>
-<div>
+      <form name = "loginForm" action="/signin" method="post">
+        <div class="login_item"><label> Login : <input type="text" name="login" placeholder="Enter login"/> </label></div>
+        <div class="login_item"><label> Password: <input type="password" name="password" placeholder="Enter password"/> </label></div>
+        <div><input type="submit" value="Sign In"/></div>
+      </form>
 
-</form>
-</body>
+    </div>
+  </section>
 </html>
