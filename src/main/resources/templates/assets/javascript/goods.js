@@ -85,6 +85,13 @@ function renderGoods(goods,categoryName,categoryId) {
         funcWrapper.classList.add('goods_item-func-wrapper')
         goodWrapper.appendChild(funcWrapper)
 
+        let funcItemWrapper1 = document.createElement('div');
+        funcItemWrapper1.classList.add('goods_item-func-wrapper-item')
+        funcWrapper.appendChild(funcItemWrapper1)
+        let funcItemWrapper2 = document.createElement('div');
+        funcItemWrapper2.classList.add('goods_item-func-wrapper-item')
+        funcWrapper.appendChild(funcItemWrapper2)
+
         /**ADD AMOUNT*/
         let addImg = document.createElement('div');
         addImg.innerHTML = 'Add'
@@ -92,7 +99,7 @@ function renderGoods(goods,categoryName,categoryId) {
             addAddAmountItemModal(goods[i],categoryName,categoryId)
         }
         addImg.classList.add('goods_item-func')
-        funcWrapper.appendChild(addImg);
+        funcItemWrapper1.appendChild(addImg);
 
         /**REMOVE AMOUNT*/
 
@@ -101,8 +108,8 @@ function renderGoods(goods,categoryName,categoryId) {
         removeImg.onclick = function () {
             addRemoveAmountItemModal(goods[i],categoryName,categoryId)
         }
-        removeImg.classList.add('goods_item-func-2')
-        funcWrapper.appendChild(removeImg);
+        removeImg.classList.add('goods_item-func')
+        funcItemWrapper1.appendChild(removeImg);
 
         /**EDIT GOOD*/
 
@@ -111,8 +118,8 @@ function renderGoods(goods,categoryName,categoryId) {
         editImg.onclick = function () {
             addEditItemModal(goods[i],categoryName,categoryId)
         }
-        editImg.classList.add('goods_item-func')
-        funcWrapper.appendChild(editImg)
+        editImg.classList.add('goods_item-func-2')
+        funcItemWrapper2.appendChild(editImg)
 
         /**DELETE GOOD*/
 
@@ -122,7 +129,7 @@ function renderGoods(goods,categoryName,categoryId) {
             addDeleteItemModal(goods[i],categoryName,categoryId)
         }
         deleteImg.classList.add('goods_item-func-2')
-        funcWrapper.appendChild(deleteImg)
+        funcItemWrapper2.appendChild(deleteImg)
 
     }
 }

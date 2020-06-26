@@ -1,0 +1,121 @@
+html {
+    box-sizing: border-box;
+}
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+
+    font-weight: bold;
+}
+
+body {
+    cursor: default;
+    /*margin: 0;*/
+    font-family: "Roboto", sans-serif;
+}
+
+a {
+    cursor: pointer;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px auto;
+    font-size: 40px;
+}
+h2 {
+    text-align: center;
+    margin: 15px auto;
+    font-size: 25px;
+}
+
+.main {
+    margin-bottom: 100px;
+}
+
+.main-wrapper {
+    display:flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 50px;
+    /*border-radius: 5px;*/
+    /*border: 2px solid black;*/
+}
+
+
+.category_items {
+    flex-basis: 25%;
+    padding-bottom: 20px;
+}
+
+.category_item {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 80%;
+    padding: 20px;
+    margin: 0 auto;
+    background-color: aliceblue;
+    margin-bottom: 30px;
+}
+
+.category_item:hover {
+    border: 2px solid #d0eaff;
+}
+
+.category_item_img-wrapper {
+    display:flex;
+    justify-content: space-between;
+}
+
+.category_item_img {
+    background-color: #d0eaff;
+    margin-top: 10px;
+    padding: 7px 20px;
+    border-radius: 3px;
+    border: 2px solid #d0eaff;
+    margin-right: 10px;
+}
+
+.category_item_img:last-child{
+    margin-right: 0px;
+}
+.category_item_img:last-of-type{
+    margin-right: 0px;
+}
+
+.category_item_img:hover {
+    background-color: rgba(208, 234, 255, 0);
+}
+
+.category_item-price {
+    margin: 5px 0 10px;
+}
+
+.category_add_item , .category_show_all {
+    width: 80%;
+    padding: 10px 20px;
+    margin: 0 auto;
+    background-color: aliceblue;
+    text-align: center;
+    margin-bottom: 20px;
+    text-decoration: underline;
+}
+
+.category_add_item:hover , .category_show_all:hover {
+    background-color:#d0eaff ;
+}
+
+.category_title-wrapper h2 {
+    margin-bottom: 5px;
+}
+
+.category_title-price {
+    text-align: center;
+    margin-bottom: 20px;
+}

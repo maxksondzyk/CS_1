@@ -5,7 +5,8 @@
     <title>StoreHouse</title>
     <link rel="shortcut icon" href="#" />
     <link rel="stylesheet" href="./assets/style/modal.css">
-    <link rel="stylesheet" href="./assets/style/style.css">
+    <link rel="stylesheet" href="./assets/style/category.css">
+    <link rel="stylesheet" href="./assets/style/goods.css">
 </head>
 <body>
   <header class="header"> </header>

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <title>List</title>
     <link rel="shortcut icon" href="#" />
-    <link rel="stylesheet" href="./assets/style/style.css">
+    <link rel="stylesheet" href="./assets/style/category.css">
+    <link rel="stylesheet" href="./assets/style/goods.css">
     <link rel="stylesheet" href="./assets/style/login.css">
 </head>
 <section class="login">

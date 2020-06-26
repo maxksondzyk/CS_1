@@ -53,6 +53,13 @@ function renderAllGoods(goods) {
             funcWrapper.classList.add('goods_item-func-wrapper')
             goodWrapper.appendChild(funcWrapper)
 
+            let funcItemWrapper1 = document.createElement('div');
+            funcItemWrapper1.classList.add('goods_item-func-wrapper-item')
+            funcWrapper.appendChild(funcItemWrapper1)
+            let funcItemWrapper2 = document.createElement('div');
+            funcItemWrapper2.classList.add('goods_item-func-wrapper-item')
+            funcWrapper.appendChild(funcItemWrapper2)
+
             /**ADD AMOUNT*/
             let addImg = document.createElement('div');
             addImg.innerHTML = 'Add'
@@ -60,7 +67,7 @@ function renderAllGoods(goods) {
                 addAddAmountItemModal2(goods[i])
             }
             addImg.classList.add('goods_item-func')
-            funcWrapper.appendChild(addImg);
+            funcItemWrapper1.appendChild(addImg);
 
             /**REMOVE AMOUNT*/
 
@@ -69,8 +76,8 @@ function renderAllGoods(goods) {
             removeImg.onclick = function () {
                 addRemoveAmountItemModal2(goods[i])
             }
-            removeImg.classList.add('goods_item-func-2')
-            funcWrapper.appendChild(removeImg);
+            removeImg.classList.add('goods_item-func')
+            funcItemWrapper1.appendChild(removeImg);
 
             /**EDIT GOOD*/
 
@@ -79,8 +86,8 @@ function renderAllGoods(goods) {
             editImg.onclick = function () {
                 addEditItemModal2(goods[i])
             }
-            editImg.classList.add('goods_item-func')
-            funcWrapper.appendChild(editImg)
+            editImg.classList.add('goods_item-func-2')
+            funcItemWrapper2.appendChild(editImg)
 
             /**DELETE GOOD*/
 
@@ -90,7 +97,7 @@ function renderAllGoods(goods) {
                 addDeleteItemModal2(goods[i])
             }
             deleteImg.classList.add('goods_item-func-2')
-            funcWrapper.appendChild(deleteImg)
+            funcItemWrapper2.appendChild(deleteImg)
     }
 
     let search =  document.createElement('div');
@@ -107,6 +114,12 @@ function renderAllGoods(goods) {
 
 function getGoodByTitle(goodTitle) {
     console.log(goodTitle)
+    if(!goodTitle) {
+        console.log('hi')
+        getAllGoods()
+        return 0;
+
+    }
     fetch(`api/goodTitle/${goodTitle.toLowerCase()}`, {
             method: "GET",
             headers: {
@@ -117,15 +130,21 @@ function getGoodByTitle(goodTitle) {
     ).then(function(response) {
         response.json().then(function (data) {
             console.log(data)
-            let newData = {
-                'amount':data.quantity,
-                'name':data.title,
-                'price':data.price,
-                'id':data.id,
-                'groupID':data.categoryId}
-            let goodArray = []
-            goodArray.push(newData)
-            addFoundGoodsToDom(goodArray)
+            if(!data) {
+                alert('Good not found');
+                return 0;
+            }
+            else {
+                let newData = {
+                    'amount':data.quantity,
+                    'name':data.title,
+                    'price':data.price,
+                    'id':data.id,
+                    'groupID':data.categoryId}
+                let goodArray = []
+                goodArray.push(newData)
+                addFoundGoodsToDom(goodArray)
+            }
         })
     }).catch(function (error) {
         alert(error)

@@ -53,7 +53,7 @@ function render(categories) {
         categoryWrapper.appendChild(title)
 
         let price = document.createElement('div');
-        price.classList.add('category_price');
+        price.classList.add('category_item-price');
         categoryWrapper.appendChild(price);
 
         getCategoryPrice(categories[i],i)
@@ -313,7 +313,7 @@ function getCategoryPrice(category,i) {
 }
 
 function addCategoryPriceToDom(price,i) {
-    document.getElementsByClassName('category_price')[i].innerHTML = `Price: ${price} uah`
+    document.getElementsByClassName('category_item-price')[i].innerHTML = `Price: ${price} uah`
 }
 
 
