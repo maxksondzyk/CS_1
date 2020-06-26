@@ -162,33 +162,36 @@ function createAddItemModal(good,categoryName,categoryId){
 }
 
 function addAmountItem(good,categoryName,categoryId,modal) {
-    let oldAmount = parseFloat(good.amount);
-    let newAmount = parseFloat(document.getElementById('good_add-quantity').value);
-    let amount = oldAmount + newAmount
-    let item = {
-        "quantity": `${amount}`,
-        "id":`${good.id}`
-    }
-
-    fetch(`api/good`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'token': tokenCookie
-            },
-            body: JSON.stringify(item)
+    if(document.getElementById('good_add-quantity').value>0) {
+        let oldAmount = parseFloat(good.amount);
+        let newAmount = parseFloat(document.getElementById('good_add-quantity').value);
+        let amount = oldAmount + newAmount
+        let item = {
+            "quantity": `${amount}`,
+            "id":`${good.id}`
         }
-    ).then(function(response) {
-        alert('Added')
-        let category = {'name':`${categoryName}`,id:categoryId}
-        getCategoriesArray();
-        getGoodsArray(category);
 
-        modal.close()
-        modal.destroy()
-    }).catch(function (error) {
-        alert(error)
-    })
+        fetch(`api/good`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': tokenCookie
+                },
+                body: JSON.stringify(item)
+            }
+        ).then(function(response) {
+            alert('The operation was successful')
+            let category = {'name':`${categoryName}`,id:categoryId}
+            getCategoriesArray();
+            getGoodsArray(category);
+
+            modal.close()
+            modal.destroy()
+        }).catch(function (error) {
+            alert(error)
+        })
+    } else if(document.getElementById('good_add-quantity').value<0) {alert('Invalid input. The amount of goods to be added should be positive.')}
+    else alert('Invalid input. The amount of goods to be added shouldn`t be empty.')
 }
 
 /**REMOVE AMOUNT TO GOOD*/
@@ -221,34 +224,37 @@ function createRemoveItemModal(good,categoryName,categoryId){
 }
 
 function removeAmountItem(good,categoryName,categoryId,modal) {
-    let oldAmount = parseFloat(good.amount);
-    let newAmount = parseFloat(document.getElementById('good_remove-quantity').value);
-    let amount = oldAmount - newAmount
-    if(amount<0) amount=0;
-    let item = {
-        "quantity": `${amount}`,
-        "id":`${good.id}`
-    }
-
-    fetch(`api/good`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'token': tokenCookie
-            },
-            body: JSON.stringify(item)
+    if(document.getElementById('good_remove-quantity').value>0) {
+        let oldAmount = parseFloat(good.amount);
+        let newAmount = parseFloat(document.getElementById('good_remove-quantity').value);
+        let amount = oldAmount - newAmount
+        if(amount<0) amount=0;
+        let item = {
+            "quantity": `${amount}`,
+            "id":`${good.id}`
         }
-    ).then(function(response) {
-        alert('Removed')
-        let category = {'name':`${categoryName}`,id:categoryId}
-        getCategoriesArray();
-        getGoodsArray(category);
 
-        modal.close()
-        modal.destroy()
-    }).catch(function (error) {
-        alert(error)
-    })
+        fetch(`api/good`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': tokenCookie
+                },
+                body: JSON.stringify(item)
+            }
+        ).then(function(response) {
+            alert('The operation was successful')
+            let category = {'name':`${categoryName}`,id:categoryId}
+            getCategoriesArray();
+            getGoodsArray(category);
+
+            modal.close()
+            modal.destroy()
+        }).catch(function (error) {
+            alert(error)
+        })
+    } else if(document.getElementById('good_remove-quantity').value<0) {alert('Invalid input. The amount of goods to be removed should be positive.')}
+    else alert('Invalid input. The amount of goods to be removed shouldn`t be empty.')
 }
 
 /**EDIT GOOD*/
@@ -295,8 +301,13 @@ function editItem(good,modal,categoryName,categoryId) {
     if(document.getElementById('good_change-price').value)
         item.price = `${document.getElementById('good_change-price').value}`
 
-    console.log(item)
-    console.log(document.getElementById('good_change-name').value)
+    if(!document.getElementById('good_change-price').value && !document.getElementById('good_change-name').value) {
+        alert('Invalid input. At least one value shouldn`t be empty.')
+        return 0;
+    }
+
+    // console.log(item)
+    //console.log(document.getElementById('good_change-name').value)
 
     fetch(`api/good`, {
             method: "POST",
@@ -307,7 +318,7 @@ function editItem(good,modal,categoryName,categoryId) {
             body: JSON.stringify(item)
         }
     ).then(function(response) {
-        alert('Changed')
+        alert('The operation was successful')
         let category = {'name':`${categoryName}`,id:categoryId}
         getCategoriesArray();
         getGoodsArray(category);
@@ -401,6 +412,12 @@ function createNewItemModal(categoryName,categoryId){
 }
 
 function addNewItem(categoryName,categoryId,modal) {
+
+    if(!document.getElementById('good_new-title').value || !document.getElementById('good_new-quantity').value || !document.getElementById('good_new-price').value ) {
+        alert('Invalid input. All values shouldn`t be empty.')
+        return 0;
+    }
+
     let item = {
         "title": document.getElementById('good_new-title').value.toLowerCase(),
         "category": categoryName,
@@ -417,7 +434,7 @@ function addNewItem(categoryName,categoryId,modal) {
             body: JSON.stringify(item)
         }
     ).then(function(response) {
-        alert('Added')
+        alert('The operation was successful')
         let category = {'name':`${categoryName}`,id:categoryId}
 
         getCategoriesArray();

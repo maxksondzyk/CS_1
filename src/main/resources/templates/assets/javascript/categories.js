@@ -162,7 +162,9 @@ function createEditCategoryModal(category){
 function editCategory(category,modal) {
     let item={"id":`${category.id}`};
 
-    if(document.getElementById('category_change-name').value)
+    console.log(document.getElementById('category_change-name').value)
+
+    if(document.getElementById('category_change-name').value) {
         item.title = `${document.getElementById('category_change-name').value.toLowerCase()}`
 
     fetch(`api/category`, {
@@ -174,13 +176,14 @@ function editCategory(category,modal) {
             body: JSON.stringify(item)
         }
     ).then(function(response) {
-        alert('Changed')
+        alert('The operation was successful')
         modal.close()
         modal.destroy()
         getCategoriesArray()
     }).catch(function (error) {
         alert(error)
-    })
+    })}
+    else alert('Invalid input. Please enter new title.')
 }
 
 
@@ -263,26 +266,28 @@ function createNewCategoryModal(){
 }
 
 function addNewCategory(modal) {
-    let item = {
-        "title": document.getElementById('category_new-title').value.toLowerCase()
-    }
+    let item={};
 
-    fetch("api/category", {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json',
-                'token': tokenCookie
-            },
-            body: JSON.stringify(item)
-        }
-    ).then(function(response) {
-        alert('Added')
-        modal.close()
-        modal.destroy()
-        getCategoriesArray()
-    }).catch(function (error) {
-        alert(error)
-    })
+    if(document.getElementById('category_new-title').value) {
+        item.title = document.getElementById('category_new-title').value.toLowerCase()
+
+        fetch("api/category", {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': tokenCookie
+                },
+                body: JSON.stringify(item)
+            }
+        ).then(function (response) {
+            alert('The operation was successful')
+            modal.close()
+            modal.destroy()
+            getCategoriesArray()
+        }).catch(function (error) {
+            alert(error)
+        })
+    } else alert('Invalid input. Please enter new title.')
 }
 
 
