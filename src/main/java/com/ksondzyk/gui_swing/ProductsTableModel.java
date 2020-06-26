@@ -1,15 +1,10 @@
-/*
-File: ProductsTableModel.java
-Author: Kate Bilorus
- */
+
 package com.ksondzyk.gui_swing;
 
 import com.ksondzyk.storage.Product;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
-
-import static javax.swing.JOptionPane.showMessageDialog;
 
 public class ProductsTableModel extends AbstractTableModel {
     private List<Product> products;

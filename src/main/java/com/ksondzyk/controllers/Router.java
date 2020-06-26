@@ -1,7 +1,5 @@
 package com.ksondzyk.controllers;
 
-import com.ksondzyk.controllers.ApiController;
-import com.ksondzyk.controllers.StaticController;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -25,9 +23,6 @@ public class Router implements HttpHandler {
             apiController.handle(httpExchange);
         }
         else{
-            //має бути пейдж контролер
-          //  PageController pg = new PageController();
-           // pg.handle(httpExchange);
             ApiController apiController = new ApiController();
             apiController.handle(httpExchange);
         }

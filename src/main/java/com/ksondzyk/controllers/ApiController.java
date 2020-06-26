@@ -618,12 +618,7 @@ public class ApiController implements HttpHandler {
                 return;
             }
             else if(responseMessage.get("status").equals("not")){
-                //response.setStatusCode(403);
                 response.setTemplate("register");
-               // register(httpExchange);return;
-            }
-            else{
-                return;
             }
 
         }
