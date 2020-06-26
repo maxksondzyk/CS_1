@@ -9,20 +9,41 @@ import javax.swing.table.TableModel;
 
 import javax.swing.table.TableRowSorter;
 import javax.swing.RowFilter;
+import java.util.ArrayList;
+import java.util.HashSet;
+
 
 /**
- * @author Danil
+ * Внизу рядом с методами, которые нужно написать - такие же TODO
+ *
  */
+// TODO Нужно сдеать так, чтобы нельзя было создавать группы с одинаковым названием +
+//  куда-то сохранять созданные группы для следующих сеансов(в файлик)
+// TODO Нужно сделать так, чтобы нельзя было ввести продукт с двумя названиями
+// TODO Нужно сделать так, чтобы удалением группы удалялись все товары этой группы
+// TODO Нужно сделать, чтобы название группы менялось всюду
+// TODO Нужно сделать вывод в новое окно информации о товарах по группам
 public class StorageFrame extends javax.swing.JFrame {
+
+    public static ArrayList<Product> products = new ArrayList<>();
+    public static HashSet<String> productsGroups = new HashSet<>();
+    private static ProductsTableModel model = new ProductsTableModel( products );
+
     /**
      * Creates new form StorageFrame
      */
     StorageFrame() {
         super("Керування складом");
         initComponents();
-        loadData();
+
         setComboBoxProductsGroup();
-        java.awt.EventQueue.invokeLater(() -> setVisible(true));
+
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                setVisible(true);
+            }
+        });
+        Storage.download();
 
     }
 
@@ -45,27 +66,13 @@ public class StorageFrame extends javax.swing.JFrame {
      */
     public static void editGroup(String groupToEdit, String newName){
         Storage.productsGroups.remove(groupToEdit);
-//        String desc = Storage.gr.get(groupToEdit).getDescription();
-//        Storage.gr.remove(groupToEdit);
-//        Storage.productsGroups.add(newName);
-//        setComboBoxProductsGroup();
-//        Storage.gr.put(newName, new ProductsGroup(newName, desc));
-//        for (Product p:Storage.products) {
-//            if (p.getGroup().getTitle().equals(groupToEdit)) p.getGroup().setTitle(newName);
-//        }
+
         Storage.model.fireTableDataChanged();
         productsTable.revalidate();
         productsTable.repaint();
     }
 
 
-    private void loadData()
-    {
-
-            Storage.download();
-        productsTable.revalidate();
-        productsTable.repaint();
-    }
 
     /**
      * Recreates combobox
@@ -113,7 +120,7 @@ public class StorageFrame extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JSeparator();
         tablePanel = new javax.swing.JPanel();
         tableScrollPane = new javax.swing.JScrollPane();
-        productsTable = new javax.swing.JTable(Storage.model);
+        productsTable = new javax.swing.JTable(model);
         productManagePanel = new javax.swing.JPanel();
         addProductButton = new javax.swing.JButton();
         removeProductButton = new javax.swing.JButton();
