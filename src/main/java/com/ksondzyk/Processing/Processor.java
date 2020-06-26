@@ -158,6 +158,17 @@ public class Processor implements Callable{
 
                        }
                        break;
+                   case("categoryTitle"):
+                       title = String.valueOf(jsonObject.get("title"));
+                       if (!titlePresent(title, "Categories")) {
+                           answerMessage.put("status", "not");
+                       } else {
+                         id = Table.selectOneByTitle(title,"Categories").getInt("id");
+                           answerMessage.put("id", id);
+                           answerMessage.put("status", "ok");
+
+                       }
+                       break;
                        default:
                        id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                        if (!idPresent(id, "Categories")) {
@@ -181,7 +192,9 @@ public class Processor implements Callable{
                     quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
 
                     id = Table.insert(category, title, quantity, price);
+                    int categoryId = Table.selectOneById(id,Properties.tableName).getInt("categoryID");
                     answerMessage.put("id",id);
+                    answerMessage.put("categoryID",categoryId);
                 }
                 else if(type.equals("category")){
                     title = (String) jsonObject.get("title");

@@ -1,6 +1,10 @@
 package com.ksondzyk.gui_swing;
 
 
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
+import com.ksondzyk.network.TCP.TCPClientThread;
+import org.json.JSONObject;
 
 public class addGroupFrame extends javax.swing.JFrame {
 
@@ -27,23 +31,19 @@ public class addGroupFrame extends javax.swing.JFrame {
 
         createGroupField = new javax.swing.JTextField();
         createGroupButton = new javax.swing.JButton();
-        createGroupField1 = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
 
         setAlwaysOnTop(true);
         setResizable(false);
         setType(java.awt.Window.Type.POPUP);
-        createGroupButton.setText("Додати");
+        createGroupButton.setText("Add");
         createGroupButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 createGroupButtonActionPerformed(evt);
             }
         });
 
-        jLabel1.setText("Опис групи");
-
-        jLabel2.setText("Назва групи");
+        jLabel2.setText("Category title");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -54,11 +54,7 @@ public class addGroupFrame extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(createGroupField1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(createGroupField, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(62, 62, 62))
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(jLabel1)
                                                 .addGap(164, 164, 164))
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                                 .addComponent(createGroupButton, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -74,10 +70,6 @@ public class addGroupFrame extends javax.swing.JFrame {
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(createGroupField, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel1)
-                                .addGap(5, 5, 5)
-                                .addComponent(createGroupField1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(35, 35, 35)
                                 .addComponent(createGroupButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(27, 27, 27))
@@ -93,8 +85,16 @@ public class addGroupFrame extends javax.swing.JFrame {
     private void createGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO add your handling code here:
         String name = createGroupField.getText();
-        String descr = createGroupField1.getText();
         StorageFrame.addProductGroup(name);
+
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cType","2");
+        jsonObject.put("type","category");
+        jsonObject.put("title",name);
+        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+        Packet answer = tcpClientThread.send();
        // Storage.gr.put(name, new ProductGroup(name));
         Storage.model.fireTableDataChanged();
         dispose();
@@ -134,8 +134,6 @@ public class addGroupFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify
     private javax.swing.JButton createGroupButton;
     private javax.swing.JTextField createGroupField;
-    private javax.swing.JTextField createGroupField1;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     // End of variables declaration
 }

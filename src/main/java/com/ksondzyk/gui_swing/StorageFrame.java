@@ -4,8 +4,13 @@ package com.ksondzyk.gui_swing;/*
  * and open the template in the editor.
  */
 
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
 import com.ksondzyk.gui_swing.ProductsTableModel;
+import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.storage.Product;
+import com.ksondzyk.utilities.CipherMy;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.table.TableModel;
@@ -58,10 +63,34 @@ public class StorageFrame extends javax.swing.JFrame {
     public static void deleteGroup(String groupToRemove) {
         productsGroups.remove(groupToRemove);
         setComboBoxProductsGroup();
-        for (Product p:products) {
-           // p.getGroup().getTitle().equals(groupToRemove);
-            products.remove(p);
-        }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cType","1");
+        jsonObject.put("type","categoryTitle");
+        jsonObject.put("title",groupToRemove);
+
+        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+        Packet answer = tcpClientThread.send();
+        String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+        JSONObject responseMessage = new JSONObject(jsonString);
+        int id = responseMessage.getInt("id");
+
+        JSONObject jsonObject1 = new JSONObject();
+        jsonObject.put("cType","4");
+        jsonObject.put("type","category");
+        jsonObject.put("id",id);
+
+        Packet packet1 = new Packet((byte) 1,new Message(1,1,jsonObject1.toString(),false));
+        TCPClientThread tcpClientThread1 = new TCPClientThread(packet1);
+        Packet answer1 = tcpClientThread1.send();
+        String jsonString1 = CipherMy.decode(answer1.getBMsq().getMessage());
+        JSONObject responseMessage1 = new JSONObject(jsonString1);
+
+//        for (Product p:products) {
+//           // p.getGroup().getTitle().equals(groupToRemove);
+//            products.remove(p);
+//        }
         productsTable.revalidate();
         productsTable.repaint();
     }
@@ -397,13 +426,26 @@ public class StorageFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_importProductButtonActionPerformed
 
     private void removeProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeProductButtonActionPerformed
+
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cType","4");
+        jsonObject.put("type","good");
+        jsonObject.put("id",products.get(productsTable.getSelectedRows()[0]).getId());
+        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+        Packet answer = tcpClientThread.send();
+
+
+
         if (productsTable.getSelectedRows().length > 0) products.remove(productsTable.getSelectedRows()[0]);
         model.fireTableDataChanged();
     }//GEN-LAST:event_removeProductButtonActionPerformed
 
     private void addProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addProductButtonActionPerformed
-        // TODO Нужно сделать так, чтобы нельзя было ввести продукт с двумя названиями
-        //addProductToList( new Product( "Назва продукту", 0 , new ProductsGroup( "Не визначено"), "Опис товару", 0, "Виробник" ) );
+
+        //addProductToList( new Product() );
+        new AddProductFrame();
         model.fireTableDataChanged();
     }//GEN-LAST:event_addProductButtonActionPerformed
 
@@ -438,7 +480,7 @@ public class StorageFrame extends javax.swing.JFrame {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel productManagePanel;
-    private static javax.swing.JTable productsTable;
+    static javax.swing.JTable productsTable;
     private javax.swing.JButton removeGroupButton;
     private javax.swing.JButton removeProductButton;
     private javax.swing.JButton searchButton;

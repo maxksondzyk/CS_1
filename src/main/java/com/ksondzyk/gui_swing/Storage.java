@@ -63,10 +63,10 @@ public class Storage {
         if(responseMessage.get("status").equals("ok")) {
            productsFromJson(responseMessage);
         }
-/*        JSONObject responseMessage2 = new JSONObject(jsonString2);
+        JSONObject responseMessage2 = new JSONObject(jsonString2);
         if(responseMessage2.get("status").equals("ok")) {
             productsGroups = groupsFromJson(responseMessage2);
-        }*/
+        }
         model= new ProductsTableModel(products);
 
         Storage.model.fireTableDataChanged();
