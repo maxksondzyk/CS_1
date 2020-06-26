@@ -18,11 +18,11 @@ import java.util.ArrayList;
 import java.util.concurrent.*;
 
 
-public class Processor implements Callable{
+public class Processor implements Callable {
     Packet packet;
     static OutputStream os;
 
-    public Processor(Packet packet){
+    public Processor(Packet packet) {
         this.packet = packet;
         run();
     }
@@ -32,24 +32,25 @@ public class Processor implements Callable{
     static JSONObject answerMessage;
     static Message answer;
 
-    public static boolean idPresent(int id, String tableName){
+    public static boolean idPresent(int id, String tableName) {
         try {
-            Table.selectOneById(id,tableName).getInt("id");
-            return true;
-        } catch (SQLException throwables) {
-            return false;
-        }
-    }
-    public static boolean titlePresent(String title, String tableName){
-        try {
-            Table.selectOneByTitle(title,tableName).getString("title");
+            Table.selectOneById(id, tableName).getInt("id");
             return true;
         } catch (SQLException throwables) {
             return false;
         }
     }
 
-    private static Message answer(int cType,JSONObject jsonObject) throws PacketDamagedException {
+    public static boolean titlePresent(String title, String tableName) {
+        try {
+            Table.selectOneByTitle(title, tableName).getString("title");
+            return true;
+        } catch (SQLException throwables) {
+            return false;
+        }
+    }
+
+    private static Message answer(int cType, JSONObject jsonObject) throws PacketDamagedException {
         answerMessage = new JSONObject();
         try {
             String category;
@@ -58,252 +59,244 @@ public class Processor implements Callable{
             int quantity;
             int price;
 
-        switch (cType) {
-            case 0:
-                try {
-                    String login = Table.selectOneByTitle("admin","Users").getString("title");
-                    String password = Table.selectOneByTitle("admin","Users").getString("password");
-                    if(login.equals(jsonObject.getString("login"))&&password.equals(jsonObject.getString("password"))){
-                        answerMessage.put("status","ok");
-                    }
-                    else {
-                        answerMessage.put("status", "not");
-                    }
+            switch (cType) {
+                case 0:
+                    try {
+                        String login = Table.selectOneByTitle("admin", "Users").getString("title");
+                        String password = Table.selectOneByTitle("admin", "Users").getString("password");
+                        if (login.equals(jsonObject.getString("login")) && password.equals(jsonObject.getString("password"))) {
+                            answerMessage.put("status", "ok");
+                        } else {
+                            answerMessage.put("status", "not");
+                        }
 
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-                break;
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                    break;
 
                 case 1:
 
-                String type = (String) jsonObject.get("type");
-               switch (type) {
-                   case("good"):
-                       id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
-                       if (!idPresent(id, Properties.tableName)) {
-                           answerMessage.put("status", "not");
-                       } else {
-                           Product product = Table.selectProductById(id);
-                           answerMessage.put("id", product.getId());
-                           answerMessage.put("title", product.getName());
-                           answerMessage.put("quantity", product.getAmount());
-                           answerMessage.put("price", product.getPrice());
-                           answerMessage.put("categoryId", product.getGroupID());
-                           answerMessage.put("status", "ok");
+                    String type = (String) jsonObject.get("type");
+                    switch (type) {
+                        case ("good"):
+                            id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+                            if (!idPresent(id, Properties.tableName)) {
+                                answerMessage.put("status", "not");
+                            } else {
+                                Product product = Table.selectProductById(id);
+                                answerMessage.put("id", product.getId());
+                                answerMessage.put("title", product.getName());
+                                answerMessage.put("quantity", product.getAmount());
+                                answerMessage.put("price", product.getPrice());
+                                answerMessage.put("categoryId", product.getGroupID());
+                                answerMessage.put("status", "ok");
 
-                       }
-                       break;
-                   case (("user")) :
-                       if(titlePresent(String.valueOf(jsonObject.get("login")),"Users")) {
-                           String password = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("password");
-                           String token = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("token");
-                           if (password.equals(jsonObject.getString("password"))) {
-                               answerMessage.put("token", token);
-                               answerMessage.put("status", "ok");
-                           }
-                           else{
-                               answerMessage.put("status","not");
-                           }
-                       }
-                       else{
-                           answerMessage.put("status","not");
-                       }
+                            }
+                            break;
+                        case (("user")):
+                            if (titlePresent(String.valueOf(jsonObject.get("login")), "Users")) {
+                                String password = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("password");
+                                String token = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("token");
+                                if (password.equals(jsonObject.getString("password"))) {
+                                    answerMessage.put("token", token);
+                                    answerMessage.put("status", "ok");
+                                } else {
+                                    answerMessage.put("status", "not");
+                                }
+                            } else {
+                                answerMessage.put("status", "not");
+                            }
 
-                       break;
-                   case("allGoods"):
-                       ArrayList<Product> goods = (ArrayList<Product>) Table.selectAllProducts();
-                       JSONArray array = new JSONArray(goods);
-                       answerMessage.put("goods", array);
-                       answerMessage.put("status", "ok");
-                       break;
-                   case("categories"):
-                       ArrayList<ProductGroup> groups = (ArrayList<ProductGroup>) Table.selectAllGroups();
-                       array = new JSONArray((groups));
-                       answerMessage.put("groups", array);
-                       answerMessage.put("status", "ok");
-                       break;
-                   case("categoryProducts"):
-                       id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
-                       if (!idPresent(id, Properties.tableCategories)) {
-                           answerMessage.put("status", "not");
-                       } else {
-                           ArrayList<Product> products = (ArrayList<Product>) Table.selectAllProducts(id);
-                           array = new JSONArray((products));
-                           answerMessage.put("products", array);
-                           answerMessage.put("status", "ok");
-                       }
-                       break;
-                   case("info"):
-                       int value;
-                       String id1 = String.valueOf(jsonObject.get("id"));
-                       if(id1.equals("all")) {
-                           value = Table.getValue();
-                       } else{
-                           value = Table.getValue(Integer.parseInt(id1));
-                       }
-                       answerMessage.put("value",value);
+                            break;
+                        case ("allGoods"):
+                            ArrayList<Product> goods = (ArrayList<Product>) Table.selectAllProducts();
+                            JSONArray array = new JSONArray(goods);
+                            answerMessage.put("goods", array);
+                            answerMessage.put("status", "ok");
+                            break;
+                        case ("categories"):
+                            ArrayList<ProductGroup> groups = (ArrayList<ProductGroup>) Table.selectAllGroups();
+                            array = new JSONArray((groups));
+                            answerMessage.put("groups", array);
+                            answerMessage.put("status", "ok");
+                            break;
+                        case ("categoryProducts"):
+                            id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+                            if (!idPresent(id, Properties.tableCategories)) {
+                                answerMessage.put("status", "not");
+                            } else {
+                                ArrayList<Product> products = (ArrayList<Product>) Table.selectAllProducts(id);
+                                array = new JSONArray((products));
+                                answerMessage.put("products", array);
+                                answerMessage.put("status", "ok");
+                            }
+                            break;
+                        case ("info"):
+                            int value;
+                            String id1 = String.valueOf(jsonObject.get("id"));
+                            if (id1.equals("all")) {
+                                value = Table.getValue();
+                            } else {
+                                value = Table.getValue(Integer.parseInt(id1));
+                            }
+                            answerMessage.put("value", value);
 
-                   case("goodTitle"):
-                       title = String.valueOf(jsonObject.get("id"));
-                       if (!titlePresent(title, Properties.tableName)) {
-                           answerMessage.put("status", "not");
-                       } else {
-                           Product product = Table.selectProductByTitle(title);
-                           answerMessage.put("id", product.getId());
-                           answerMessage.put("title", product.getName());
-                           answerMessage.put("quantity", product.getAmount());
-                           answerMessage.put("price", product.getPrice());
-                           answerMessage.put("categoryId", product.getGroupID());
-                           answerMessage.put("status", "ok");
+                        case ("goodTitle"):
+                            title = String.valueOf(jsonObject.get("id"));
+                            if (!titlePresent(title, Properties.tableName)) {
+                                answerMessage.put("status", "not");
+                            } else {
+                                Product product = Table.selectProductByTitle(title);
+                                answerMessage.put("id", product.getId());
+                                answerMessage.put("title", product.getName());
+                                answerMessage.put("quantity", product.getAmount());
+                                answerMessage.put("price", product.getPrice());
+                                answerMessage.put("categoryId", product.getGroupID());
+                                answerMessage.put("status", "ok");
 
-                       }
-                       break;
-                   case("categoryTitle"):
-                       title = String.valueOf(jsonObject.get("title"));
-                       if (!titlePresent(title, "Categories")) {
-                           answerMessage.put("status", "not");
-                       } else {
-                         id = Table.selectOneByTitle(title,"Categories").getInt("id");
-                           answerMessage.put("id", id);
-                           answerMessage.put("status", "ok");
+                            }
+                            break;
+                        case ("categoryTitle"):
+                            title = String.valueOf(jsonObject.get("title"));
+                            if (!titlePresent(title, "Categories")) {
+                                answerMessage.put("status", "not");
+                            } else {
+                                id = Table.selectOneByTitle(title, "Categories").getInt("id");
+                                answerMessage.put("id", id);
+                                answerMessage.put("status", "ok");
 
-                       }
-                       break;
-                       default:
-                       id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
-                       if (!idPresent(id, "Categories")) {
-                           answerMessage.put("status", "not");
-                       } else {
-                           title = Table.selectOneById(id, "Categories").getString("title");
-                           answerMessage.put("id", id);
-                           answerMessage.put("title", title);
-                           answerMessage.put("status", "ok");
-                       }
-                   }
+                            }
+                            break;
+                        default:
+                            id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+                            if (!idPresent(id, "Categories")) {
+                                answerMessage.put("status", "not");
+                            } else {
+                                title = Table.selectOneById(id, "Categories").getString("title");
+                                answerMessage.put("id", id);
+                                answerMessage.put("title", title);
+                                answerMessage.put("status", "ok");
+                            }
+                    }
 
-                break;
+                    break;
 
-            case 2:
-                type = (String) jsonObject.get("type");
-                if(type.equals("good")) {
-                    category = (String) jsonObject.get("category");
-                    title = (String) jsonObject.get("title");
-                    price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
-                    quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
-
-                    id = Table.insert(category, title, quantity, price);
-                    int categoryId = Table.selectOneById(id,Properties.tableName).getInt("categoryID");
-                    answerMessage.put("id",id);
-                    answerMessage.put("categoryID",categoryId);
-                }
-                else if(type.equals("category")){
-                    title = (String) jsonObject.get("title");
-                    id = Table.insertCategory(title);
-                    answerMessage.put("id",id);
-                }
-                else{
-                    Table.insertUser(jsonObject.getString("login"),jsonObject.getString("password"), jsonObject.getString("token"));
-                }
-
-
-
-
-                break;
-
-            case 3:
-                int categoryId = 0;
-                id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
-                if(jsonObject.get("type").equals("good")) {
-                    if(!idPresent(id,Properties.tableName)) {
-                        answerMessage.put("status","not");
-                    }else {
-                    if (jsonObject.has("category")) {
+                case 2:
+                    type = (String) jsonObject.get("type");
+                    if (type.equals("good")) {
                         category = (String) jsonObject.get("category");
-                    } else {
-                        categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryId");
-                        category = Table.selectOneById(categoryId, "Categories").getString("title");
-                    }
-                    if (jsonObject.has("title")) {
                         title = (String) jsonObject.get("title");
-                    } else
-                        title = Table.selectOneById(id, Properties.tableName).getString("title");
-
-                    if (jsonObject.has("price")) {
                         price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
-                    } else
-                        price = Table.selectOneById(id, Properties.tableName).getInt("price");
-
-                    if (jsonObject.has("quantity")) {
                         quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
-                    } else
-                        quantity = Table.selectOneById(id, Properties.tableName).getInt("quantity");
 
-                    Table.update(id, title, category, price, quantity);
-                    answerMessage.put("status","ok");
-                }}
-                else {
-                    if(!idPresent(id,"Categories")) {
-                        answerMessage.put("status","not");
-                    }else {
+                        id = Table.insert(category, title, quantity, price);
+                        int categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryID");
+                        answerMessage.put("id", id);
+                        answerMessage.put("categoryID", categoryId);
+                    } else if (type.equals("category")) {
                         title = (String) jsonObject.get("title");
-                        Table.updateCategory(id, title);
-                        answerMessage.put("status","ok");
+                        id = Table.insertCategory(title);
+                        answerMessage.put("id", id);
+                    } else {
+                        Table.insertUser(jsonObject.getString("login"), jsonObject.getString("password"), jsonObject.getString("token"));
                     }
-                }
 
-                break;
-            case 4:
-                type = (String) jsonObject.get("type");
 
-                id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+                    break;
 
-                if(type.equals("good")) {
-                    if(idPresent(id,Properties.tableName)) {
-                        Table.delete(id);
-                        answerMessage.put("status","ok");
+                case 3:
+                    int categoryId = 0;
+                    id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+                    if (jsonObject.get("type").equals("good")) {
+                        if (!idPresent(id, Properties.tableName)) {
+                            answerMessage.put("status", "not");
+                        } else {
+                            if (jsonObject.has("category")) {
+                                category = (String) jsonObject.get("category");
+                            } else {
+                                categoryId = Table.selectOneById(id, Properties.tableName).getInt("categoryId");
+                                category = Table.selectOneById(categoryId, "Categories").getString("title");
+                            }
+                            if (jsonObject.has("title")) {
+                                title = (String) jsonObject.get("title");
+                            } else
+                                title = Table.selectOneById(id, Properties.tableName).getString("title");
+
+                            if (jsonObject.has("price")) {
+                                price = Integer.parseInt(String.valueOf(jsonObject.get("price")));
+                            } else
+                                price = Table.selectOneById(id, Properties.tableName).getInt("price");
+
+                            if (jsonObject.has("quantity")) {
+                                quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
+                            } else
+                                quantity = Table.selectOneById(id, Properties.tableName).getInt("quantity");
+
+                            Table.update(id, title, category, price, quantity);
+                            answerMessage.put("status", "ok");
+                        }
+                    } else {
+                        if (!idPresent(id, "Categories")) {
+                            answerMessage.put("status", "not");
+                        } else {
+                            title = (String) jsonObject.get("title");
+                            Table.updateCategory(id, title);
+                            answerMessage.put("status", "ok");
+                        }
                     }
-                    else{
-                        answerMessage.put("status","not");
-                    }
-                }
-                else {
-                    if(idPresent(id,"Categories")) {
-                        Table.deleteCategory(id);
-                        answerMessage.put("status","ok");
-                    }
-                    else{
-                        answerMessage.put("status","not");
-                    }
-                }
-                break;
 
-            default:
-                throw new PacketDamagedException("Unknown command");
+                    break;
+                case 4:
+                    type = (String) jsonObject.get("type");
 
-        }
+                    id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
+
+                    if (type.equals("good")) {
+                        if (idPresent(id, Properties.tableName)) {
+                            Table.delete(id);
+                            answerMessage.put("status", "ok");
+                        } else {
+                            answerMessage.put("status", "not");
+                        }
+                    } else {
+                        if (idPresent(id, "Categories")) {
+                            Table.deleteCategory(id);
+                            answerMessage.put("status", "ok");
+                        } else {
+                            answerMessage.put("status", "not");
+                        }
+                    }
+                    break;
+
+                default:
+                    throw new PacketDamagedException("Unknown command");
+
+            }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        answer = new Message(1,1,answerMessage.toString(),false);
+        answer = new Message(1, 1, answerMessage.toString(), false);
         return answer;
     }
+
     public static Future<Message> process(Packet packet, OutputStream ostream) {
         os = ostream;
         Callable<Message> processingAsync = new Processor(packet);
         return executorPool.submit(processingAsync);
     }
-    public void run(){
+
+    public void run() {
         synchronized (packet) {
-        String jsonString = CipherMy.decode(packet.getBMsq().getMessage());
+            String jsonString = CipherMy.decode(packet.getBMsq().getMessage());
 
             JSONObject jsonObject = new JSONObject(jsonString);
             int cType = 0;
-            if(jsonObject.has("cType"))
-             cType = Integer.parseInt(String.valueOf(jsonObject.get("cType")));
+            if (jsonObject.has("cType"))
+                cType = Integer.parseInt(String.valueOf(jsonObject.get("cType")));
 
             try {
-            answer = answer(cType,jsonObject);
+                answer = answer(cType, jsonObject);
 
             } catch (PacketDamagedException e) {
                 e.printStackTrace();
@@ -313,7 +306,7 @@ public class Processor implements Callable{
 
 
     @Override
-    public Message call()  {
+    public Message call() {
         try {
             Thread.sleep(50 * Server.secondsPerTask);
         } catch (InterruptedException e) {
@@ -321,6 +314,7 @@ public class Processor implements Callable{
         }
         return answer;
     }
+
     public static void shutdown() {
         executorPool.shutdown();
         try {
