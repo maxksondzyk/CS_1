@@ -1,7 +1,4 @@
-/*
-File: importProductFrame.java
-Author: Danylo Vanin
- */
+
 package com.ksondzyk.gui_swing.frames;
 
 

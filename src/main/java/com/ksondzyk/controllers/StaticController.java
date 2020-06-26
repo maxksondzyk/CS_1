@@ -12,10 +12,7 @@ import java.io.OutputStream;
 import java.net.URI;
 
 public class StaticController implements HttpHandler {
-    //private static View view=new BinaryView();
-    //public static void setView(View newView) {
-    //    view = newView;
-    //}
+
 
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {

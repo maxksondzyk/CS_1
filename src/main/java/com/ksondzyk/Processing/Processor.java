@@ -103,7 +103,7 @@ public class Processor implements Callable{
                                answerMessage.put("status", "ok");
                            }
                            else{
-                               answerMessage.put("status", "wrong");
+                               answerMessage.put("status","not");
                            }
                        }
                        else{

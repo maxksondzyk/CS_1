@@ -1,7 +1,4 @@
-/*
-File: editGroupFrame.java
-Author: Danylo Vanin
- */
+
 package com.ksondzyk.gui_swing.frames;
 
 import com.ksondzyk.entities.Message;

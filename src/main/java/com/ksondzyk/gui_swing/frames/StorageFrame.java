@@ -1,8 +1,4 @@
-package com.ksondzyk.gui_swing.frames;/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+package com.ksondzyk.gui_swing.frames;
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
@@ -421,7 +417,7 @@ public class StorageFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_addProductButtonActionPerformed
 
     private void showInfoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_showInfoButtonActionPerformed
-        new com.company.frames.showInfoFrame();
+        new showInfoFrame();
     }//GEN-LAST:event_showInfoButtonActionPerformed
 
     private void addGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {

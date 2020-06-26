@@ -1,7 +1,3 @@
-/*
-File: removeGroupFrame.java
-Author: Kate Bilorus
- */
 package com.ksondzyk.gui_swing.frames;
 
 //import static com.company.StorageFrame.productsGroups;
