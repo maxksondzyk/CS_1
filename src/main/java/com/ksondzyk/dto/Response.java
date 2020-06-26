@@ -1,4 +1,4 @@
-package com.ksondzyk.HTTP.dto;
+package com.ksondzyk.dto;
 
 import com.sun.net.httpserver.HttpExchange;
 import lombok.Data;

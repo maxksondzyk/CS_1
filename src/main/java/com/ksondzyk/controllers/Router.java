@@ -1,7 +1,7 @@
-package com.ksondzyk.HTTP.controllers;
+package com.ksondzyk.controllers;
 
-import com.ksondzyk.HTTP.controllers.ApiController;
-import com.ksondzyk.HTTP.controllers.StaticController;
+import com.ksondzyk.controllers.ApiController;
+import com.ksondzyk.controllers.StaticController;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 

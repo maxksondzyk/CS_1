@@ -2,11 +2,12 @@
 File: importProductFrame.java
 Author: Danylo Vanin
  */
-package com.ksondzyk.gui_swing;
+package com.ksondzyk.gui_swing.frames;
 
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
+import com.ksondzyk.gui_swing.Storage;
 import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.storage.Product;
 import com.ksondzyk.utilities.CipherMy;

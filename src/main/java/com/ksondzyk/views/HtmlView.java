@@ -1,6 +1,6 @@
-package com.ksondzyk.HTTP.views;
+package com.ksondzyk.views;
 
-import com.ksondzyk.HTTP.dto.Response;
+import com.ksondzyk.dto.Response;
 import com.sun.net.httpserver.HttpExchange;
 import freemarker.template.Configuration;
 import freemarker.template.Template;

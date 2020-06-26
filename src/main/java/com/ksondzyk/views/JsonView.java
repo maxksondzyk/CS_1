@@ -1,10 +1,10 @@
-package com.ksondzyk.HTTP.views;
+package com.ksondzyk.views;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
-import com.ksondzyk.HTTP.dto.Response;
+import com.ksondzyk.dto.Response;
 
 import java.io.IOException;
 import java.io.OutputStream;

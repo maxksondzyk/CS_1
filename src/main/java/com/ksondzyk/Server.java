@@ -1,7 +1,7 @@
 package com.ksondzyk;
 
 import com.ksondzyk.DataBase.DB;
-import com.ksondzyk.HTTP.dao.Table;
+import com.ksondzyk.dao.Table;
 import com.ksondzyk.Processing.Processor;
 import com.ksondzyk.network.TCP.TCPServerThread;
 import com.ksondzyk.network.UDP.UDPServerThread;

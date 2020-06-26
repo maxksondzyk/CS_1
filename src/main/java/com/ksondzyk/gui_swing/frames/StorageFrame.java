@@ -1,4 +1,4 @@
-package com.ksondzyk.gui_swing;/*
+package com.ksondzyk.gui_swing.frames;/*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -6,6 +6,9 @@ package com.ksondzyk.gui_swing;/*
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
+import com.ksondzyk.gui_swing.ProductsTableModel;
+import com.ksondzyk.gui_swing.Storage;
+import com.ksondzyk.gui_swing.addGroupFrame;
 import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.storage.Product;
 import org.json.JSONObject;

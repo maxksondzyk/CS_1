@@ -4,6 +4,7 @@ package com.ksondzyk.gui_swing;
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
+import com.ksondzyk.gui_swing.frames.StorageFrame;
 import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.storage.Product;
 import com.ksondzyk.storage.ProductGroup;
@@ -34,7 +35,7 @@ public class Storage {
 
 
 
-    static void download(){
+    public static void download(){
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("cType","1");

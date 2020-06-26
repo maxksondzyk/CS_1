@@ -1,6 +1,6 @@
-package com.ksondzyk.HTTP.controllers;
+package com.ksondzyk.controllers;
 
-import com.ksondzyk.HTTP.dto.Response;
+import com.ksondzyk.dto.Response;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

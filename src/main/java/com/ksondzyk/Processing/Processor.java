@@ -1,6 +1,6 @@
 package com.ksondzyk.Processing;
 
-import com.ksondzyk.HTTP.dao.Table;
+import com.ksondzyk.dao.Table;
 import com.ksondzyk.Server;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
@@ -143,6 +143,7 @@ public class Processor implements Callable{
                            value = Table.getValue(Integer.parseInt(id1));
                        }
                        answerMessage.put("value",value);
+
                    case("goodTitle"):
                        title = String.valueOf(jsonObject.get("id"));
                        if (!titlePresent(title, Properties.tableName)) {

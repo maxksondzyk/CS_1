@@ -1,14 +1,13 @@
 package com.ksondzyk.DataBase;
 
 
-import com.ksondzyk.HTTP.dao.Table;
+import com.ksondzyk.dao.Table;
 import com.ksondzyk.utilities.Properties;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;

@@ -5,6 +5,12 @@
  */
 package com.company.frames;
 
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
+import com.ksondzyk.network.TCP.TCPClientThread;
+import com.ksondzyk.utilities.CipherMy;
+import org.json.JSONObject;
+
 public class showInfoFrame extends javax.swing.JFrame {
 
     /**
@@ -24,7 +30,6 @@ public class showInfoFrame extends javax.swing.JFrame {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-
         infoLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -32,6 +37,21 @@ public class showInfoFrame extends javax.swing.JFrame {
         setType(Type.POPUP);
 
         infoLabel.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cType","1");
+        jsonObject.put("type","info");
+        jsonObject.put("id","all");
+
+        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+        Packet answer = tcpClientThread.send();
+        String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+        JSONObject responseMessage = new JSONObject(jsonString);
+
+        infoLabel.setText("The overall value: "+responseMessage.get("value"));
+
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

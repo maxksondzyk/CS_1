@@ -2,12 +2,13 @@
 File: removeGroupFrame.java
 Author: Kate Bilorus
  */
-package com.ksondzyk.gui_swing;
+package com.ksondzyk.gui_swing.frames;
 
 //import static com.company.StorageFrame.productsGroups;
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
+import com.ksondzyk.gui_swing.Storage;
 import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.storage.ProductGroup;
 import com.ksondzyk.utilities.CipherMy;

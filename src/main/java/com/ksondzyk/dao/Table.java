@@ -1,4 +1,4 @@
-package com.ksondzyk.HTTP.dao;
+package com.ksondzyk.dao;
 
 import com.ksondzyk.DataBase.DB;
 import com.ksondzyk.storage.Product;

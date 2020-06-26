@@ -1,9 +1,9 @@
-package com.ksondzyk.HTTP.controllers;
+package com.ksondzyk.controllers;
 
 
-import com.ksondzyk.HTTP.dto.Response;
-import com.ksondzyk.HTTP.views.HtmlView;
-import com.ksondzyk.HTTP.views.View;
+import com.ksondzyk.dto.Response;
+import com.ksondzyk.views.HtmlView;
+import com.ksondzyk.views.View;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.network.TCP.TCPClientThread;

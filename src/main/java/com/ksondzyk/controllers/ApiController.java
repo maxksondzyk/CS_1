@@ -1,10 +1,10 @@
-package com.ksondzyk.HTTP.controllers;
+package com.ksondzyk.controllers;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ksondzyk.HTTP.dto.Response;
-import com.ksondzyk.HTTP.views.JsonView;
-import com.ksondzyk.HTTP.views.View;
+import com.ksondzyk.dto.Response;
+import com.ksondzyk.views.JsonView;
+import com.ksondzyk.views.View;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.network.TCP.TCPClientThread;

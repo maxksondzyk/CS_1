@@ -1,9 +1,9 @@
-package com.ksondzyk.HTTP;
+package com.ksondzyk;
 
-import com.ksondzyk.HTTP.controllers.ApiController;
-import com.ksondzyk.HTTP.controllers.Router;
-import com.ksondzyk.HTTP.views.HtmlView;
-import com.ksondzyk.HTTP.views.View;
+import com.ksondzyk.controllers.ApiController;
+import com.ksondzyk.controllers.Router;
+import com.ksondzyk.views.HtmlView;
+import com.ksondzyk.views.View;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

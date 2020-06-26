@@ -3,6 +3,7 @@ package com.ksondzyk.gui_swing;
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
+import com.ksondzyk.gui_swing.frames.StorageFrame;
 import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.storage.ProductGroup;
 import com.ksondzyk.utilities.CipherMy;
