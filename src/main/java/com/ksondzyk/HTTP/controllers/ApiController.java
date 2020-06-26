@@ -609,8 +609,13 @@ public class ApiController implements HttpHandler {
             JSONObject responseMessage = new JSONObject(jsonString);
 
             if(responseMessage.get("status").equals("ok")) {
+                authToken = responseMessage.getString("token");
                 httpExchange.getResponseHeaders().add("Set-Cookie", "token=" + authToken);
+                response.setStatusCode(200);
                 response.setTemplate("mainpage");
+                response.setHttpExchange(httpExchange);
+                view.view(response);
+                return;
             }
             else if(responseMessage.get("status").equals("not")){
                 //response.setStatusCode(403);
