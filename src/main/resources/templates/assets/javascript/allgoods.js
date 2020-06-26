@@ -1,5 +1,5 @@
 function renderAllGoods(goods) {
-
+    console.log('goods',goods)
     clearDom();
 
     if(!document.getElementsByClassName('goods_items-wrapper')[0]) {
@@ -107,7 +107,7 @@ function renderAllGoods(goods) {
 
 function getGoodByTitle(goodTitle) {
     console.log(goodTitle)
-    fetch(`api/goodTitle/${goodTitle}`, {
+    fetch(`api/goodTitle/${goodTitle.toLowerCase()}`, {
             method: "GET",
             headers: {
                 'Content-Type': 'application/json',
@@ -117,10 +117,24 @@ function getGoodByTitle(goodTitle) {
     ).then(function(response) {
         response.json().then(function (data) {
             console.log(data)
+            let newData = {
+                'amount':data.quantity,
+                'name':data.title,
+                'price':data.price,
+                'id':data.id,
+                'groupID':data.categoryId}
+            let goodArray = []
+            goodArray.push(newData)
+            addFoundGoodsToDom(goodArray)
         })
     }).catch(function (error) {
         alert(error)
     })
+}
+
+function addFoundGoodsToDom(goods) {
+
+    renderAllGoods(goods)
 }
 
 
@@ -154,31 +168,35 @@ function createAddItemModal2(good){
 }
 
 function addAmountItem2(good,modal) {
-    let oldAmount = parseFloat(good.amount);
-    let newAmount = parseFloat(document.getElementById('goods_add-quantity').value);
-    let amount = oldAmount + newAmount
-    let item = {
-        "quantity": `${amount}`,
-        "id":`${good.id}`
-    }
-
-    fetch(`api/good`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'token': tokenCookie
-            },
-            body: JSON.stringify(item)
+    if(document.getElementById('goods_add-quantity').value>0) {
+        let oldAmount = parseFloat(good.amount);
+        let newAmount = parseFloat(document.getElementById('goods_add-quantity').value);
+        let amount = oldAmount + newAmount
+        let item = {
+            "quantity": `${amount}`,
+            "id":`${good.id}`
         }
-    ).then(function(response) {
-        alert('Added')
-        getAllGoods()
 
-        modal.close()
-        modal.destroy()
-    }).catch(function (error) {
-        alert(error)
-    })
+        fetch(`api/good`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': tokenCookie
+                },
+                body: JSON.stringify(item)
+            }
+        ).then(function(response) {
+            alert('The operation was successful')
+            getAllGoods()
+
+            modal.close()
+            modal.destroy()
+        }).catch(function (error) {
+            alert(error)
+        })
+    } else if(document.getElementById('goods_add-quantity').value<0) {alert('Invalid input. The amount of goods to be added should be positive.')}
+    else alert('Invalid input. The amount of goods to be added shouldn`t be empty.')
+
 }
 
 /**REMOVE AMOUNT ITEM*/
@@ -211,32 +229,36 @@ function createRemoveItemModal2(good){
 }
 
 function removeAmountItem2(good,modal) {
-    let oldAmount = parseFloat(good.amount);
-    let newAmount = parseFloat(document.getElementById('goods_remove-quantity').value);
-    let amount = oldAmount - newAmount
-    if(amount<0) amount=0;
-    let item = {
-        "quantity": `${amount}`,
-        "id":`${good.id}`
-    }
-
-    fetch(`api/good`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-                'token': tokenCookie
-            },
-            body: JSON.stringify(item)
+    if(document.getElementById('goods_remove-quantity').value>0) {
+        let oldAmount = parseFloat(good.amount);
+        let newAmount = parseFloat(document.getElementById('goods_remove-quantity').value);
+        let amount = oldAmount - newAmount
+        if(amount<0) amount=0;
+        let item = {
+            "quantity": `${amount}`,
+            "id":`${good.id}`
         }
-    ).then(function(response) {
-        alert('Removed')
-        getCategoriesArray();
-        getAllGoods()
-        modal.close()
-        modal.destroy()
-    }).catch(function (error) {
-        alert(error)
-    })
+
+        fetch(`api/good`, {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': tokenCookie
+                },
+                body: JSON.stringify(item)
+            }
+        ).then(function(response) {
+            alert('Removed')
+            getCategoriesArray();
+            getAllGoods()
+            modal.close()
+            modal.destroy()
+        }).catch(function (error) {
+            alert(error)
+        })
+    } else if(document.getElementById('goods_remove-quantity').value<0) {alert('Invalid input. The amount of goods to be removed should be positive.')}
+    else alert('Invalid input. The amount of goods to be removed shouldn`t be empty.')
+
 }
 
 /**EDIT AMOUNT ITEM*/
@@ -284,8 +306,12 @@ function editItem2(good,modal) {
     if(document.getElementById('goods_change-price').value)
         item.price = `${document.getElementById('goods_change-price').value}`
 
-    console.log(item)
-    console.log(document.getElementById('goods_change-name').value)
+    if(!document.getElementById('goods_change-price').value && !document.getElementById('goods_change-name').value) {
+        alert('Invalid input. At least one value shouldn`t be empty.')
+        return 0;
+    }
+    // console.log(item)
+    // console.log(document.getElementById('goods_change-name').value)
 
     fetch(`api/good`, {
             method: "POST",
@@ -296,7 +322,7 @@ function editItem2(good,modal) {
             body: JSON.stringify(item)
         }
     ).then(function(response) {
-        alert('Changed')
+        alert('The operation was successful')
         getCategoriesArray();
         getAllGoods()
         modal.close()
@@ -389,6 +415,12 @@ function createNewItemModal2(){
 }
 
 function addNewItem2(modal) {
+
+    if(!document.getElementById('goods_new-title').value || !document.getElementById('goods_new-quantity').value || !document.getElementById('goods_new-price').value ) {
+        alert('Invalid input. All values shouldn`t be empty.')
+        return 0;
+    }
+
     let item = {
         "title": document.getElementById('goods_new-title').value.toLowerCase(),
         "category": document.getElementById('goods_new-category').value.toLowerCase(),
@@ -405,7 +437,7 @@ function addNewItem2(modal) {
             body: JSON.stringify(item)
         }
     ).then(function(response) {
-        alert('Added')
+        alert('The operation was successful')
         getCategoriesArray();
         getAllGoods()
         modal.close()

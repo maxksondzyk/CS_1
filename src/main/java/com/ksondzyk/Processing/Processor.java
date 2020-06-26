@@ -95,11 +95,16 @@ public class Processor implements Callable{
                        }
                        break;
                    case (("user")) :
-                       String password = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("password");
-                       String token = Table.selectOneByTitle(jsonObject.getString("login"),"Users").getString("token");
-                       if(password.equals(jsonObject.getString("password"))) {
-                           answerMessage.put("token", token);
-                           answerMessage.put("status","ok");
+                       if(titlePresent(String.valueOf(jsonObject.get("login")),"Users")) {
+                           String password = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("password");
+                           String token = Table.selectOneByTitle(jsonObject.getString("login"), "Users").getString("token");
+                           if (password.equals(jsonObject.getString("password"))) {
+                               answerMessage.put("token", token);
+                               answerMessage.put("status", "ok");
+                           }
+                           else{
+                               answerMessage.put("status", "wrong");
+                           }
                        }
                        else{
                            answerMessage.put("status","not");
@@ -153,6 +158,17 @@ public class Processor implements Callable{
 
                        }
                        break;
+                   case("categoryTitle"):
+                       title = String.valueOf(jsonObject.get("title"));
+                       if (!titlePresent(title, "Categories")) {
+                           answerMessage.put("status", "not");
+                       } else {
+                         id = Table.selectOneByTitle(title,"Categories").getInt("id");
+                           answerMessage.put("id", id);
+                           answerMessage.put("status", "ok");
+
+                       }
+                       break;
                        default:
                        id = Integer.parseInt(String.valueOf(jsonObject.get("id")));
                        if (!idPresent(id, "Categories")) {
@@ -176,7 +192,9 @@ public class Processor implements Callable{
                     quantity = Integer.parseInt(String.valueOf(jsonObject.get("quantity")));
 
                     id = Table.insert(category, title, quantity, price);
+                    int categoryId = Table.selectOneById(id,Properties.tableName).getInt("categoryID");
                     answerMessage.put("id",id);
+                    answerMessage.put("categoryID",categoryId);
                 }
                 else if(type.equals("category")){
                     title = (String) jsonObject.get("title");
@@ -271,11 +289,6 @@ public class Processor implements Callable{
     }
     public static Future<Message> process(Packet packet, OutputStream ostream) {
         os = ostream;
-        Callable<Message> processingAsync = new Processor(packet);
-        return executorPool.submit(processingAsync);
-    }
-    public static Future<Message> process(JSONObject jsonObject) {
-        Packet packet = new Packet(jsonObject);
         Callable<Message> processingAsync = new Processor(packet);
         return executorPool.submit(processingAsync);
     }

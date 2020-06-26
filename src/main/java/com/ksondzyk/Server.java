@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 
 public class Server {
 
-    static int networkThreadCount = 10;
+    static int networkThreadCount = 3;
     static ExecutorService executorPool;
-    public static int processingThreadCount = 10;
+    public static int processingThreadCount = 3;
     public static Boolean serverIsWorking = true;
     public static int secondsPerTask = 1;
     static ServerSocket s;

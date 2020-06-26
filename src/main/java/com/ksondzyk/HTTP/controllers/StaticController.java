@@ -1,8 +1,6 @@
 package com.ksondzyk.HTTP.controllers;
 
 import com.ksondzyk.HTTP.dto.Response;
-import com.ksondzyk.HTTP.views.BinaryView;
-import com.ksondzyk.HTTP.views.View;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

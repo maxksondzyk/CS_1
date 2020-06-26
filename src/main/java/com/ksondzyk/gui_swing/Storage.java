@@ -61,7 +61,7 @@ public class Storage {
 
         JSONObject responseMessage = new JSONObject(jsonString);
         if(responseMessage.get("status").equals("ok")) {
-           products = productsFromJson(responseMessage);
+           productsFromJson(responseMessage);
         }
         JSONObject responseMessage2 = new JSONObject(jsonString2);
         if(responseMessage2.get("status").equals("ok")) {
@@ -90,7 +90,8 @@ public class Storage {
         JSONArray jArray = jsn.getJSONArray("goods");
         if (jArray != null) {
             for (int i=0;i<jArray.length();i++){
-                listdata.add(getProductFromJson(jArray.getJSONObject(i)));
+                Product p = getProductFromJson(jArray.getJSONObject(i));
+                StorageFrame.products.add(p);
             }
         }
         return (ArrayList<Product>) listdata;

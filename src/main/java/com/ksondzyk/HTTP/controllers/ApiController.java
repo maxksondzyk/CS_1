@@ -316,7 +316,7 @@ public class ApiController implements HttpHandler {
     }
     @Override
     public void handle(HttpExchange httpExchange) throws IOException {
-String path = httpExchange.getRequestURI().getPath();
+        String path = httpExchange.getRequestURI().getPath();
         switch (httpExchange.getRequestMethod()) {
 
             case "GET":
@@ -341,7 +341,12 @@ String path = httpExchange.getRequestURI().getPath();
                 else if(path.contains("api/info")){
                     getInfo(httpExchange);
                 }
-
+                else if(path.contains("signin")){
+                    signin(httpExchange);
+                }
+                else if(path.contains("signup")){
+                    register(httpExchange);
+                }
                 else{
                     get(httpExchange);
                 }
@@ -366,6 +371,14 @@ String path = httpExchange.getRequestURI().getPath();
                 delete(httpExchange);
                 break;
         }
+    }
+
+    public static void register(HttpExchange httpExchange) {
+        Response response = new Response();
+        response.setStatusCode(200);
+        response.setTemplate("register");
+        response.setHttpExchange(httpExchange);
+        view.view(response);
     }
 
     public static void getInfo(HttpExchange httpExchange) {
@@ -560,7 +573,6 @@ String path = httpExchange.getRequestURI().getPath();
             httpExchange.getResponseHeaders().add("Set-Cookie", "token="+authToken);
         }
         else{
-
             response.setStatusCode(400);
             response.setData("Bad Request.");
         }
@@ -599,19 +611,24 @@ String path = httpExchange.getRequestURI().getPath();
 
             if(responseMessage.get("status").equals("ok")) {
                 httpExchange.getResponseHeaders().add("Set-Cookie", "token=" + authToken);
-                response.setStatusCode(200);
                 response.setTemplate("mainpage");
             }
-            else {
-                response.setStatusCode(403);
-                response.setTemplate("login");
+            else if(responseMessage.get("status").equals("not")){
+                //response.setStatusCode(403);
+                response.setTemplate("register");
+               // register(httpExchange);return;
             }
+            else{
+                return;
+            }
+
         }
         else{
 
             response.setStatusCode(400);
             response.setData("Bad Request.");
         }
+        response.setStatusCode(200);
         response.setHttpExchange(httpExchange);
         view.view(response);
     }

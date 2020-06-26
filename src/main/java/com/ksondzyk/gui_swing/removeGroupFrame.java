@@ -6,6 +6,8 @@ package com.ksondzyk.gui_swing;
 
 //import static com.company.StorageFrame.productsGroups;
 
+import com.ksondzyk.storage.ProductGroup;
+
 public class removeGroupFrame extends javax.swing.JFrame {
 
     /**
@@ -33,11 +35,15 @@ public class removeGroupFrame extends javax.swing.JFrame {
         setResizable(false);
         setAlwaysOnTop(true);
         setType(Type.POPUP);
+        String[] temp = new String[Storage.productsGroups.size()];
+        for(int i = 0;i<temp.length;i++){
+            ProductGroup group = Storage.productsGroups.get(i);
+            temp[i] = group.getName();
+        }
 
-        String[] temp = Storage.productsGroups.toArray(new String[Storage.productsGroups.size()]);
         deleteGroupChooser.setModel(new javax.swing.DefaultComboBoxModel<>(temp));
 
-        deleteGroupButton.setText("Видалити");
+        deleteGroupButton.setText("Delete");
         deleteGroupButton.addActionListener(evt -> deleteGroupButtonActionPerformed(evt));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
