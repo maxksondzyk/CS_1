@@ -129,7 +129,7 @@ public class PageController implements HttpHandler {
             }
             else {
                 response.setStatusCode(403);
-                //response.setTemplate("login");
+                response.setTemplate("login");
             }
         }
         else{

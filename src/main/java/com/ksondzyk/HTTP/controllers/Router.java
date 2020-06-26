@@ -26,6 +26,8 @@ public class Router implements HttpHandler {
         }
         else{
             //має бути пейдж контролер
+          //  PageController pg = new PageController();
+           // pg.handle(httpExchange);
             ApiController apiController = new ApiController();
             apiController.handle(httpExchange);
         }

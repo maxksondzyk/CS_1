@@ -356,10 +356,9 @@ public class ApiController implements HttpHandler {
                 break;
             case "POST":
 
-                if((httpExchange.getRequestURI().getPath().contains("hello"))){
-                    //helloLogin(httpExchange);
-                }
-                else if(httpExchange.getRequestURI().getPath().contains("signup")){
+
+
+               if(httpExchange.getRequestURI().getPath().contains("signup")){
                     signup(httpExchange);
                 }
                 else if(httpExchange.getRequestURI().getPath().contains("signin")){
