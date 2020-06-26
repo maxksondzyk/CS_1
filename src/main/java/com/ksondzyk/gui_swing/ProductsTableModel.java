@@ -103,6 +103,6 @@ public class ProductsTableModel extends AbstractTableModel {
      */
     @Override
     public boolean isCellEditable(int row, int column) {
-        return column != 3;
+        return column != 3&&column!=0;
     }
 }

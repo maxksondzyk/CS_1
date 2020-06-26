@@ -4,6 +4,13 @@ Author: Danylo Vanin
  */
 package com.ksondzyk.gui_swing;
 
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
+import com.ksondzyk.network.TCP.TCPClientThread;
+import com.ksondzyk.storage.ProductGroup;
+import com.ksondzyk.utilities.CipherMy;
+import org.json.JSONObject;
+
 public class editGroupFrame extends javax.swing.JFrame {
 
     /**
@@ -33,7 +40,13 @@ public class editGroupFrame extends javax.swing.JFrame {
         setAlwaysOnTop(true);
         setResizable(false);
         setType(Type.POPUP);
-        String[] temp = Storage.productsGroups.toArray(new String[Storage.productsGroups.size()]);
+
+        String[] temp = new String[Storage.productsGroups.size()];
+        for(int i = 0;i<temp.length;i++){
+            ProductGroup group = Storage.productsGroups.get(i);
+            temp[i] = group.getName();
+        }
+
         editGroupChooser.setModel(new javax.swing.DefaultComboBoxModel<>(temp));
         editGroupButton.setText("Змінити назву");
         editGroupButton.addActionListener(evt -> editGroupButtonActionPerformed());
@@ -77,6 +90,38 @@ public class editGroupFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         String groupToEdit = String.valueOf(editGroupChooser.getSelectedItem());
         String newName = editGroupTextField.getText();
+
+
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cType","1");
+        jsonObject.put("type","categoryTitle");
+        jsonObject.put("title",groupToEdit);
+
+        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+        Packet answer = tcpClientThread.send();
+        String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+
+        JSONObject responseMessage = new JSONObject(jsonString);
+        int id = responseMessage.getInt("id");
+
+        JSONObject jsonObject1 = new JSONObject();
+        jsonObject1.put("id",id);
+        jsonObject1.put("cType","3");
+        jsonObject1.put("type","category");
+        jsonObject1.put("title",newName);
+
+        Packet packet1 = new Packet((byte) 1,new Message(1,1,jsonObject1.toString(),false));
+        TCPClientThread tcpClientThread1 = new TCPClientThread(packet1);
+        Packet answer1 = tcpClientThread1.send();
+
+        for(ProductGroup p: Storage.productsGroups){
+            if(p.getId()==id){
+                p.setName(newName);
+                break;
+            }
+        }
         //StorageFrame.editGroup(groupToEdit, newName);
         dispose();
     }

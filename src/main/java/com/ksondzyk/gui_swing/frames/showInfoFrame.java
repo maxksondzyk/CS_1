@@ -5,10 +5,6 @@
  */
 package com.company.frames;
 
-/**
- *
- * @author Danil
- */
 public class showInfoFrame extends javax.swing.JFrame {
 
     /**

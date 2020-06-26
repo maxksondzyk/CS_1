@@ -5,7 +5,12 @@ Author: Danylo Vanin
 package com.ksondzyk.gui_swing;
 
 
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
+import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.storage.Product;
+import com.ksondzyk.utilities.CipherMy;
+import org.json.JSONObject;
 
 import javax.swing.*;
 
@@ -106,15 +111,38 @@ public class importProductFrame extends JFrame {
         // TODO add your handling code here:
         String item = productChooser.getSelectedItem().toString();
         int numb = (int) numberOfProductsSpinner.getValue();
+        int num = 0;
+        int id = 0;
         for (Product p : Storage.products) {
             if (p.getName().equals(item)){
-                if(numb>(p.getAmount()))
+                if(numb>(p.getAmount())) {
                     showMessageDialog(null, "The quantity can`t be negative!");
+                    dispose();
+                    return;
+                }
                 if (p.getAmount()>=numb) {
-                    p.setAmount(p.getAmount() - numb);
+                    id = p.getId();
+                    num = (p.getAmount() - numb);
+                    p.setAmount(num);
                 }
             }
         }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cType","3");
+        jsonObject.put("type","good");
+        jsonObject.put("id",id);
+        jsonObject.put("quantity",num);
+
+
+        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+        Packet answer = tcpClientThread.send();
+        String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+        JSONObject responseMessage = new JSONObject(jsonString);
+
+        StorageFrame.productsTable.revalidate();
+        StorageFrame.productsTable.repaint();
+
         Storage.model.fireTableDataChanged();
         dispose();
 
@@ -128,11 +156,33 @@ public class importProductFrame extends JFrame {
         // TODO add your handling code here:
         String item = productChooser.getSelectedItem().toString();
         int numb = (int) numberOfProductsSpinner.getValue();
+        int num = 0;
+        int id = 0;
         for (Product p : Storage.products) {
             if (p.getName().equals(item)){
-                p.setAmount(p.getAmount()+numb);
+                id = p.getId();
+                num = (p.getAmount()+numb);
+                p.setAmount(num);
             }
         }
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cType","3");
+        jsonObject.put("type","good");
+        jsonObject.put("id",id);
+        jsonObject.put("quantity",num);
+
+
+        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+        Packet answer = tcpClientThread.send();
+        String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+        JSONObject responseMessage = new JSONObject(jsonString);
+
+        StorageFrame.productsTable.revalidate();
+        StorageFrame.productsTable.repaint();
+
+
         Storage.model.fireTableDataChanged();
         dispose();
     }

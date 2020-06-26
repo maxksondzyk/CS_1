@@ -92,6 +92,7 @@ public class Storage {
             for (int i=0;i<jArray.length();i++){
                 Product p = getProductFromJson(jArray.getJSONObject(i));
                 StorageFrame.products.add(p);
+                Storage.products.add(p);
             }
         }
         return (ArrayList<Product>) listdata;

@@ -4,6 +4,8 @@ package com.ksondzyk.gui_swing;
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
 import com.ksondzyk.network.TCP.TCPClientThread;
+import com.ksondzyk.storage.ProductGroup;
+import com.ksondzyk.utilities.CipherMy;
 import org.json.JSONObject;
 
 public class addGroupFrame extends javax.swing.JFrame {
@@ -95,6 +97,9 @@ public class addGroupFrame extends javax.swing.JFrame {
         Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
         TCPClientThread tcpClientThread = new TCPClientThread(packet);
         Packet answer = tcpClientThread.send();
+        String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+        JSONObject responseMessage = new JSONObject(jsonString);
+        Storage.productsGroups.add(new ProductGroup(responseMessage.getInt("id"),name));
        // Storage.gr.put(name, new ProductGroup(name));
         Storage.model.fireTableDataChanged();
         dispose();

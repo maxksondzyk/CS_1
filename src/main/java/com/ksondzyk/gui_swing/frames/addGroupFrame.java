@@ -7,10 +7,6 @@ package com.ksondzyk.gui_swing.frames;/*
 
 import com.ksondzyk.gui_swing.StorageFrame;
 
-/**
- *
- * @author Danil
- */
 public class addGroupFrame extends javax.swing.JFrame {
 
     /**

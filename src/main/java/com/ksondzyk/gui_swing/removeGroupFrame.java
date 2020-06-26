@@ -6,7 +6,12 @@ package com.ksondzyk.gui_swing;
 
 //import static com.company.StorageFrame.productsGroups;
 
+import com.ksondzyk.entities.Message;
+import com.ksondzyk.entities.Packet;
+import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.storage.ProductGroup;
+import com.ksondzyk.utilities.CipherMy;
+import org.json.JSONObject;
 
 public class removeGroupFrame extends javax.swing.JFrame {
 
@@ -77,8 +82,38 @@ public class removeGroupFrame extends javax.swing.JFrame {
     private void deleteGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
         String groupToRemove = String.valueOf(deleteGroupChooser.getSelectedItem());
         StorageFrame.deleteGroup(groupToRemove);
-      //  Storage.gr.remove(groupToRemove);
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("cType","1");
+        jsonObject.put("type","categoryTitle");
+        jsonObject.put("title",groupToRemove);
+
+        Packet packet = new Packet((byte) 1,new Message(1,1,jsonObject.toString(),false));
+        TCPClientThread tcpClientThread = new TCPClientThread(packet);
+        Packet answer = tcpClientThread.send();
+        String jsonString = CipherMy.decode(answer.getBMsq().getMessage());
+        JSONObject responseMessage = new JSONObject(jsonString);
+        int id = responseMessage.getInt("id");
+
+        JSONObject jsonObject1 = new JSONObject();
+        jsonObject1.put("cType","4");
+        jsonObject1.put("type","category");
+        jsonObject1.put("id",id);
+
+        Packet packet1 = new Packet((byte) 1,new Message(1,1,jsonObject1.toString(),false));
+        TCPClientThread tcpClientThread1 = new TCPClientThread(packet1);
+        Packet answer1 = tcpClientThread1.send();
+        String jsonString1 = CipherMy.decode(answer1.getBMsq().getMessage());
+        JSONObject responseMessage1 = new JSONObject(jsonString1);
+        Storage.products.removeIf(p -> p.getGroupID() == id);
+        Storage.productsGroups.removeIf(p -> p.getId() == id);
+        StorageFrame.products.removeIf(p -> p.getGroupID() == id);
+        StorageFrame.productsTable.revalidate();
+        StorageFrame.productsTable.repaint();
         dispose();
+      //  Storage.gr.remove(groupToRemove);
+
+       // dispose();
         }
 
 
