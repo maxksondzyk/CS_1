@@ -6,7 +6,6 @@ package com.ksondzyk.gui_swing;/*
 
 import com.ksondzyk.entities.Message;
 import com.ksondzyk.entities.Packet;
-import com.ksondzyk.gui_swing.ProductsTableModel;
 import com.ksondzyk.network.TCP.TCPClientThread;
 import com.ksondzyk.storage.Product;
 import com.ksondzyk.utilities.CipherMy;
@@ -52,7 +51,6 @@ public class StorageFrame extends javax.swing.JFrame {
             }
         });
 
-        //products.add(new Product("jknk", 100, new ProductsGroup("fghj") ,"aaaa", 1.0 , "zsdfgh"));
 
     }
 
@@ -95,19 +93,6 @@ public class StorageFrame extends javax.swing.JFrame {
         productsTable.repaint();
     }
 
-    /**
-     * Loads data from file using method @AddToList
-     */
-    private void loadData()
-    {
-        try {
-            //Files.read();
-        }catch (Exception exc)
-        {
-            System.out.println("File:"+exc.getMessage());
-            System.out.println("File:"+exc.toString());
-        }
-    }
 
     /**
      * Adds group name to combo box chooser in table
@@ -421,7 +406,7 @@ public class StorageFrame extends javax.swing.JFrame {
 
     private void importProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importProductButtonActionPerformed
         // TODO add your handling code here:
-        new com.company.frames.importProductFrame();
+        new importProductFrame();
 
     }//GEN-LAST:event_importProductButtonActionPerformed
 
@@ -466,7 +451,7 @@ public class StorageFrame extends javax.swing.JFrame {
 
     private void editGroupButtonActionPerformed(java.awt.event.ActionEvent evt) {
         // TODO Нужно сделать, чтобы название группы менялось всюду
-        new com.company.frames.editGroupFrame();
+        new editGroupFrame();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
