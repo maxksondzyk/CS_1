@@ -61,7 +61,7 @@ h2 {
     padding: 20px;
     margin: 0 auto;
     background-color: aliceblue;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 }
 
 .category_item:hover {
@@ -118,4 +118,14 @@ h2 {
 .category_title-price {
     text-align: center;
     margin-bottom: 20px;
+}
+
+.btn-primary {
+    margin-right: 10px;
+}
+
+.btn-danger {
+    background-color: rgb(243, 68, 68);
+    border-color:rgb(243, 68, 68);
+    margin-right: 10px;
 }
