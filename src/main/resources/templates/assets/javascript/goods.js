@@ -302,16 +302,22 @@ function createEditItemModal(good,categoryName,categoryId){
 function editItem(good,modal,categoryName,categoryId) {
     let item={"id":`${good.id}`};
 
-    if(document.getElementById('good_change-name').value)
-        item.title = `${document.getElementById('good_change-name').value.toLowerCase()}`
-
-    if(document.getElementById('good_change-price').value)
-        item.price = `${document.getElementById('good_change-price').value}`
 
     if(!document.getElementById('good_change-price').value && !document.getElementById('good_change-name').value) {
         alert('Invalid input. At least one value shouldn`t be empty.')
         return 0;
     }
+
+    if(document.getElementById('good_change-price').value<0) {
+        alert('Invalid input. Value should be positive.')
+        return 0;
+    }
+
+    if(document.getElementById('good_change-name').value)
+        item.title = `${document.getElementById('good_change-name').value.toLowerCase()}`
+
+    if(document.getElementById('good_change-price').value)
+        item.price = `${document.getElementById('good_change-price').value}`
 
     // console.log(item)
     //console.log(document.getElementById('good_change-name').value)
@@ -422,6 +428,11 @@ function addNewItem(categoryName,categoryId,modal) {
 
     if(!document.getElementById('good_new-title').value || !document.getElementById('good_new-quantity').value || !document.getElementById('good_new-price').value ) {
         alert('Invalid input. All values shouldn`t be empty.')
+        return 0;
+    }
+
+    if(document.getElementById('good_new-quantity').value<0 || document.getElementById('good_new-price').value<0 ) {
+        alert('Invalid input. All values should be positive.')
         return 0;
     }
 

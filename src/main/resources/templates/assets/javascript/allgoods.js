@@ -320,16 +320,21 @@ function createEditItemModal2(good){
 function editItem2(good,modal) {
     let item={"id":`${good.id}`};
 
+    if(!document.getElementById('goods_change-price').value && !document.getElementById('goods_change-name').value) {
+        alert('Invalid input. At least one value shouldn`t be empty.')
+        return 0;
+    }
+    if(document.getElementById('goods_change-price').value<0) {
+        alert('Invalid input. Value should be positive.')
+        return 0;
+    }
+
     if(document.getElementById('goods_change-name').value)
         item.title = `${document.getElementById('goods_change-name').value.toLowerCase()}`
 
     if(document.getElementById('goods_change-price').value)
         item.price = `${document.getElementById('goods_change-price').value}`
 
-    if(!document.getElementById('goods_change-price').value && !document.getElementById('goods_change-name').value) {
-        alert('Invalid input. At least one value shouldn`t be empty.')
-        return 0;
-    }
     // console.log(item)
     // console.log(document.getElementById('goods_change-name').value)
 
@@ -438,6 +443,11 @@ function addNewItem2(modal) {
 
     if(!document.getElementById('goods_new-title').value || !document.getElementById('goods_new-quantity').value || !document.getElementById('goods_new-price').value ) {
         alert('Invalid input. All values shouldn`t be empty.')
+        return 0;
+    }
+
+    if(document.getElementById('goods_new-quantity').value<0 || document.getElementById('goods_new-price').value<0 ) {
+        alert('Invalid input. All values should be positive.')
         return 0;
     }
 
